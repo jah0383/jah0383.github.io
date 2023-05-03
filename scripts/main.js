@@ -1,16 +1,16 @@
-const CisInfo = {
-	Name: "James Howe",
+const trans = true;
+const MyInfo = {
+	Name: "Howe",
 	Age: 22
 };
-const TransInfo = {
-	Name: "Piper Howe",
-	Age: 22
-};
+if(trans){
+	MyInfo["Name"] = "Piper Howe"
+}
+else{
+	MyInfo["Name"] = "James Howe"
+}
 
-let myInfo = TransInfo;
-
-
-Array.from(document.getElementsByClassName("Name")).forEach(elem => (elem.textContent = myInfo["Name"]));
-//for (const [key, value] of Object.entries(myInfo)) {
-//  console.log(key, value);
-//}
+Array.from(document.getElementsByClassName("Name")).forEach(elem => (elem.textContent = MyInfo["Name"]));
+for (const [key, value] of Object.entries(MyInfo)) {
+  console.log(key, value);
+}
