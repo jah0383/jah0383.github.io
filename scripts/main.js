@@ -10,7 +10,7 @@ const TransInfo = {
 let myInfo = TransInfo;
 
 
-Array.from(document.getElementsByClassName("Name")).forEach(elem => (elem.textContent = myInfo["name"]));
-for (const [key, value] of Object.entries(myInfo)) {
-  console.log(key, value);
-}
+Array.from(document.getElementsByClassName("Name")).forEach(elem => (elem.textContent = myInfo["Name"]));
+//for (const [key, value] of Object.entries(myInfo)) {
+//  console.log(key, value);
+//}
