@@ -28,17 +28,7 @@ const Skills = {
 	
 };
 
-const trans = false;
-if(trans){
-	MyInfo["Name"] = "Piper Howe"
-	MyInfo["FirstName"] = "Piper"
-	MyInfo["Bio"] = "Just a gal having some fun on her computer :3"
-}
-else{
-	MyInfo["Name"] = "James Howe"
-	MyInfo["FirstName"] = "James"
-	MyInfo["Bio"] = "Graduating Senior From Bucknell University looking for some work!"
-}
+
 
 //Changes all the Text Values of the spans 
 for (const [key, value] of Object.entries(MyInfo)) {
