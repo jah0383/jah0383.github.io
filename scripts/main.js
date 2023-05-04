@@ -14,7 +14,8 @@ const MyInfo = {
 
 const Links = {
 	Link1: "https://to-show-i-can.tumblr.com/",
-	Link2: "https://www.linkedin.com/in/james-howe-17100b206/"
+	Link2: "https://www.linkedin.com/in/james-howe-17100b206/",
+	Link3: "http://jameshowe.blogs.bucknell.edu/files/2023/04/James-Resume-1.pdf"
 };
 
 const Skills = {
@@ -25,7 +26,6 @@ const Skills = {
 	Model: ["3D modeling", 40],
 	C: ["C++", 40],
 	Java: ["Java", 30]
-	
 };
 
 
