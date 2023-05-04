@@ -1,7 +1,7 @@
-const trans = false;
+
 const MyInfo = {
-	Name: "John Doe",
-	FirstName: ":3",
+	Name: "James Howe",
+	FirstName: "James",
 	LastName: "Howe",
 	Age: 22,
 	Phone: "(203) 524-4312",
@@ -9,7 +9,7 @@ const MyInfo = {
 	AddressLine1: "",
 	AddressLine2: "",
 	JobTitle: "Computer Engineer",
-	Bio: "Just a gal having some fun on her computer :3"
+	Bio: "Graduating Senior From Bucknell University looking for some work!"
 };
 
 const Links = {
@@ -18,11 +18,17 @@ const Links = {
 };
 
 const Skills = {
-	Python: ["Python(Numpy, Pandas, Tensorflow, Keras)", 80],
-	Java: ["Java", 70],
-	C: ["C++", 30]
+	Python: ["Python(Numpy, Pandas, Tensorflow, Keras)", 90],
+	Linux: ["Linux", 85],
+	Git: ["Git", 80],
+	Javascript: ["JavaScript(This website and the gear thing for example)", 60],
+	Model: ["3D modeling", 40],
+	C: ["C++", 40],
+	Java: ["Java", 30]
+	
 };
 
+const trans = false;
 if(trans){
 	MyInfo["Name"] = "Piper Howe"
 	MyInfo["FirstName"] = "Piper"
