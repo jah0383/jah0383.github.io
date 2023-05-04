@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/addons/p5.sound.min.js"></script>
+    <link href="../css/bootstrap-4.4.1.css" rel="stylesheet">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div class="container">
+    <div class="row" id="canvas"></div>
+    <div class="row" style="color:f0f0f0">
+        <div class="col" style="color:f0f0f0" id="PeriodSliderDiv">
+            <p>Period:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="StepsSliderDiv">
+            <p>First gear teeth #:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="AmplitudeSliderDiv">
+            <p>Amplitude:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="OffsetSliderDiv">
+            <p>Offset:</p>
+        </div>
+    </div>  
+    <hr>
+    <div class="row" style="color:f0f0f0">
+        <div class="col" style="color:f0f0f0" id="FuncPercentSliderDiv">
+            <p class="text-left">Percent of function which is flat:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="EasingFunctionDiv">
+            <p>EasingFunction:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="SecondGearTeethDiv">
+            <p>Second gear teeth #:</p>
+        </div>
+        <div class="col" style="color:f0f0f0" id="PauseButtonDiv">
+            <!-- <p>EasingFunction:</p> -->
+        </div>
+    </div>  
+    </div>
+    <script src="sketch.js"></script>
+    <script src="gear.js"></script>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap-4.4.1.js"></script>
+  </body>
+</html>
