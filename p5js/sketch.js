@@ -157,11 +157,15 @@ let pause_box;
 let count = 0;
 
 function setup() {
-  var myCanvas = createCanvas(windowWidth-200, windowHeight/2);
-  myCanvas.parent("canvas");
+  var myCanvas = createCanvas(windowWidth*.9, windowHeight/2);
+  myCanvas.parent(select("#canvas"));
+  // myCanvas.center('horizontal')
   W = width;
   H = height;
-
+  // var x = (windowWidth - width) / 2;
+  // var y = (windowHeight - height) / 2;
+  // myCanvas.position(x, 0);
+  
   
   //Initial graph so it doesn't flash in on first frame
   for(let i = 0; i< 2*width; i++){
@@ -293,7 +297,9 @@ function update_graph(){
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight/2);
+  resizeCanvas(windowWidth*.9, windowHeight/2);
+  W = width;
+  H = height;
 }
 
 
