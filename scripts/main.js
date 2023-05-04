@@ -15,7 +15,7 @@ const MyInfo = {
 const Links = {
 	Link1: "https://to-show-i-can.tumblr.com/",
 	Link2: "https://www.linkedin.com/in/james-howe-17100b206/",
-	Link3: "http://jameshowe.blogs.bucknell.edu/files/2023/04/James-Resume-1.pdf"
+	Link3: "https://jameshowe.blogs.bucknell.edu/redirect/"
 };
 
 const Skills = {
@@ -39,6 +39,8 @@ for (const [key, value] of Object.entries(MyInfo)) {
 for (const [key, value] of Object.entries(Links)) {
 	Array.from(document.getElementsByClassName(key)).forEach(elem => (elem.setAttribute("href", value)));
 }
+
+//For Skills 
 const SkillDiv = document.getElementById("Skills");
 for (const [key, value] of Object.entries(Skills)) {
 	const skillWrapper = document.createElement("div");
