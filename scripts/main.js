@@ -65,5 +65,12 @@ for (const [key, value] of Object.entries(Skills)) {
 //Change the link on emails 
 Array.from(document.getElementsByClassName("Email")).forEach(elem => (elem.setAttribute("href","mailto:".concat(MyInfo["Email"]))));
 
+function test(event){
+	$.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+		info = JSON.stringify(data, null, 2)
+		console.log(info);
+	});
+}
 
+test();
 
