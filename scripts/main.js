@@ -71,6 +71,39 @@ function test(event){
 		console.log(info);
 	});
 }
+Date.now()
+// test();
+// d94bfac5-11f5-4077-ab82-0ee82f297427
+function sendToPantry(){
+	// var info = null;
+	$.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+		info = JSON.stringify(data, null, 2)
+		// console.log(info);
+		var date = new Date();
+		// console.log(TStamp);
+		let x = {};
+		x[date.toGMTString()] = data
+		// console.log(x);
+		let sendData = JSON.stringify(x, null, 2);
+		// console.log(sendData);
+		const settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://getpantry.cloud/apiv1/pantry/d94bfac5-11f5-4077-ab82-0ee82f297427/basket/newBasket12",
+			"method": "PUT",
+			"headers": {
+			"Content-Type": "application/json"
+			},
+			"processData": false,
+			"data": sendData
+		};
+		
+		$.ajax(settings).done(function (response) {
+			// console.log(response);
+		});
+	});
+	
 
-test();
+}
+sendToPantry()
 
