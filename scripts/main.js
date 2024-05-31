@@ -3,13 +3,13 @@ const MyInfo = {
 	Name: "James Howe",
 	FirstName: "James",
 	LastName: "Howe",
-	Age: 22,
+	Age: 23,
 	Phone: "(203) 524-4312",
-	Email: "jah083@bucknell.edu",
+	Email: "james.howe@kyndryl.com",
 	AddressLine1: "",
 	AddressLine2: "",
 	JobTitle: "Computer Engineer",
-	Bio: "Graduating Senior From Bucknell University looking for some work!"
+	Bio: "Computer Scientist with 3 years of experience in automation, machine learning, and data sceince. Passionate about using AI to create better workflows."
 };
 
 const Links = {
@@ -20,9 +20,8 @@ const Links = {
 
 const Skills = {
 	Python: ["Python(Numpy, Pandas, Tensorflow, Keras)", 90],
-	Linux: ["Linux", 85],
-	Git: ["Git", 80],
-	Javascript: ["JavaScript(This website and the gear thing for example)", 60],
+	Linux: ["Linux(Debian)", 85],
+	Javascript: ["JavaScript", 60],
 	Model: ["3D modeling", 40],
 	C: ["C++", 40],
 	Java: ["Java", 30]
