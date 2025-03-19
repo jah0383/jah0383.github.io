@@ -3,19 +3,19 @@ const MyInfo = {
 	Name: "James Howe",
 	FirstName: "James",
 	LastName: "Howe",
-	Age: 23,
+	Age: 24,
 	Phone: "(203) 524-4312",
-	Email: "james.howe@kyndryl.com",
+	Email: "madjam1231@gmail.com",
 	AddressLine1: "",
 	AddressLine2: "",
-	JobTitle: "Computer Engineer",
-	Bio: "Computer Scientist with 3 years of experience in automation, machine learning, and data sceince. Passionate about using AI to create better workflows."
+	JobTitle: "Computer Scientist",
+	Bio: "Computer Scientist with 5 years of experience in automation, machine learning, and cloud services. Passionate about using AI to create better workflows."
 };
 
 const Links = {
 	Link1: "https://to-show-i-can.tumblr.com/",
 	Link2: "https://www.linkedin.com/in/james-howe-17100b206/",
-	Link3: "https://jameshowe.blogs.bucknell.edu/redirect/"
+	Link3: "https://drive.google.com/file/d/1jbt0S1yDKbu0VOePak1r-MWbgDdaM17-/view?usp=sharing"
 };
 
 const Skills = {
