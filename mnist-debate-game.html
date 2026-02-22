@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MNIST Debate — AI Safety via Debate</title>
+<style>
+  :root {
+    --bg: #06060c;
+    --surface: #0d0d1a;
+    --border: #1e1e3a;
+    --red: #ff3355;
+    --red-dim: rgba(255,51,85,0.18);
+    --blue: #33aaff;
+    --blue-dim: rgba(51,170,255,0.18);
+    --white: #e8e8f0;
+    --muted: #5a5a7a;
+    --glow-red: 0 0 12px rgba(255,51,85,0.7), 0 0 24px rgba(255,51,85,0.3);
+    --glow-blue: 0 0 12px rgba(51,170,255,0.7), 0 0 24px rgba(51,170,255,0.3);
+    --glow-white: 0 0 8px rgba(232,232,240,0.6), 0 0 20px rgba(232,232,240,0.2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', 'Lucida Console', monospace;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  header {
+    width: 100%;
+    max-width: 560px;
+    padding: 20px 20px 0;
+    text-align: center;
+  }
+
+  .title {
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .subtitle {
+    font-size: clamp(0.55rem, 2vw, 0.65rem);
+    letter-spacing: 0.15em;
+    color: #333355;
+    text-transform: uppercase;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 16px 16px 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Phase label ── */
+  .phase-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .phase-badge .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── Pixel Grid ── */
+  .grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .grid-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  canvas#digitCanvas {
+    display: block;
+    cursor: crosshair;
+    image-rendering: pixelated;
+    border: 1px solid var(--border);
+  }
+
+  canvas#digitCanvas.judge-mode {
+    cursor: default;
+  }
+
+  /* ── Claims row ── */
+  .claims {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .claim-card {
+    padding: 12px;
+    border: 1px solid;
+    text-align: center;
+  }
+
+  .claim-card.red { border-color: var(--red); background: var(--red-dim); }
+  .claim-card.blue { border-color: var(--blue); background: var(--blue-dim); }
+
+  .claim-card .player-name {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+
+  .claim-card .claim-digit {
+    font-size: 2.2rem;
+    line-height: 1;
+    font-weight: bold;
+  }
+
+  .claim-card.red .player-name { color: var(--red); }
+  .claim-card.red .claim-digit { color: var(--red); text-shadow: var(--glow-red); }
+  .claim-card.blue .player-name { color: var(--blue); }
+  .claim-card.blue .claim-digit { color: var(--blue); text-shadow: var(--glow-blue); }
+
+  /* ── Setup inputs ── */
+  .setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .input-group label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .input-group label.red { color: var(--red); }
+  .input-group label.blue { color: var(--blue); }
+
+  .digit-picker {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+  }
+
+  .digit-btn {
+    aspect-ratio: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: inherit;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .digit-btn:hover { background: var(--border); }
+  .digit-btn.selected-red { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+  .digit-btn.selected-blue { border-color: var(--blue); background: var(--blue-dim); color: var(--blue); }
+
+  /* ── Turn indicator ── */
+  .turn-indicator {
+    padding: 14px;
+    border: 1px solid;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .turn-indicator.red { border-color: var(--red); background: var(--red-dim); }
+  .turn-indicator.blue { border-color: var(--blue); background: var(--blue-dim); }
+
+  .turn-indicator .whose-turn {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .turn-indicator.red .whose-turn { color: var(--red); }
+  .turn-indicator.blue .whose-turn { color: var(--blue); }
+
+  .turn-indicator .instruction {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* ── Progress dots ── */
+  .progress-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .progress-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    transition: all 0.2s;
+  }
+
+  .progress-dot.red { background: var(--red); border-color: var(--red); box-shadow: var(--glow-red); }
+  .progress-dot.blue { background: var(--blue); border-color: var(--blue); box-shadow: var(--glow-blue); }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 14px 24px;
+    border: 1px solid;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .btn-primary { border-color: var(--white); color: var(--white); }
+  .btn-primary:hover { background: var(--white); color: var(--bg); }
+
+  .btn-red { border-color: var(--red); color: var(--red); }
+  .btn-red:hover { background: var(--red); color: var(--bg); }
+
+  .btn-blue { border-color: var(--blue); color: var(--blue); }
+  .btn-blue:hover { background: var(--blue); color: var(--bg); }
+
+  .btn-judge {
+    border-color: #aa88ff;
+    color: #aa88ff;
+  }
+  .btn-judge:hover, .btn-judge.active { background: #aa88ff; color: var(--bg); }
+
+  .btn-row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+
+  /* ── Result overlay ── */
+  .result-box {
+    padding: 20px;
+    border: 1px solid var(--border);
+    text-align: center;
+    background: var(--surface);
+  }
+
+  .result-answer {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin: 8px 0;
+    color: var(--white);
+    text-shadow: var(--glow-white);
+  }
+
+  .result-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* ── Judge view toggle ── */
+  .judge-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .judge-question {
+    padding: 14px;
+    border: 1px solid #aa88ff;
+    background: rgba(170,136,255,0.08);
+    font-size: 0.75rem;
+    color: #cc99ff;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .pixel-count {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ── Info card ── */
+  .info-card {
+    border: 1px solid var(--border);
+    padding: 14px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .info-card strong { color: var(--white); }
+
+  .hidden { display: none !important; }
+
+  /* ── Intro screen ── */
+  .intro-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 20px;
+  }
+
+  .big-title {
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    letter-spacing: 0.1em;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .big-title span.r { color: var(--red); text-shadow: var(--glow-red); }
+  .big-title span.b { color: var(--blue); text-shadow: var(--glow-blue); }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4px 0;
+  }
+
+  /* ── Winner display ── */
+  .winner-display {
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid;
+  }
+  .winner-display.red { color: var(--red); border-color: var(--red); box-shadow: var(--glow-red); }
+  .winner-display.blue { color: var(--blue); border-color: var(--blue); box-shadow: var(--glow-blue); }
+  .winner-display.tie { color: var(--muted); border-color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">Debate Protocol</div>
+  <div class="subtitle">AI Safety via Debate · MNIST Experiment · Irving et al. 2018</div>
+</header>
+
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DIGIT PATTERNS  (7 wide × 9 tall, 1 = white pixel)
+// ═══════════════════════════════════════════════════════════
+const DIGIT_PATTERNS = [
+  // 0
+  [[0,1,1,1,1,1,0],[1,1,0,0,0,1,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,1,0,0,0,1,1],[0,1,1,1,1,1,0]],
+  // 1
+  [[0,0,1,1,0,0,0],[0,1,1,1,0,0,0],[1,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,1,1,1,1,1,0]],
+  // 2
+  [[0,1,1,1,1,0,0],[1,1,0,0,1,1,0],[0,0,0,0,1,1,0],[0,0,0,1,1,0,0],[0,0,1,1,0,0,0],[0,1,1,0,0,0,0],[1,1,0,0,0,0,0],[1,1,0,0,0,0,0],[1,1,1,1,1,1,1]],
+  // 3
+  [[0,1,1,1,1,0,0],[1,0,0,0,1,1,0],[0,0,0,0,0,1,0],[0,0,0,0,1,1,0],[0,0,1,1,1,0,0],[0,0,0,0,1,1,0],[0,0,0,0,0,1,0],[1,0,0,0,1,1,0],[0,1,1,1,1,0,0]],
+  // 4
+  [[0,0,0,1,1,0,0],[0,0,1,1,1,0,0],[0,1,0,1,1,0,0],[1,0,0,1,1,0,0],[1,1,1,1,1,1,1],[0,0,0,1,1,0,0],[0,0,0,1,1,0,0],[0,0,0,1,1,0,0],[0,0,0,1,1,1,0]],
+  // 5
+  [[1,1,1,1,1,1,0],[1,1,0,0,0,0,0],[1,1,0,0,0,0,0],[1,1,1,1,1,0,0],[0,0,0,0,1,1,0],[0,0,0,0,0,1,0],[0,0,0,0,0,1,0],[1,0,0,0,1,1,0],[0,1,1,1,1,0,0]],
+  // 6
+  [[0,0,1,1,1,0,0],[0,1,1,0,0,0,0],[1,1,0,0,0,0,0],[1,1,1,1,1,0,0],[1,1,0,0,1,1,0],[1,0,0,0,0,1,0],[1,1,0,0,1,1,0],[0,1,1,0,1,1,0],[0,0,1,1,1,0,0]],
+  // 7
+  [[1,1,1,1,1,1,1],[0,0,0,0,1,1,0],[0,0,0,1,1,0,0],[0,0,0,1,1,0,0],[0,0,1,1,0,0,0],[0,0,1,1,0,0,0],[0,1,1,0,0,0,0],[0,1,1,0,0,0,0],[1,1,0,0,0,0,0]],
+  // 8
+  [[0,1,1,1,1,1,0],[1,1,0,0,0,1,1],[1,1,0,0,0,1,1],[0,1,1,0,1,1,0],[0,0,1,1,1,0,0],[0,1,1,0,1,1,0],[1,1,0,0,0,1,1],[1,1,0,0,0,1,1],[0,1,1,1,1,1,0]],
+  // 9
+  [[0,1,1,1,1,1,0],[1,1,0,0,0,1,1],[1,0,0,0,0,0,1],[1,1,0,0,0,1,1],[0,1,1,1,1,1,1],[0,0,0,0,0,1,1],[0,0,0,0,1,1,0],[0,0,0,1,1,0,0],[0,1,1,1,0,0,0]],
+];
+
+const ROWS = 9, COLS = 7;
+const MAX_PIXELS = 6; // total pixels revealed (3 each)
+
+// ═══════════════════════════════════════════════════════════
+//  GAME STATE
+// ═══════════════════════════════════════════════════════════
+let state = {
+  phase: 'intro',       // intro | setup | debate | judge | result
+  trueLabel: null,
+  grid: null,           // ROWS×COLS of 0|1
+  revealed: null,       // ROWS×COLS of null|'red'|'blue'
+  redClaim: null,
+  blueClaim: null,
+  currentPlayer: 'red', // red goes first
+  pixelsLeft: MAX_PIXELS,
+  judgeView: false,
+  judgeChoice: null,
+};
+
+// ═══════════════════════════════════════════════════════════
+//  CANVAS RENDERING
+// ═══════════════════════════════════════════════════════════
+const CELL = Math.min(38, Math.floor((Math.min(window.innerWidth, 560) - 32) / COLS));
+const CW = COLS * CELL, CH = ROWS * CELL;
+
+function getCanvas() { return document.getElementById('digitCanvas'); }
+
+function drawGrid() {
+  const canvas = getCanvas();
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, CW, CH);
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const x = c * CELL, y = r * CELL;
+      const isDigitPixel = state.grid[r][c] === 1;
+      const revealedBy = state.revealed[r][c];
+      const inJudgeMode = state.judgeView;
+
+      // Background
+      ctx.fillStyle = '#08080f';
+      ctx.fillRect(x, y, CELL, CELL);
+
+      // Subtle grid lines
+      ctx.strokeStyle = '#111120';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(x + 0.25, y + 0.25, CELL - 0.5, CELL - 0.5);
+
+      if (inJudgeMode) {
+        // Judge only sees revealed pixels
+        if (revealedBy === 'red') {
+          ctx.fillStyle = 'rgba(255,51,85,0.15)';
+          ctx.fillRect(x, y, CELL, CELL);
+          drawDot(ctx, x, y, '#ff3355', true);
+        } else if (revealedBy === 'blue') {
+          ctx.fillStyle = 'rgba(51,170,255,0.15)';
+          ctx.fillRect(x, y, CELL, CELL);
+          drawDot(ctx, x, y, '#33aaff', true);
+        }
+      } else {
+        // Full image visible
+        if (isDigitPixel) {
+          // Draw digit pixel with glow
+          const alpha = revealedBy ? 0.25 : 0.85;
+          ctx.fillStyle = `rgba(220,220,235,${alpha})`;
+          const pad = 2;
+          ctx.fillRect(x + pad, y + pad, CELL - pad*2, CELL - pad*2);
+        }
+        // Overlay revealed color
+        if (revealedBy === 'red') {
+          ctx.fillStyle = 'rgba(255,51,85,0.12)';
+          ctx.fillRect(x, y, CELL, CELL);
+          drawDot(ctx, x, y, '#ff3355', true);
+        } else if (revealedBy === 'blue') {
+          ctx.fillStyle = 'rgba(51,170,255,0.12)';
+          ctx.fillRect(x, y, CELL, CELL);
+          drawDot(ctx, x, y, '#33aaff', true);
+        }
+      }
+    }
+  }
+}
+
+function drawDot(ctx, x, y, color, glowing) {
+  const cx = x + CELL / 2, cy = y + CELL / 2;
+  const r = CELL * 0.28;
+  if (glowing) {
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 10;
+  }
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  GAME LOGIC
+// ═══════════════════════════════════════════════════════════
+function newGame() {
+  const label = Math.floor(Math.random() * 10);
+  state = {
+    phase: 'setup',
+    trueLabel: label,
+    grid: DIGIT_PATTERNS[label].map(r => [...r]),
+    revealed: Array.from({length: ROWS}, () => Array(COLS).fill(null)),
+    redClaim: null,
+    blueClaim: null,
+    currentPlayer: 'red',
+    pixelsLeft: MAX_PIXELS,
+    judgeView: false,
+    judgeChoice: null,
+  };
+  render();
+}
+
+function handleCanvasClick(e) {
+  if (state.phase !== 'debate') return;
+  const canvas = getCanvas();
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = CW / rect.width;
+  const scaleY = CH / rect.height;
+  const px = (e.clientX - rect.left) * scaleX;
+  const py = (e.clientY - rect.top) * scaleY;
+  const col = Math.floor(px / CELL);
+  const row = Math.floor(py / CELL);
+  if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return;
+
+  // Only non-black pixels
+  if (state.grid[row][col] !== 1) return;
+  // Already revealed?
+  if (state.revealed[row][col] !== null) return;
+
+  state.revealed[row][col] = state.currentPlayer;
+  state.pixelsLeft--;
+
+  if (state.pixelsLeft === 0) {
+    // Go to judge phase
+    state.phase = 'judge';
+    state.judgeView = false;
+    render();
+    return;
+  }
+
+  state.currentPlayer = state.currentPlayer === 'red' ? 'blue' : 'red';
+  render();
+}
+
+// Touch support
+function handleCanvasTouch(e) {
+  e.preventDefault();
+  const touch = e.changedTouches[0];
+  handleCanvasClick({ clientX: touch.clientX, clientY: touch.clientY });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+const app = document.getElementById('app');
+
+function render() {
+  app.innerHTML = '';
+
+  if (state.phase === 'intro') renderIntro();
+  else if (state.phase === 'setup') renderSetup();
+  else if (state.phase === 'debate') renderDebate();
+  else if (state.phase === 'judge') renderJudge();
+  else if (state.phase === 'result') renderResult();
+
+  // Setup canvas interaction after render
+  requestAnimationFrame(() => {
+    const canvas = getCanvas();
+    if (canvas) {
+      canvas.addEventListener('click', handleCanvasClick);
+      canvas.addEventListener('touchend', handleCanvasTouch, { passive: false });
+      drawGrid();
+    }
+  });
+}
+
+function makeCanvas(judgeMode = false) {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'digitCanvas';
+  canvas.width = CW;
+  canvas.height = CH;
+  canvas.style.width = Math.min(CW, window.innerWidth - 40) + 'px';
+  canvas.style.height = 'auto';
+  canvas.style.aspectRatio = `${CW}/${CH}`;
+  if (judgeMode) canvas.classList.add('judge-mode');
+  return canvas;
+}
+
+function makeProgressDots() {
+  const dots = document.createElement('div');
+  dots.className = 'progress-dots';
+  // 6 dots total, alternating red/blue by order of play
+  const order = ['red','blue','red','blue','red','blue'];
+  const filled = MAX_PIXELS - state.pixelsLeft;
+  for (let i = 0; i < MAX_PIXELS; i++) {
+    const d = document.createElement('div');
+    d.className = 'progress-dot' + (i < filled ? ` ${order[i]}` : '');
+    dots.appendChild(d);
+  }
+  return dots;
+}
+
+function makeClaimsRow() {
+  const div = document.createElement('div');
+  div.className = 'claims';
+  div.innerHTML = `
+    <div class="claim-card red">
+      <div class="player-name">🔴 Red claims</div>
+      <div class="claim-digit">${state.redClaim ?? '?'}</div>
+    </div>
+    <div class="claim-card blue">
+      <div class="player-name">🔵 Blue claims</div>
+      <div class="claim-digit">${state.blueClaim ?? '?'}</div>
+    </div>
+  `;
+  return div;
+}
+
+// ── Intro ──
+function renderIntro() {
+  const div = document.createElement('div');
+  div.className = 'intro-screen';
+  div.innerHTML = `
+    <div>
+      <div class="big-title">
+        <span class="r">Debate</span><br>
+        <span class="b">Protocol</span>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <div class="info-card">
+      <strong>The Debate Game</strong> (Irving et al., 2018)<br><br>
+      A hidden MNIST digit is shown to two players. Each <strong>claims</strong> a digit label and takes turns
+      <strong>revealing pixels</strong> to support their argument. A <strong>judge</strong> sees only the
+      revealed pixels and must decide who is telling the truth.
+      <br><br>
+      <strong style="color:var(--red)">Red</strong> reveals first · 
+      <strong style="color:var(--blue)">Blue</strong> reveals second · 
+      ${MAX_PIXELS} pixels total (${MAX_PIXELS/2} each)
+    </div>
+    <hr class="section-divider">
+    <button class="btn btn-primary" id="startBtn">[ Start New Game ]</button>
+  `;
+  app.appendChild(div);
+  document.getElementById('startBtn').onclick = newGame;
+}
+
+// ── Setup ──
+function renderSetup() {
+  const phaseBadge = document.createElement('div');
+  phaseBadge.className = 'phase-badge';
+  phaseBadge.innerHTML = `<div class="dot"></div> Phase 1 — Setup · Both players examine the digit`;
+
+  const gridWrapper = document.createElement('div');
+  gridWrapper.className = 'grid-wrapper';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'grid-label';
+  lbl.textContent = `Secret Digit — Visible to Both Debaters`;
+  gridWrapper.appendChild(lbl);
+  gridWrapper.appendChild(makeCanvas());
+
+  // Claim inputs
+  const setup = document.createElement('div');
+  setup.className = 'setup-section';
+
+  // Red claim
+  const redGroup = document.createElement('div');
+  redGroup.className = 'input-group';
+  redGroup.innerHTML = `<label class="red">🔴 Red Player — I argue this digit is:</label>`;
+  const redPicker = document.createElement('div');
+  redPicker.className = 'digit-picker';
+  for (let i = 0; i <= 9; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'digit-btn' + (state.redClaim === i ? ' selected-red' : '');
+    btn.textContent = i;
+    btn.onclick = () => { state.redClaim = i; render(); };
+    redPicker.appendChild(btn);
+  }
+  redGroup.appendChild(redPicker);
+
+  // Blue claim
+  const blueGroup = document.createElement('div');
+  blueGroup.className = 'input-group';
+  blueGroup.innerHTML = `<label class="blue">🔵 Blue Player — I argue this digit is:</label>`;
+  const bluePicker = document.createElement('div');
+  bluePicker.className = 'digit-picker';
+  for (let i = 0; i <= 9; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'digit-btn' + (state.blueClaim === i ? ' selected-blue' : '');
+    btn.textContent = i;
+    btn.onclick = () => { state.blueClaim = i; render(); };
+    bluePicker.appendChild(btn);
+  }
+  blueGroup.appendChild(bluePicker);
+
+  setup.appendChild(redGroup);
+  setup.appendChild(blueGroup);
+
+  const startDebateBtn = document.createElement('button');
+  startDebateBtn.className = 'btn btn-primary';
+  startDebateBtn.textContent = '[ Begin Debate ]';
+  startDebateBtn.disabled = state.redClaim === null || state.blueClaim === null;
+  if (startDebateBtn.disabled) startDebateBtn.style.opacity = '0.3';
+  startDebateBtn.onclick = () => { state.phase = 'debate'; render(); };
+
+  app.appendChild(phaseBadge);
+  app.appendChild(gridWrapper);
+  app.appendChild(setup);
+  app.appendChild(startDebateBtn);
+}
+
+// ── Debate ──
+function renderDebate() {
+  const phaseBadge = document.createElement('div');
+  phaseBadge.className = 'phase-badge';
+  phaseBadge.innerHTML = `<div class="dot" style="background:var(--${state.currentPlayer})"></div> Phase 2 — Debate · ${MAX_PIXELS - state.pixelsLeft + 1} of ${MAX_PIXELS} pixels`;
+
+  const turn = document.createElement('div');
+  turn.className = `turn-indicator ${state.currentPlayer}`;
+  const emoji = state.currentPlayer === 'red' ? '🔴' : '🔵';
+  turn.innerHTML = `
+    <div class="whose-turn">${emoji} ${state.currentPlayer === 'red' ? 'Red' : 'Blue'} Player's Turn</div>
+    <div class="instruction">Click a white pixel on the digit to reveal it</div>
+  `;
+
+  const claimsRow = makeClaimsRow();
+  const progressDots = makeProgressDots();
+
+  const gridWrapper = document.createElement('div');
+  gridWrapper.className = 'grid-wrapper';
+  const lbl = document.createElement('div');
+  lbl.className = 'grid-label';
+  lbl.textContent = 'Full Image — Visible to Debaters Only';
+  gridWrapper.appendChild(lbl);
+  gridWrapper.appendChild(makeCanvas());
+
+  const tip = document.createElement('div');
+  tip.className = 'pixel-count';
+  tip.textContent = `${state.pixelsLeft} pixel${state.pixelsLeft !== 1 ? 's' : ''} remaining · only bright pixels can be selected`;
+
+  app.appendChild(phaseBadge);
+  app.appendChild(claimsRow);
+  app.appendChild(turn);
+  app.appendChild(gridWrapper);
+  app.appendChild(progressDots);
+  app.appendChild(tip);
+}
+
+// ── Judge ──
+function renderJudge() {
+  state.judgeView = state.judgeView ?? false;
+
+  const phaseBadge = document.createElement('div');
+  phaseBadge.className = 'phase-badge';
+  phaseBadge.innerHTML = `<div class="dot" style="background:#aa88ff"></div> Phase 3 — Judgment · Hand device to the Judge`;
+
+  const claimsRow = makeClaimsRow();
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'btn btn-judge' + (state.judgeView ? ' active' : '');
+  toggleBtn.textContent = state.judgeView ? '[ 👁 Switch to Debater View ]' : '[ 🎭 Switch to Judge View ]';
+  toggleBtn.onclick = () => { state.judgeView = !state.judgeView; render(); };
+
+  const gridWrapper = document.createElement('div');
+  gridWrapper.className = 'grid-wrapper';
+  const lbl = document.createElement('div');
+  lbl.className = 'grid-label';
+  lbl.textContent = state.judgeView ? 'Judge View — Only Revealed Pixels Visible' : 'Debater View — Full Image Visible';
+  lbl.style.color = state.judgeView ? '#aa88ff' : 'var(--muted)';
+  gridWrapper.appendChild(lbl);
+  gridWrapper.appendChild(makeCanvas(state.judgeView));
+
+  const judgePanel = document.createElement('div');
+  judgePanel.className = 'judge-panel';
+
+  if (state.judgeView) {
+    const q = document.createElement('div');
+    q.className = 'judge-question';
+    q.innerHTML = `🧑‍⚖️ <strong>Judge:</strong> Based only on the highlighted pixels above,<br>which claim do you believe?`;
+    judgePanel.appendChild(q);
+
+    const btnRow = document.createElement('div');
+    btnRow.className = 'btn-row';
+    const redBtn = document.createElement('button');
+    redBtn.className = 'btn btn-red';
+    redBtn.innerHTML = `🔴 Red: "${state.redClaim}"`;
+    redBtn.onclick = () => { state.judgeChoice = 'red'; state.phase = 'result'; render(); };
+    const blueBtn = document.createElement('button');
+    blueBtn.className = 'btn btn-blue';
+    blueBtn.innerHTML = `🔵 Blue: "${state.blueClaim}"`;
+    blueBtn.onclick = () => { state.judgeChoice = 'blue'; state.phase = 'result'; render(); };
+    btnRow.appendChild(redBtn);
+    btnRow.appendChild(blueBtn);
+    judgePanel.appendChild(btnRow);
+  }
+
+  app.appendChild(phaseBadge);
+  app.appendChild(claimsRow);
+  app.appendChild(toggleBtn);
+  app.appendChild(gridWrapper);
+  app.appendChild(makeProgressDots());
+  app.appendChild(judgePanel);
+}
+
+// ── Result ──
+function renderResult() {
+  state.judgeView = false; // show full image in result
+
+  const phaseBadge = document.createElement('div');
+  phaseBadge.className = 'phase-badge';
+  phaseBadge.innerHTML = `<div class="dot" style="background:#ffdd44"></div> Phase 4 — Result · The truth is revealed`;
+
+  // Who won?
+  const judgeCorrect = 
+    (state.judgeChoice === 'red' && state.redClaim === state.trueLabel) ||
+    (state.judgeChoice === 'blue' && state.blueClaim === state.trueLabel);
+
+  const redWasHonest = state.redClaim === state.trueLabel;
+  const blueWasHonest = state.blueClaim === state.trueLabel;
+
+  const judgePickedCorrect = state.judgeChoice === (redWasHonest ? 'red' : blueWasHonest ? 'blue' : null);
+
+  const resultBox = document.createElement('div');
+  resultBox.className = 'result-box';
+  resultBox.innerHTML = `
+    <div class="result-label">The actual digit was</div>
+    <div class="result-answer">${state.trueLabel}</div>
+  `;
+
+  const claimsRow = makeClaimsRow();
+
+  const gridWrapper = document.createElement('div');
+  gridWrapper.className = 'grid-wrapper';
+  const lbl = document.createElement('div');
+  lbl.className = 'grid-label';
+  lbl.style.color = '#ffdd44';
+  lbl.textContent = 'Full Image — Now Visible to Judge';
+  gridWrapper.appendChild(lbl);
+  gridWrapper.appendChild(makeCanvas(false));
+
+  // Judge verdict summary
+  const verdictBox = document.createElement('div');
+  verdictBox.className = 'info-card';
+  const judgePickedLabel = state.judgeChoice === 'red' ? `Red's claim (${state.redClaim})` : `Blue's claim (${state.blueClaim})`;
+  verdictBox.innerHTML = `
+    <strong>🧑‍⚖️ Judge chose:</strong> ${judgePickedLabel}<br>
+    <strong style="color:var(--${state.judgeChoice})">→ ${state.judgeChoice === 'red' ? '🔴 Red' : '🔵 Blue'}</strong> was picked<br><br>
+    <strong>Truth:</strong> The digit is <strong style="color:#ffdd44">${state.trueLabel}</strong><br>
+    <strong>Red claimed:</strong> ${state.redClaim} ${state.redClaim === state.trueLabel ? '✅ Honest' : '❌ Liar'}<br>
+    <strong>Blue claimed:</strong> ${state.blueClaim} ${state.blueClaim === state.trueLabel ? '✅ Honest' : '❌ Liar'}
+  `;
+
+  // Winner display
+  const winnerDiv = document.createElement('div');
+  if (judgeCorrect) {
+    winnerDiv.className = 'winner-display ' + state.judgeChoice;
+    winnerDiv.textContent = `✓ Judge guessed correctly — Debate succeeded`;
+  } else {
+    winnerDiv.className = 'winner-display tie';
+    winnerDiv.textContent = `✗ Judge was deceived — The debate failed`;
+  }
+
+  const newGameBtn = document.createElement('button');
+  newGameBtn.className = 'btn btn-primary';
+  newGameBtn.textContent = '[ Play Again ]';
+  newGameBtn.onclick = newGame;
+
+  app.appendChild(phaseBadge);
+  app.appendChild(resultBox);
+  app.appendChild(claimsRow);
+  app.appendChild(gridWrapper);
+  app.appendChild(makeProgressDots());
+  app.appendChild(verdictBox);
+  app.appendChild(winnerDiv);
+  app.appendChild(newGameBtn);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
