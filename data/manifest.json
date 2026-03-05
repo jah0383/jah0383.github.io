@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count": 341,
+  "episode_count": 540,
   "episodes": [
     {
       "id": 1,
@@ -14,6 +14,11 @@
     {
       "id": 2,
       "title": "Holding a Stranger’s Hand",
+      "date": null
+    },
+    {
+      "id": 3,
+      "title": "My Walnut is a Temple",
       "date": null
     },
     {
@@ -302,6 +307,11 @@
       "date": "June 20, 2011"
     },
     {
+      "id": 61,
+      "title": "Steak’em and Tubes",
+      "date": "June 27th, 2011"
+    },
+    {
       "id": 63,
       "title": "R.I.P.B.E.P",
       "date": "July 18, 2011"
@@ -310,6 +320,11 @@
       "id": 64,
       "title": "Giant Scott Bakula",
       "date": "July 25, 2011"
+    },
+    {
+      "id": 65,
+      "title": "Lady Zoo",
+      "date": "August 1, 2011"
     },
     {
       "id": 66,
@@ -325,6 +340,156 @@
       "id": 69,
       "title": "Krumbelieveable",
       "date": "August 29th, 2011"
+    },
+    {
+      "id": 70,
+      "title": "Spit on a Dog",
+      "date": "September 5th, 2011"
+    },
+    {
+      "id": 71,
+      "title": "Swaddling",
+      "date": "September 12, 2011"
+    },
+    {
+      "id": 72,
+      "title": "Propositions",
+      "date": "September 19th, 2011"
+    },
+    {
+      "id": 73,
+      "title": "Gooshing from the Johnson’s",
+      "date": "September 26, 2011"
+    },
+    {
+      "id": 74,
+      "title": "Hey Baby",
+      "date": "October 3, 2011"
+    },
+    {
+      "id": 75,
+      "title": "Everbuddies",
+      "date": "October 10, 2011"
+    },
+    {
+      "id": 76,
+      "title": "Food Versus Man",
+      "date": "October 17th, 2011"
+    },
+    {
+      "id": 77,
+      "title": "The Hole Shebang",
+      "date": "October 24th, 2011"
+    },
+    {
+      "id": 78,
+      "title": "Fly Me to Heaven, Kid Vid",
+      "date": "October 31, 2011"
+    },
+    {
+      "id": 79,
+      "title": "Who Guginoed?",
+      "date": "November 7, 2011"
+    },
+    {
+      "id": 80,
+      "title": "For and By Dummos",
+      "date": "November 14, 2011"
+    },
+    {
+      "id": 81,
+      "title": "Pizza Roll Suicide",
+      "date": "November 21, 2011"
+    },
+    {
+      "id": 82,
+      "title": "Fried Green Lockout",
+      "date": "December 5, 2011"
+    },
+    {
+      "id": 83,
+      "title": "Face 2 Face 3: Tokyo Drift",
+      "date": "December 12th, 2011"
+    },
+    {
+      "id": 84,
+      "title": "Face 2 Face 4: Sippin' on Chillerz",
+      "date": "December 19th, 2011"
+    },
+    {
+      "id": 85,
+      "title": "Candlenights 2011 Special",
+      "date": "December 26, 2011"
+    },
+    {
+      "id": 86,
+      "title": "Get It",
+      "date": "January 2, 2012"
+    },
+    {
+      "id": 87,
+      "title": "A Murder of Uncles",
+      "date": "January 16, 2012"
+    },
+    {
+      "id": 88,
+      "title": "The Lion, The Witch and the Boyskinz",
+      "date": "January 23, 2012"
+    },
+    {
+      "id": 89,
+      "title": "Grab the Merkin",
+      "date": null
+    },
+    {
+      "id": 90,
+      "title": "Dworp",
+      "date": null
+    },
+    {
+      "id": 91,
+      "title": "Feeding Frenzy",
+      "date": "February 13th, 2012"
+    },
+    {
+      "id": 92,
+      "title": "Ten Thousand Throbs",
+      "date": "February 20, 2012"
+    },
+    {
+      "id": 93,
+      "title": "Dax is All",
+      "date": "February 27, 2012"
+    },
+    {
+      "id": 94,
+      "title": "The Secrets of Dilbert",
+      "date": null
+    },
+    {
+      "id": 95,
+      "title": "Giamatti, Go!",
+      "date": "March 13th, 2012"
+    },
+    {
+      "id": 96,
+      "title": "Ven Conmigo a Jurassic Park",
+      "date": "March 19th, 2012"
+    },
+    {
+      "id": 97,
+      "title": "Stevurkel",
+      "date": "March 26th, 2012"
+    },
+    {
+      "id": 98,
+      "title": "Two til’ Tulsa",
+      "date": "April 2nd, 2012"
+    },
+    {
+      "id": 99,
+      "title": "Plunger Practicalities",
+      "date": "April 9th, 2012"
     },
     {
       "id": 100,
@@ -362,6 +527,11 @@
       "date": "June 7th, 2012"
     },
     {
+      "id": 269,
+      "title": "Face 2 Face: Loose Gravy",
+      "date": "Sep 14, 2015"
+    },
+    {
       "id": 292,
       "title": "Remain on the Smooth Tip",
       "date": "Feb 29, 2016"
@@ -375,6 +545,11 @@
       "id": 308,
       "title": "Burgertrees",
       "date": "June 20, 2016"
+    },
+    {
+      "id": 351,
+      "title": "Unknown",
+      "date": "April 17th, 2017"
     },
     {
       "id": 352,
@@ -397,6 +572,26 @@
       "date": "May 15, 2017"
     },
     {
+      "id": 356,
+      "title": "Face 2 Face: My Donut-Loving Boys",
+      "date": "May 23, 2017"
+    },
+    {
+      "id": 357,
+      "title": "A Wonderful Hug From Goro",
+      "date": "May 30th, 2017"
+    },
+    {
+      "id": 358,
+      "title": "Detective Jigsaw, My Very Best Friend",
+      "date": "June 5th, 2017"
+    },
+    {
+      "id": 359,
+      "title": "Tumnus Opportunities",
+      "date": "June 12th, 2017"
+    },
+    {
       "id": 360,
       "title": "Gatorade Weak",
       "date": "June 19, 2017"
@@ -407,14 +602,79 @@
       "date": "July 10, 2017"
     },
     {
+      "id": 363,
+      "title": "Breathing in Space",
+      "date": "July 18th, 2017"
+    },
+    {
       "id": 365,
       "title": "One Guy, One Guy, and a Chicken Place",
       "date": "July 31, 2017"
     },
     {
+      "id": 366,
+      "title": "Sorry, Todd",
+      "date": "August 7th, 2017"
+    },
+    {
+      "id": 367,
+      "title": "Shrimp! Heaven! Now!",
+      "date": "August 14th, 2017"
+    },
+    {
+      "id": 368,
+      "title": "The Sun Shines On Our Dark Planet!",
+      "date": "August 21st, 2017"
+    },
+    {
+      "id": 369,
+      "title": "Bro’s Better, Bro’s Best Ch. 122 - 133",
+      "date": "August 28th, 2017"
+    },
+    {
+      "id": 370,
+      "title": "Dax Don’t Care",
+      "date": "September 4th, 2017"
+    },
+    {
+      "id": 370,
+      "title": "Face 2 Face: A Lot About Horniness",
+      "date": "September 11th, 2017"
+    },
+    {
+      "id": 372,
+      "title": "Unknown",
+      "date": "September 18th, 2017"
+    },
+    {
+      "id": 373,
+      "title": "Face 2 Face: Bonefolders",
+      "date": "September 26, 2017"
+    },
+    {
+      "id": 374,
+      "title": "Respect the Journey",
+      "date": "October 2, 2017"
+    },
+    {
+      "id": 375,
+      "title": "Massage Drone Switcheroo",
+      "date": "October 9th, 2017"
+    },
+    {
       "id": 377,
       "title": "Face 2 Face: One Great Potato!",
       "date": "October 24, 2017"
+    },
+    {
+      "id": 378,
+      "title": "Pumpkindaze 2017",
+      "date": "October 30th, 2017"
+    },
+    {
+      "id": 379,
+      "title": "6969 Cool Street",
+      "date": "November 6th, 2017"
     },
     {
       "id": 382,
@@ -427,9 +687,54 @@
       "date": null
     },
     {
+      "id": 384,
+      "title": "Face 2 Face: TORONTO! LISTEN!",
+      "date": "December 12th, 2017"
+    },
+    {
+      "id": 385,
+      "title": "Horses in the Drift",
+      "date": "December 18th, 2017"
+    },
+    {
+      "id": 388,
+      "title": "Unknown",
+      "date": "January 10th, 2018"
+    },
+    {
+      "id": 389,
+      "title": "Unknown",
+      "date": "January 16th, 2018"
+    },
+    {
+      "id": 390,
+      "title": "Singing to the Bean Box",
+      "date": "January 22, 2018"
+    },
+    {
       "id": 391,
       "title": "Jeff Wolfworthy",
       "date": "January 29, 2018"
+    },
+    {
+      "id": 392,
+      "title": "Big Game Tony Sunday",
+      "date": "February 5th, 2018"
+    },
+    {
+      "id": 393,
+      "title": "Bungrob Squareman",
+      "date": "February 12th, 2018"
+    },
+    {
+      "id": 394,
+      "title": "Face 2 Face: I Fritos Hard",
+      "date": "February 19, 2018"
+    },
+    {
+      "id": 395,
+      "title": "Diagnosis: Onions",
+      "date": "February 27, 2018"
     },
     {
       "id": 396,
@@ -462,9 +767,74 @@
       "date": "April 9th, 2018"
     },
     {
+      "id": 402,
+      "title": "Face 2 Face: That Good Hot Dog Syrup",
+      "date": "April 17th, 2018"
+    },
+    {
       "id": 403,
       "title": "Hot Dog Wine",
       "date": "April 23, 2018"
+    },
+    {
+      "id": 404,
+      "title": "Michelangelo’s Special Week",
+      "date": "April 30, 2018"
+    },
+    {
+      "id": 405,
+      "title": "Gumpy, Hey!",
+      "date": "May 7th, 2018"
+    },
+    {
+      "id": 406,
+      "title": "Face 2 Face: Sweet Dreams, Timothy",
+      "date": "May 15th, 2018"
+    },
+    {
+      "id": 407,
+      "title": "Morton Shart’s Joke School",
+      "date": "May 21st, 2018"
+    },
+    {
+      "id": 408,
+      "title": "Come and Get It!",
+      "date": "May 29th, 2018"
+    },
+    {
+      "id": 409,
+      "title": "Limp Bizkit Skank Boy",
+      "date": "June 4th, 2018"
+    },
+    {
+      "id": 410,
+      "title": "Game Man",
+      "date": "June 11th, 2018"
+    },
+    {
+      "id": 411,
+      "title": "Face 2 Face: Bon Voyage!",
+      "date": "June 19th, 2018"
+    },
+    {
+      "id": 412,
+      "title": "Robocup",
+      "date": "June 25th, 2018"
+    },
+    {
+      "id": 413,
+      "title": "Faster Car",
+      "date": "July 2nd, 2018"
+    },
+    {
+      "id": 414,
+      "title": "Hogsplash",
+      "date": "July 10th, 2018"
+    },
+    {
+      "id": 415,
+      "title": "My Very Cool Telescope!",
+      "date": "July 16th, 2018"
     },
     {
       "id": 416,
@@ -472,14 +842,399 @@
       "date": "July 24, 2018"
     },
     {
+      "id": 417,
+      "title": "DVDs For The People",
+      "date": "August 31st, 2018"
+    },
+    {
+      "id": 418,
+      "title": "Trial of the Riddlemancers",
+      "date": "August 6th, 2018"
+    },
+    {
+      "id": 419,
+      "title": "Some Good JPEGs of My Favorite Matrix Characters",
+      "date": "August 13th, 2018"
+    },
+    {
       "id": 420,
       "title": "Funeral For a Friend",
       "date": "April 20th, 2021"
     },
     {
+      "id": 421,
+      "title": "Spoonhog",
+      "date": "August 20th, 2018"
+    },
+    {
+      "id": 422,
+      "title": "The Very Best Stains",
+      "date": "August 27th, 2018"
+    },
+    {
+      "id": 423,
+      "title": "Face 2 Face: The Bigfoot Whistle",
+      "date": "September 4, 2018"
+    },
+    {
+      "id": 424,
+      "title": "The Fly-Swallow YouTube Challenge",
+      "date": "September 10, 2018"
+    },
+    {
+      "id": 425,
+      "title": "Bigfoot Meat",
+      "date": "September 18th, 2018"
+    },
+    {
+      "id": 426,
+      "title": "The Home of Smooth Daddy",
+      "date": "September 24th, 2018"
+    },
+    {
+      "id": 428,
+      "title": "Big Debbie",
+      "date": "October 8th, 2018"
+    },
+    {
+      "id": 429,
+      "title": "Lactating Las Vegas",
+      "date": "October 15th, 2018"
+    },
+    {
+      "id": 430,
+      "title": "Scare's Swamp Thing A-boo-t Scary",
+      "date": "October 24th, 2018"
+    },
+    {
+      "id": 431,
+      "title": "A Very Spooky Burger",
+      "date": "October 29th, 2018"
+    },
+    {
+      "id": 432,
+      "title": "Hand Dog and Face Cat",
+      "date": "November 5th, 2018"
+    },
+    {
+      "id": 433,
+      "title": "Fred Savage, Piss Warrior",
+      "date": "November 12th, 2018"
+    },
+    {
+      "id": 434,
+      "title": "The Crimes of Grundlewad",
+      "date": "November 19, 2018"
+    },
+    {
+      "id": 435,
+      "title": "The Pasta Poem",
+      "date": null
+    },
+    {
+      "id": 436,
+      "title": "Face 2 Face: I Had Charcuterie Today!",
+      "date": "December 4th, 2018"
+    },
+    {
+      "id": 437,
+      "title": "A Silent Chug",
+      "date": "December 10th, 2018"
+    },
+    {
+      "id": 439,
+      "title": "Face 2 Face: Candlenights 2018",
+      "date": "December 27th, 2019"
+    },
+    {
+      "id": 440,
+      "title": "The Naming of 2019",
+      "date": "December 31st, 2018"
+    },
+    {
+      "id": 441,
+      "title": "In a New York Whoopsie",
+      "date": "January 7th, 2019"
+    },
+    {
+      "id": 442,
+      "title": "Justin’s Special Shower Sauce",
+      "date": "January 14, 2019"
+    },
+    {
+      "id": 443,
+      "title": "Face 2 Face: Apple Time!",
+      "date": null
+    },
+    {
+      "id": 444,
+      "title": "The 100 Wishes of the Pandemonium Cube",
+      "date": "January 28th, 2019"
+    },
+    {
+      "id": 445,
+      "title": "Pizzalicious Turbo-Moths",
+      "date": "February 4th, 2019"
+    },
+    {
+      "id": 446,
+      "title": "Face 2 Face: The Cupture",
+      "date": "February 12th, 2019"
+    },
+    {
+      "id": 447,
+      "title": "Valentine's Escape Room",
+      "date": "February 18th, 2019"
+    },
+    {
+      "id": 448,
+      "title": "Bird Words",
+      "date": "February 25, 2019"
+    },
+    {
+      "id": 449,
+      "title": "The Cable Pie",
+      "date": null
+    },
+    {
+      "id": 450,
+      "title": "Face 2 Face: The Emoji Contract",
+      "date": "March 11th, 2019"
+    },
+    {
+      "id": 451,
+      "title": "Spider-Man's Magic Potion",
+      "date": "March 18th, 2019"
+    },
+    {
+      "id": 452,
+      "title": "The Cornbread Heist of the Century",
+      "date": "March 25, 2019"
+    },
+    {
+      "id": 453,
+      "title": "The Grotto of Gains",
+      "date": "April 1, 2019"
+    },
+    {
+      "id": 454,
+      "title": "Face 2 Face: April Foods' Day",
+      "date": "April 8, 2019"
+    },
+    {
+      "id": 455,
+      "title": "Fear Sponging Material",
+      "date": "April 15, 2019"
+    },
+    {
+      "id": 456,
+      "title": "Good Happy Taste!!!",
+      "date": null
+    },
+    {
+      "id": 457,
+      "title": "Wake Up and Smell The Future, It's Beanjuice",
+      "date": "April 29, 2019"
+    },
+    {
+      "id": 458,
+      "title": "Race Island: A Horse Show",
+      "date": "May 6, 2019"
+    },
+    {
+      "id": 459,
+      "title": "Face 2 Face: You Know, Like Eggs?",
+      "date": "May 13, 2019"
+    },
+    {
+      "id": 460,
+      "title": "Dr. Praetorium's Fudge-a-matorium",
+      "date": "May 21, 2019"
+    },
+    {
+      "id": 461,
+      "title": "All Rise!",
+      "date": "May 28, 2019"
+    },
+    {
+      "id": 462,
+      "title": "The Pork Doctor",
+      "date": "June 3, 2019"
+    },
+    {
+      "id": 463,
+      "title": "Stranger Creams",
+      "date": "June 10th, 2019"
+    },
+    {
+      "id": 464,
+      "title": "Face 2 Face: Peace with the Ground-Children",
+      "date": "June 18, 2019"
+    },
+    {
+      "id": 465,
+      "title": "It's Definitely Chodezilla",
+      "date": "June 24th, 2019"
+    },
+    {
+      "id": 466,
+      "title": "Food Train",
+      "date": "July 1st, 2019"
+    },
+    {
+      "id": 467,
+      "title": "Leonardo Di-Zap!-rio",
+      "date": "July 8th, 2019"
+    },
+    {
+      "id": 468,
+      "title": "Down the Soda Hole",
+      "date": "July 15th, 2019"
+    },
+    {
+      "id": 469,
+      "title": "Face 2 Face: The DEEP Pepperoni",
+      "date": null
+    },
+    {
+      "id": 470,
+      "title": "Mama Freddy's Turbo Spaghetti",
+      "date": "July 29th, 2019"
+    },
+    {
+      "id": 471,
+      "title": "Face 2 Face: The Fraternity of Bones",
+      "date": "August 5th, 2019"
+    },
+    {
+      "id": 472,
+      "title": "Public Domain LASIK Voicemails",
+      "date": "August 12th, 2019"
+    },
+    {
+      "id": 473,
+      "title": "Spooketti",
+      "date": "August 19th, 2019"
+    },
+    {
+      "id": 474,
+      "title": "OutSTANDing Deals!",
+      "date": "August 26th, 2019"
+    },
+    {
+      "id": 475,
+      "title": "Edchup",
+      "date": "September 2nd, 2019"
+    },
+    {
+      "id": 476,
+      "title": "Face 2 Face: Super-Snake Begins",
+      "date": "September 9th, 2019"
+    },
+    {
+      "id": 477,
+      "title": "Crash Bandicoot’s Wallet Chain",
+      "date": "September 17th, 2019"
+    },
+    {
+      "id": 478,
+      "title": "The Sprite Slide, A Sprite Experience",
+      "date": "September 24, 2019"
+    },
+    {
+      "id": 479,
+      "title": "Face 2 Face: A Spectral, Horny Build-A-Bear",
+      "date": "September 30th, 2019"
+    },
+    {
+      "id": 480,
+      "title": "Everlasting Stringburger",
+      "date": "October 8th, 2019"
+    },
+    {
+      "id": 481,
+      "title": "I Have Seen Every Bird",
+      "date": "October 14th, 2019"
+    },
+    {
+      "id": 482,
+      "title": "Face 2 Face: Big Stitch Energy",
+      "date": "October 21st, 2019"
+    },
+    {
+      "id": 483,
+      "title": "Face 2 Face: Beemen",
+      "date": "October 28th, 2019"
+    },
+    {
+      "id": 484,
+      "title": "Griffy Griffy Bang Bang",
+      "date": "November 4th, 2019"
+    },
+    {
+      "id": 485,
+      "title": "Face 2 Face: Haunted Munch Squad",
+      "date": "November 12th, 2019"
+    },
+    {
+      "id": 486,
+      "title": "That's So Hambone!",
+      "date": "November 19th, 2019"
+    },
+    {
       "id": 487,
       "title": "Frasier Crane's Anime Dreamscape",
       "date": "November 25th, 2019"
+    },
+    {
+      "id": 488,
+      "title": "Huff the Un-Foot",
+      "date": "December 2nd, 2019"
+    },
+    {
+      "id": 489,
+      "title": "The Clean Saloon",
+      "date": "December 9th, 2019"
+    },
+    {
+      "id": 490,
+      "title": "Ewdaddy",
+      "date": "December 16th, 2019"
+    },
+    {
+      "id": 491,
+      "title": "Face 2 Face: Candlenights 2019",
+      "date": "December 23rd, 2019"
+    },
+    {
+      "id": 492,
+      "title": "The Naming of 2020",
+      "date": "January 6th, 2020"
+    },
+    {
+      "id": 493,
+      "title": "Face 2 Face: U Up?",
+      "date": "January 13th, 2020"
+    },
+    {
+      "id": 493,
+      "title": "Face 2 Face: U Up?",
+      "date": "January 20th, 2020"
+    },
+    {
+      "id": 495,
+      "title": "Play Along at Home!",
+      "date": "January 27th, 2020"
+    },
+    {
+      "id": 496,
+      "title": "The Hyena Hole",
+      "date": "February 3rd, 2020"
+    },
+    {
+      "id": 497,
+      "title": "Bugatti Boys",
+      "date": "February 10th, 2020"
     },
     {
       "id": 498,
@@ -902,6 +1657,11 @@
       "date": null
     },
     {
+      "id": 584,
+      "title": "Three Hunky Guys Podcast",
+      "date": null
+    },
+    {
       "id": 585,
       "title": "One Year Closer to Salsa",
       "date": null
@@ -1052,6 +1812,11 @@
       "date": "June 27th, 2022"
     },
     {
+      "id": 617,
+      "title": "Platonic Neck Kisses",
+      "date": "July 4, 2022"
+    },
+    {
       "id": 618,
       "title": "Face to Face: Lovely Feet",
       "date": "July 11, 2022"
@@ -1157,6 +1922,21 @@
       "date": "December 5, 2022"
     },
     {
+      "id": 640,
+      "title": "Playing the Gravy Card",
+      "date": "December 19, 2022"
+    },
+    {
+      "id": 641,
+      "title": "The Naming of 2023",
+      "date": "January 2, 2023"
+    },
+    {
+      "id": 642,
+      "title": "Snort the Pod",
+      "date": "January 9, 2023"
+    },
+    {
       "id": 643,
       "title": "Wet Out of 100",
       "date": "January 16th, 2023"
@@ -1170,6 +1950,161 @@
       "id": 645,
       "title": "Pawn Time Boys",
       "date": "January 30, 2023"
+    },
+    {
+      "id": 646,
+      "title": "Fart Power to the Max",
+      "date": "February 6, 2023"
+    },
+    {
+      "id": 647,
+      "title": "Share the Holes",
+      "date": "February 13th, 2023"
+    },
+    {
+      "id": 648,
+      "title": "200-250 Catchphrases Per Episode",
+      "date": "February 20, 2023"
+    },
+    {
+      "id": 649,
+      "title": "Truly Random Nudity",
+      "date": "February 27, 2023"
+    },
+    {
+      "id": 650,
+      "title": "Dadfishing",
+      "date": "March 6, 2023"
+    },
+    {
+      "id": 651,
+      "title": "Face 2 Face: Structural Xboxes",
+      "date": "March 13, 2023"
+    },
+    {
+      "id": 652,
+      "title": "Travis’s Fast Soup Cup for Boys",
+      "date": "March 20, 2023"
+    },
+    {
+      "id": 653,
+      "title": "Mardi Gras Hades",
+      "date": "March 27, 2023"
+    },
+    {
+      "id": 654,
+      "title": "With Great Car Comes Great Babeability",
+      "date": "April 3, 2023"
+    },
+    {
+      "id": 655,
+      "title": "Did Robotnik Send You",
+      "date": "April 10, 2023"
+    },
+    {
+      "id": 656,
+      "title": "Shagworth Boombastic",
+      "date": "April 17, 2023"
+    },
+    {
+      "id": 657,
+      "title": "Face 2 Face: We Stan the Target Tortillas",
+      "date": "April 24, 2023"
+    },
+    {
+      "id": 658,
+      "title": "Bro’s Better, Bro’s Best: Ch. 231-243",
+      "date": "March 1, 2023"
+    },
+    {
+      "id": 658,
+      "title": "Dom Jeans",
+      "date": "March 8, 2023"
+    },
+    {
+      "id": 660,
+      "title": "Non-Fungible Tote Bags",
+      "date": "May 15, 2023"
+    },
+    {
+      "id": 661,
+      "title": "Billionaire Beyblades",
+      "date": "May 22, 2023"
+    },
+    {
+      "id": 662,
+      "title": "The Consequence Rate",
+      "date": "May 29, 2023"
+    },
+    {
+      "id": 663,
+      "title": "Comedy Comes from the Balls",
+      "date": "June 5, 2023"
+    },
+    {
+      "id": 664,
+      "title": "Great Ass Wonkabater",
+      "date": "June 12, 2023"
+    },
+    {
+      "id": 665,
+      "title": "Face 2 Face: Cody-Pendant",
+      "date": "June 19, 2023"
+    },
+    {
+      "id": 666,
+      "title": "It’s Your Mouth",
+      "date": "June 25, 2023"
+    },
+    {
+      "id": 667,
+      "title": "Face 2 Face: I’ll Miss You, Little Sailor Man",
+      "date": "July 3, 2023"
+    },
+    {
+      "id": 668,
+      "title": "A Honeypot for Rita Repulsa",
+      "date": "July 10, 2023"
+    },
+    {
+      "id": 669,
+      "title": "Oomp, There It Is!",
+      "date": "July 17, 2023"
+    },
+    {
+      "id": 670,
+      "title": "Face 2 Face: Hey You, Learn How to Juggle!",
+      "date": "July 24, 2023"
+    },
+    {
+      "id": 671,
+      "title": "Sun’s Out, Pits Up",
+      "date": "July 31st, 2023"
+    },
+    {
+      "id": 672,
+      "title": "Sure Thing, Dave Matthews",
+      "date": "August 7, 2023"
+    },
+    {
+      "id": 675,
+      "title": "A Great Lay But a Real Wet Hug",
+      "date": "August 28, 2023"
+    },
+    {
+      "id": 676,
+      "title": "Face 2 Face: Teddy Laid it Down Sideways",
+      "date": "September 4, 2023"
+    },
+    {
+      "id": 677,
+      "title": "Am I the Sphincter?",
+      "date": "September 11, 2023"
+    },
+    {
+      "id": 678,
+      "title": "Travis-Level Funny",
+      "date": "September 18, 2023"
     },
     {
       "id": 679,
@@ -1220,6 +2155,11 @@
       "id": 688,
       "title": "Face 2 Face: You Can't Boo Through the Whole Thing",
       "date": "November 27, 2023"
+    },
+    {
+      "id": 689,
+      "title": "I Live in the Walls of Downton Abbey",
+      "date": "December 4th, 2023"
     },
     {
       "id": 690,
@@ -1297,6 +2237,11 @@
       "date": "April 8, 2024"
     },
     {
+      "id": 707,
+      "title": "Beef Me Down to Beefy Town",
+      "date": "April 15th, 2024"
+    },
+    {
       "id": 708,
       "title": "Make those Bills Rainable",
       "date": "April 22nd, 2024"
@@ -1305,6 +2250,11 @@
       "id": 709,
       "title": "Face 2 Face: Personal Hot Dog Thermos",
       "date": "April 29th, 2024"
+    },
+    {
+      "id": 710,
+      "title": "Colin from Secret Garden Energy",
+      "date": "May 6th, 2024"
     },
     {
       "id": 711,
@@ -1355,6 +2305,11 @@
       "id": 720,
       "title": "Mariana Trench Warfare",
       "date": "July 15, 2024"
+    },
+    {
+      "id": 721,
+      "title": "Face 2 Face: Cotton Candy Cenneth",
+      "date": "July 22nd, 2024"
     },
     {
       "id": 722,
@@ -1452,9 +2407,29 @@
       "date": "December 2nd, 2024"
     },
     {
+      "id": 741,
+      "title": "Face 2 Face: 50-Way Pasta for Big Kisses",
+      "date": "December 9, 2024"
+    },
+    {
+      "id": 742,
+      "title": "Vesecticon Seven",
+      "date": "December 16, 2024"
+    },
+    {
       "id": 743,
       "title": "Combination Taco Bell and Travis House",
       "date": "December 23rd, 2024"
+    },
+    {
+      "id": 744,
+      "title": "The Naming of 2025",
+      "date": "January 6, 2025"
+    },
+    {
+      "id": 745,
+      "title": "2 Year 2 Naming",
+      "date": "January 13, 2025"
     },
     {
       "id": 746,
@@ -1607,6 +2582,11 @@
       "date": "August 18th, 2025"
     },
     {
+      "id": 777,
+      "title": "Preparation Hoops",
+      "date": "August 25th, 2025"
+    },
+    {
       "id": 778,
       "title": "Face 2 Face: Yellin' at the Kellen Felons",
       "date": "September 1st, 2025"
@@ -1635,6 +2615,11 @@
       "id": 783,
       "title": "Spidey Spaghetti",
       "date": "October 6th, 2025"
+    },
+    {
+      "id": 784,
+      "title": "Can You Escape Hatred Cove?",
+      "date": "October 13th, 2025"
     },
     {
       "id": 785,
@@ -1687,6 +2672,11 @@
       "date": "December 22nd, 2025"
     },
     {
+      "id": 795,
+      "title": "The Naming of 2026",
+      "date": "January 5th, 2026"
+    },
+    {
       "id": 796,
       "title": "Wire and Ass",
       "date": "January 12th, 2025"
@@ -1695,6 +2685,11 @@
       "id": 797,
       "title": "Safe and Full of Grubs",
       "date": "January 19th, 2026"
+    },
+    {
+      "id": 798,
+      "title": "Round and Swallowable",
+      "date": "January 26th, 2026"
     },
     {
       "id": 799,
