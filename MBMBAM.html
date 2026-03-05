@@ -460,6 +460,109 @@
       /* Legend hint */
       .legend-hint { font-size: 0.6rem; }
     }
+    /* ── BROWSE ───────────────────────────────────────────── */
+    .browse-toolbar {
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: 1rem 1.5rem; margin-bottom: 1.5rem;
+      background: var(--ink); border-radius: 4px; padding: 1.25rem 1.5rem;
+    }
+    .browse-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .browse-group-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; color: #6a5030;
+      white-space: nowrap;
+    }
+    .browse-filter-group { flex: 1; min-width: 160px; }
+    .browse-filter {
+      width: 100%; background: #1a1008; border: 2px solid #4a3820; border-radius: 2px;
+      color: var(--cream); font-family: 'Lora', serif; font-size: 0.9rem;
+      padding: 0.4rem 0.8rem; outline: none; transition: border-color 0.15s;
+    }
+    .browse-filter::placeholder { color: #6a5030; }
+    .browse-filter:focus { border-color: var(--gold); }
+
+    /* Speaker multi-select pills */
+    .browse-spk-group { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .browse-spk-btn {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 2px solid; border-radius: 2px;
+      padding: 0.28rem 0.65rem; cursor: pointer; transition: all 0.12s;
+      opacity: 0.4;
+    }
+    .browse-spk-btn.active { opacity: 1; }
+
+    .browse-status {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.06em; color: var(--ink-lite); margin-bottom: 1rem;
+    }
+    .browse-status.error { color: #f08060; }
+
+    .browse-count-badge {
+      margin-left: auto;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.62rem;
+      letter-spacing: 0.12em; color: #b8a888;
+    }
+
+    /* Browse table */
+    .browse-table {
+      width: 100%; border-collapse: collapse;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .browse-table th {
+      background: rgba(43,29,14,0.04);
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-lite);
+      padding: 0.5rem 1rem; border-bottom: 2px solid var(--cream-dd);
+      text-align: left; white-space: nowrap; cursor: pointer;
+      user-select: none;
+    }
+    .browse-table th:hover { color: var(--ink); }
+    .browse-table th.sort-active { color: var(--coral); }
+    .browse-table th.sort-active::after { content: ' ↓'; }
+    .browse-table th.num { text-align: right; }
+    .browse-table td {
+      padding: 0.45rem 1rem; font-size: 0.85rem;
+      border-bottom: 1px solid rgba(43,29,14,0.06);
+    }
+    .browse-table td.term-cell {
+      font-family: 'Lora', serif; font-size: 0.9rem; font-weight: 600;
+      max-width: 280px; word-break: break-word;
+    }
+    .browse-table td.term-cell em { /* filter highlight */
+      background: rgba(232,178,52,0.35); font-style: normal; border-radius: 2px;
+    }
+    .browse-table td.num {
+      text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-mid);
+    }
+    .browse-table td.num.top { color: var(--ink); font-weight: 700; }
+    .browse-table tr:last-child td { border-bottom: none; }
+    .browse-table tr:hover td { background: rgba(43,29,14,0.025); }
+
+    /* Pagination */
+    .browse-pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem; border-top: 1px solid rgba(43,29,14,0.08);
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.72rem;
+      letter-spacing: 0.06em; color: var(--ink-lite);
+    }
+    .browse-page-btns { display: flex; gap: 0.4rem; }
+    .browse-page-btn {
+      background: var(--cream-d); border: 1px solid var(--cream-dd); border-radius: 3px;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mid);
+      padding: 0.3rem 0.85rem; cursor: pointer; transition: all 0.12s;
+    }
+    .browse-page-btn:hover:not(:disabled) { background: var(--cream-dd); color: var(--ink); }
+    .browse-page-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* Mobile */
+    @media (max-width: 599px) {
+      .browse-toolbar { padding: 1rem; gap: 0.75rem 1rem; }
+      .browse-table th, .browse-table td { padding: 0.4rem 0.6rem; }
+      .browse-table th { font-size: 0.55rem; }
+      .browse-table td.term-cell { font-size: 0.8rem; }
+    }
   </style>
   <script data-goatcounter="https://madjam1231.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -491,6 +594,7 @@
   <button class="active" data-tab="overview">Overview</button>
   <button data-tab="search">Word Search</button>
   <button data-tab="topwords">Compare Words</button>
+  <button data-tab="browse">Browse</button>
 </nav>
 
 <main>
@@ -594,7 +698,61 @@
     </div>
     <div id="tw-results"></div>
   </section>
+<!-- BROWSE -->
+  <section id="browse">
+    <div class="section-heading"><h2>Browse</h2><div class="rule"></div></div>
 
+    <div class="browse-toolbar">
+      <!-- Category toggles -->
+      <div class="browse-group">
+        <span class="browse-group-label">Category</span>
+        <div class="ctrl-btn-group" id="browse-cat-group">
+          <button class="ctrl-btn active" data-cat="word">Words</button>
+          <button class="ctrl-btn" data-cat="bigram">Bigrams</button>
+          <button class="ctrl-btn" data-cat="trigram">Trigrams</button>
+          <button class="ctrl-btn" data-cat="stage">Stage</button>
+        </div>
+      </div>
+
+      <!-- Speaker toggles (multi-select) -->
+      <div class="browse-group">
+        <span class="browse-group-label">Speaker</span>
+        <div class="browse-spk-group" id="browse-spk-group"></div>
+      </div>
+
+      <!-- Sort -->
+      <div class="browse-group">
+        <span class="browse-group-label">Sort</span>
+        <div class="ctrl-btn-group" id="browse-sort-group">
+          <button class="ctrl-btn active" data-sort="total">Most Used</button>
+          <button class="ctrl-btn" data-sort="alpha">A–Z</button>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="browse-group browse-filter-group">
+        <input class="browse-filter" type="text" id="browse-filter"
+               placeholder="Filter terms…" autocomplete="off" spellcheck="false" />
+      </div>
+    </div>
+
+    <div id="browse-status" class="browse-status">Loading vocabulary…</div>
+
+    <div class="chart-card" id="browse-card" style="display:none">
+      <div class="chart-card-head">
+        <span class="dot" style="background:var(--gold)"></span>
+        <span id="browse-card-title">All speakers · Words</span>
+        <span id="browse-count-badge" class="browse-count-badge"></span>
+      </div>
+      <div class="chart-card-body" style="padding:0">
+        <table class="browse-table" id="browse-table">
+          <thead id="browse-thead"></thead>
+          <tbody id="browse-tbody"></tbody>
+        </table>
+      </div>
+      <div class="browse-pagination" id="browse-pagination"></div>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -639,6 +797,7 @@ document.querySelectorAll('.site-nav button').forEach(btn => {
     document.querySelectorAll('main section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(tab).classList.add('active');
+    if (tab === 'browse') initBrowse();
   });
 });
 
@@ -1163,6 +1322,203 @@ async function doCompare() {
   btn.disabled = false;
 }
 
+// ── Browse vocabulary ─────────────────────────────────────────────────────────
+let vocabData = null;
+let browseState = {
+  cat: 'word',
+  activeSpeakers: null, // set on first load (all speakers)
+  sort: 'total',        // 'total' | 'alpha'
+  filter: '',
+  page: 0,
+  pageSize: 100,
+};
+const BROWSE_SPEAKERS_META = {}; // filled once vocab loads: {name: {color, index}}
+
+async function loadVocab() {
+  if (vocabData) return vocabData;
+  setBrowseStatus('', 'Loading vocabulary…');
+  const data = await fetchJSON(`${DATA_BASE}/vocabulary.json`);
+  vocabData = data;
+  return data;
+}
+
+function setBrowseStatus(cls, text) {
+  const el = document.getElementById('browse-status');
+  el.className = cls ? `browse-status ${cls}` : 'browse-status';
+  el.textContent = text;
+}
+
+async function initBrowse() {
+  // Only runs once, when tab is first opened
+  if (document.getElementById('browse-spk-group').childElementCount) return;
+
+  try {
+    const data = await loadVocab();
+
+    // Build speaker toggle buttons
+    const spkGroup = document.getElementById('browse-spk-group');
+    browseState.activeSpeakers = new Set(data.speakers);
+
+    data.speakers.forEach((spk, idx) => {
+      const color = sc(spk).line;
+      BROWSE_SPEAKERS_META[spk] = { color, index: idx };
+
+      const btn = document.createElement('button');
+      btn.className = 'browse-spk-btn active';
+      btn.textContent = spk;
+      btn.dataset.spk = spk;
+      btn.style.borderColor = color;
+      btn.style.color = color;
+      btn.style.background = 'transparent';
+      btn.addEventListener('click', () => {
+        const active = browseState.activeSpeakers;
+        if (active.has(spk) && active.size === 1) return; // keep at least one
+        if (active.has(spk)) active.delete(spk); else active.add(spk);
+        btn.classList.toggle('active', active.has(spk));
+        browseState.page = 0;
+        renderBrowse();
+      });
+      spkGroup.appendChild(btn);
+    });
+
+    wireToggleGroup('browse-cat-group', btn => {
+      browseState.cat = btn.dataset.cat;
+      browseState.page = 0;
+      browseState.filter = '';
+      document.getElementById('browse-filter').value = '';
+      renderBrowse();
+    });
+
+    wireToggleGroup('browse-sort-group', btn => {
+      browseState.sort = btn.dataset.sort;
+      browseState.page = 0;
+      renderBrowse();
+    });
+
+    let filterTimer;
+    document.getElementById('browse-filter').addEventListener('input', e => {
+      clearTimeout(filterTimer);
+      filterTimer = setTimeout(() => {
+        browseState.filter = e.target.value.trim().toLowerCase();
+        browseState.page = 0;
+        renderBrowse();
+      }, 150);
+    });
+
+    renderBrowse();
+    setBrowseStatus('', '');
+
+  } catch (err) {
+    setBrowseStatus('error', `Failed to load vocabulary: ${err.message}`);
+  }
+}
+
+function renderBrowse() {
+  const { cat, activeSpeakers, sort, filter, page, pageSize } = browseState;
+  const data = vocabData;
+  const speakers = data.speakers;
+
+  // Get rows for this category: [[term, [counts...]], ...]
+  let rows = data[cat];
+
+  // Filter by text
+  const filterLower = filter;
+  if (filterLower) {
+    rows = rows.filter(([term]) => term.includes(filterLower));
+  }
+
+  // Compute display totals (only active speakers)
+  const activeIndexes = speakers.map((s, i) => activeSpeakers.has(s) ? i : -1).filter(i => i !== -1);
+  const withTotals = rows.map(([term, counts]) => {
+    const displayTotal = activeIndexes.reduce((sum, i) => sum + (counts[i] || 0), 0);
+    return { term, counts, displayTotal };
+  });
+
+  // Filter out rows where selected speakers had zero uses
+  const nonZero = withTotals.filter(r => r.displayTotal > 0);
+
+  // Sort
+  let sorted;
+  if (sort === 'alpha') {
+    sorted = [...nonZero].sort((a, b) => a.term.localeCompare(b.term));
+  } else {
+    sorted = [...nonZero].sort((a, b) => b.displayTotal - a.displayTotal);
+  }
+
+  const totalRows = sorted.length;
+  const pageCount = Math.max(1, Math.ceil(totalRows / pageSize));
+  const safePage  = Math.min(page, pageCount - 1);
+  const slice     = sorted.slice(safePage * pageSize, (safePage + 1) * pageSize);
+
+  // Card title
+  const catLabel = { word: 'Words', bigram: 'Bigrams', trigram: 'Trigrams', stage: 'Stage Directions' };
+  const spkLabel = activeSpeakers.size === speakers.length ? 'All speakers' : [...activeSpeakers].join(' + ');
+  document.getElementById('browse-card-title').textContent = `${spkLabel} · ${catLabel[cat]}`;
+  document.getElementById('browse-count-badge').textContent =
+    `${totalRows.toLocaleString()} terms${filter ? ` matching "${filter}"` : ''}`;
+
+  // Table header
+  const thead = document.getElementById('browse-thead');
+  const activeSpks = speakers.filter(s => activeSpeakers.has(s));
+  const showIndividual = activeSpeakers.size > 1;
+  thead.innerHTML = `<tr>
+    <th class="sort-active">Term</th>
+    ${showIndividual ? activeSpks.map(s =>
+      `<th class="num" style="color:${sc(s).line}">${s}</th>`
+    ).join('') : ''}
+    <th class="num">${showIndividual ? 'Total' : activeSpks[0]}</th>
+  </tr>`;
+
+  // Table body — highlight filter match in term
+  const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function highlight(term) {
+    if (!filterLower) return esc(term);
+    const idx = term.indexOf(filterLower);
+    if (idx < 0) return esc(term);
+    return esc(term.slice(0, idx)) +
+      '<em>' + esc(term.slice(idx, idx + filterLower.length)) + '</em>' +
+      esc(term.slice(idx + filterLower.length));
+  }
+
+  const tbody = document.getElementById('browse-tbody');
+  tbody.innerHTML = slice.map((row, i) => {
+    const rank = safePage * pageSize + i + 1;
+    const isTop = rank <= 3 && sort === 'total' && !filter;
+    const spkCells = showIndividual
+      ? activeSpks.map(s => {
+          const idx = speakers.indexOf(s);
+          return `<td class="num">${(row.counts[idx] || 0).toLocaleString()}</td>`;
+        }).join('')
+      : '';
+    return `<tr>
+      <td class="term-cell">${highlight(row.term)}</td>
+      ${spkCells}
+      <td class="num${isTop ? ' top' : ''}">${row.displayTotal.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+
+  // Pagination
+  const pagination = document.getElementById('browse-pagination');
+  const start = safePage * pageSize + 1;
+  const end   = Math.min((safePage + 1) * pageSize, totalRows);
+  pagination.innerHTML = `
+    <span>${start.toLocaleString()}–${end.toLocaleString()} of ${totalRows.toLocaleString()}</span>
+    <div class="browse-page-btns">
+      <button class="browse-page-btn" id="bp-first"  ${safePage === 0 ? 'disabled' : ''}>⟪ First</button>
+      <button class="browse-page-btn" id="bp-prev"   ${safePage === 0 ? 'disabled' : ''}>← Prev</button>
+      <button class="browse-page-btn" id="bp-next"   ${safePage >= pageCount-1 ? 'disabled' : ''}>Next →</button>
+      <button class="browse-page-btn" id="bp-last"   ${safePage >= pageCount-1 ? 'disabled' : ''}>Last ⟫</button>
+    </div>`;
+
+  document.getElementById('bp-first')?.addEventListener('click', () => { browseState.page = 0; renderBrowse(); });
+  document.getElementById('bp-prev')?.addEventListener('click',  () => { browseState.page = safePage - 1; renderBrowse(); });
+  document.getElementById('bp-next')?.addEventListener('click',  () => { browseState.page = safePage + 1; renderBrowse(); });
+  document.getElementById('bp-last')?.addEventListener('click',  () => { browseState.page = pageCount - 1; renderBrowse(); });
+
+  document.getElementById('browse-card').style.display = '';
+  // Scroll table into view on page change
+  document.getElementById('browse-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 // ── Status helpers ────────────────────────────────────────────────────────────
 function setSearchStatus(cls, text) {
   const el = document.getElementById('search-status');
