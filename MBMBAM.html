@@ -479,7 +479,7 @@
     <div class="masthead-divider"></div>
     <div class="masthead-meta" id="masthead-meta">Loading…</div>
     <div class="masthead-about">
-      Made by James Howe <a href="https://jah0383.github.io" target="_blank" rel="noopener">Check out my other stuff!(I'm looking for a job!)</a><br>
+      Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe</a><br>
       <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
     </div>
   </div>
@@ -501,7 +501,7 @@
       <div class="stat-band" id="stat-band"></div>
       <div class="stripe-rule"></div>
       <div class="chart-card">
-        <div class="chart-card-head"><span class="dot"></span>Words Spoken Per Episode — By Brother</div>
+        <div class="chart-card-head"><span class="dot"></span><span id="ov-words-title">Words Per Episode — By Brother</span></div>
         <div class="chart-controls">
           <span class="chart-controls-label">Range</span>
           <div class="ctrl-group">
@@ -523,6 +523,12 @@
           <div class="ctrl-btn-group" id="ov-type-group">
             <button class="ctrl-btn active" data-type="line">Line</button>
             <button class="ctrl-btn" data-type="area">Area</button>
+          </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Count</span>
+          <div class="ctrl-btn-group" id="ov-count-group">
+            <button class="ctrl-btn active" data-count="per">Per Episode</button>
+            <button class="ctrl-btn" data-count="cumulative">Cumulative</button>
           </div>
         </div>
         <div class="chart-card-body">
@@ -552,7 +558,7 @@
         <button class="ngram-btn" data-mode="stage">Stage Direction</button>
       </div>
       <div class="search-input-row">
-        <input class="search-input" type="text" id="word-input" placeholder="e.g.  Brother or Griffin" />
+        <input class="search-input" type="text" id="word-input" placeholder="e.g.  thunderzone" />
         <button class="search-go" id="search-btn">Search</button>
       </div>
       <div class="badge-row">
@@ -572,7 +578,7 @@
     <div class="tw-panel">
       <div class="tw-panel-label">Enter words or phrases, comma-separated(Might have issues on mobile devices)</div>
       <input class="tw-input" type="text" id="tw-input"
-             placeholder="e.g.  yahoo, kiss your dad, unless, modern era" />
+             placeholder="e.g.  yahoo, kiss your dad, monster factory, thunderzone" />
       <div class="tw-presets-label">Presets</div>
       <div class="tw-presets" id="tw-presets"></div>
       <div class="tw-bottom-row">
@@ -602,8 +608,8 @@ const FALLBACK = { line: '#9A7D58', area: 'rgba(154,125,88,0.15)', bar: 'rgba(15
 const sc = spk => SPEAKER_COLORS[spk] ?? FALLBACK;
 
 const PRESETS = [
-  { label: 'Catchphrases',    terms: 'yahoo, unless, kiss your dad, modern era' },
-  { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters], [wheezes]' },
+  { label: 'Catchphrases',    terms: 'yahoo, thunderzone, kiss your dad, taako' },
+  { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters]' },
   { label: 'Podcast bits',    terms: 'munch squad, money zone, haunted doll watch' },
   { label: 'Advice words',    terms: 'advice, question, problem, help' },
   { label: 'Relationships',   terms: 'wife, husband, brother, family, friend' },
@@ -648,8 +654,8 @@ document.querySelectorAll('.ngram-btn').forEach(btn => {
     setSearchStatus('', '');
 
     const hints = {
-      word:    'e.g.  brother  or  griffin',
-      bigram:  'e.g.  modern era  or  bad idea',
+      word:    'e.g.  thunderzone  or  griffin',
+      bigram:  'e.g.  monster factory  or  bad idea',
       trigram: 'e.g.  kiss your dad  or  bad idea blanket',
       stage:   'e.g.  laughs  or  chortles  — brackets added automatically',
     };
@@ -751,6 +757,11 @@ function lineDS(speaker, data, fill = false, radius = 0) {
 }
 
 // ── Utilities: rolling average, range filter ──────────────────────────────────
+function cumulate(arr) {
+  let sum = 0;
+  return arr.map(v => (sum += v));
+}
+
 function rollingAvg(arr, window) {
   if (window <= 1) return arr;
   return arr.map((_, i) => {
@@ -772,7 +783,7 @@ function wireToggleGroup(groupId, onChange) {
 
 // ── Overview ──────────────────────────────────────────────────────────────────
 let ovWordsChart = null, ovShareChart = null;
-let ovSmooth = 1, ovFill = false;
+let ovSmooth = 1, ovFill = false, ovCumulative = false;
 
 function renderOverview() {
   const stats = episodeStats, speakers = manifest.speakers;
@@ -805,11 +816,25 @@ function buildOvCharts(stats) {
   const filtered = stats.filter(ep => ep.id >= epFrom && ep.id <= epTo);
   const labels = filtered.map(ep => `Ep ${ep.id}`);
 
+  // Update title
+  const titleEl = document.getElementById('ov-words-title');
+  if (titleEl) titleEl.textContent = ovCumulative
+    ? 'Cumulative Words — By Brother'
+    : 'Words Per Episode — By Brother';
+
+  // Disable smooth when cumulative (meaningless on a monotone curve)
+  document.getElementById('ov-smooth-group')?.querySelectorAll('.ctrl-btn').forEach(b => {
+    b.disabled = ovCumulative;
+    b.style.opacity = ovCumulative ? '0.35' : '';
+  });
+
   // Words chart
   if (ovWordsChart) ovWordsChart.destroy();
-  const wordsData = speakers.map(s => ({
-    ...lineDS(s, rollingAvg(filtered.map(ep => ep.speakers[s]?.total_words ?? 0), ovSmooth), ovFill),
-  }));
+  const wordsData = speakers.map(s => {
+    const raw = filtered.map(ep => ep.speakers[s]?.total_words ?? 0);
+    const vals = ovCumulative ? cumulate(raw) : rollingAvg(raw, ovSmooth);
+    return { ...lineDS(s, vals, ovFill) };
+  });
   ovWordsChart = new Chart(document.getElementById('chart-words'), {
     type: 'line',
     data: { labels, datasets: wordsData },
@@ -854,11 +879,16 @@ function wireOvControls(stats) {
     ovFill = btn.dataset.type === 'area';
     buildOvCharts(stats);
   });
+
+  wireToggleGroup('ov-count-group', btn => {
+    ovCumulative = btn.dataset.count === 'cumulative';
+    buildOvCharts(stats);
+  });
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
 let searchChart = null;
-let searchAllEps = [], searchEntry = null, searchSpeakers = [], searchSmooth = 1;
+let searchAllEps = [], searchEntry = null, searchSpeakers = [], searchSmooth = 1, searchCumulative = false;
 
 document.getElementById('word-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 document.getElementById('search-btn').addEventListener('click', doSearch);
@@ -903,7 +933,7 @@ async function doSearch() {
       .map(id => epLookup[id]).filter(Boolean).sort((a, b) => a.id - b.id);
 
     // stash for controls to reuse
-    searchAllEps = allEps; searchEntry = entry; searchSpeakers = speakers; searchSmooth = 1;
+    searchAllEps = allEps; searchEntry = entry; searchSpeakers = speakers; searchSmooth = 1; searchCumulative = false;
 
     const spkTotals = Object.fromEntries(
       speakers.map(s => [s, Object.values(entry[s]).reduce((a, v) => a + v, 0)])
@@ -941,6 +971,12 @@ async function doSearch() {
             <button class="ctrl-btn" data-smooth="10">10</button>
             <button class="ctrl-btn" data-smooth="20">20</button>
           </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Count</span>
+          <div class="ctrl-btn-group" id="sr-count-group">
+            <button class="ctrl-btn active" data-count="per">Per Episode</button>
+            <button class="ctrl-btn" data-count="cumulative">Cumulative</button>
+          </div>
         </div>
         <div class="chart-card-body">
           <canvas id="search-chart"></canvas>
@@ -967,10 +1003,18 @@ function buildSearchChart() {
   const toId   = parseInt(document.getElementById('sr-ep-to')?.value)   || searchAllEps[searchAllEps.length-1]?.id;
   const filtered = searchAllEps.filter(ep => ep.id >= fromId && ep.id <= toId);
   const labels   = filtered.map(ep => `Ep ${ep.id}`);
-  const datasets = searchSpeakers.map(s =>
-    lineDS(s, rollingAvg(filtered.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0), searchSmooth),
-           false, filtered.length > 80 ? 0 : 3)
-  );
+
+  // Disable smooth when cumulative
+  document.getElementById('sr-smooth-group')?.querySelectorAll('.ctrl-btn').forEach(b => {
+    b.disabled = searchCumulative;
+    b.style.opacity = searchCumulative ? '0.35' : '';
+  });
+
+  const datasets = searchSpeakers.map(s => {
+    const raw = filtered.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0);
+    const vals = searchCumulative ? cumulate(raw) : rollingAvg(raw, searchSmooth);
+    return lineDS(s, vals, false, filtered.length > 80 ? 0 : 3);
+  });
   if (searchChart) { searchChart.destroy(); searchChart = null; }
   searchChart = new Chart(document.getElementById('search-chart'), {
     type: 'line', data: { labels, datasets }, options: baseOpts(),
@@ -984,6 +1028,10 @@ function wireSearchControls() {
   document.getElementById('sr-ep-to')?.addEventListener('keydown',   e => { if (e.key === 'Enter') applyFn(); });
   wireToggleGroup('sr-smooth-group', btn => {
     searchSmooth = parseInt(btn.dataset.smooth);
+    buildSearchChart();
+  });
+  wireToggleGroup('sr-count-group', btn => {
+    searchCumulative = btn.dataset.count === 'cumulative';
     buildSearchChart();
   });
 }
