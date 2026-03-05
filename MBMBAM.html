@@ -119,7 +119,7 @@
 
     /* ── STAT CARDS ───────────────────────────────────────── */
     .stat-band { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--ink); color: var(--cream); border-radius: 4px; padding: 1rem 1.5rem; min-width: 140px; }
+    .stat-card { background: var(--ink); color: var(--cream); border-radius: 4px; padding: 1rem 1.5rem; min-width: 140px; flex: 1 1 140px; }
     .stat-card .sc-label {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
       letter-spacing: 0.2em; text-transform: uppercase; color: #b8a888; margin-bottom: 0.35rem;
@@ -347,7 +347,8 @@
     .loading-state::after  { content: ' —'; }
 
     .masthead-about {
-      position: absolute; top: 18px; right: 1.5rem;
+      position: absolute; top: 50%; right: 0;
+      transform: translateY(-50%);
       font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem;
       letter-spacing: 0.05em; color: var(--ink-lite);
       text-align: right; line-height: 1.7; z-index: 2;
@@ -365,6 +366,100 @@
     ::-webkit-scrollbar-track { background: var(--cream-d); }
     ::-webkit-scrollbar-thumb { background: var(--cream-dd); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--ink-lite); }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE — tablet and mobile
+    ═══════════════════════════════════════════════════════ */
+
+    /* ── Tablet (≤ 860px) ────────────────────────────────── */
+    @media (max-width: 860px) {
+      .masthead-inner { padding: 1.25rem 1.5rem; gap: 1.5rem; }
+      main { padding: 1.75rem 1.5rem; }
+      .masthead-about { font-size: 0.6rem; }
+    }
+
+    /* ── Mobile (≤ 599px) ────────────────────────────────── */
+    @media (max-width: 599px) {
+
+      /* Masthead: stack vertically */
+      .masthead-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1rem 1.25rem;
+        gap: 0.3rem;
+      }
+      .masthead-divider { display: none; }
+      /* About: leave absolute flow, reposition to inline at bottom of column */
+      .masthead-about {
+        position: static;
+        transform: none;
+        text-align: left;
+        margin-top: 0.6rem;
+        padding-top: 0.6rem;
+        border-top: 1px solid rgba(43,29,14,0.15);
+        width: 100%;
+      }
+      /* Shrink the semicircle so it doesn't dominate */
+      .masthead-semi { width: 180px; height: 180px; right: -40px; top: -30px; }
+
+      /* Nav: equal-width buttons, smaller text */
+      .site-nav { padding: 0; }
+      .site-nav button {
+        flex: 1;
+        padding: 0.8rem 0.25rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.07em;
+      }
+
+      /* Main: tighter padding */
+      main { padding: 1.25rem 1rem; }
+
+      /* Section heading */
+      .section-heading { margin-bottom: 1.25rem; }
+      .section-heading h2 { font-size: 1.3rem; }
+
+      /* Stat cards: 2 per row */
+      .stat-band { gap: 0.6rem; margin-bottom: 1.5rem; }
+      .stat-card { flex: 1 1 calc(50% - 0.3rem); min-width: 0; padding: 0.85rem 1rem; }
+      .stat-card .sc-value { font-size: 1.25rem; }
+
+      /* Chart cards: smaller shadow */
+      .chart-card { box-shadow: 3px 3px 0 var(--ink); margin-bottom: 1.25rem; }
+      .chart-card-head { font-size: 0.62rem; letter-spacing: 0.12em; padding: 0.6rem 1rem; }
+      .chart-card-body { padding: 1rem; }
+
+      /* Chart controls: hide separators, tighten padding */
+      .chart-controls { padding: 0.5rem 1rem; gap: 0.5rem 0.75rem; }
+      .ctrl-sep { display: none; }
+      /* Each label+group pair wraps to its own line */
+      .chart-controls-label { flex-basis: 100%; margin-bottom: -0.25rem; }
+
+      /* Search panel */
+      .search-panel { padding: 1.25rem; }
+      .search-panel::before { width: 120px; height: 120px; right: -30px; bottom: -30px; }
+      .ngram-row { gap: 0.4rem; }
+      .ngram-btn { font-size: 0.65rem; padding: 0.4rem 0.7rem; letter-spacing: 0.08em; }
+      .search-go { padding: 0.7rem 1rem; font-size: 0.8rem; }
+
+      /* Compare words panel */
+      .tw-panel { padding: 1.25rem; }
+      .tw-panel::before { width: 140px; height: 140px; }
+      .tw-bottom-row { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+      .tw-hint { font-size: 0.65rem; }
+      .tw-go { text-align: center; }
+
+      /* Totals table: scrollable on mobile */
+      .totals-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 1rem; }
+      .totals-table { margin-top: 0; min-width: 300px; }
+      .totals-table td, .totals-table th { padding: 0.4rem 0.6rem; }
+      .totals-table .count-val { font-size: 0.9rem; }
+
+      /* Stripe rule */
+      .stripe-rule { margin-bottom: 1.5rem; }
+
+      /* Legend hint */
+      .legend-hint { font-size: 0.6rem; }
+    }
   </style>
 </head>
 <body>
@@ -375,10 +470,6 @@
     <span></span><span></span><span></span><span></span>
   </div>
   <div class="masthead-semi"></div>
-  <div class="masthead-about">
-    Made by James Howe <a href="https://jah0383.github.io" target="_blank" rel="noopener">Check out my other stuff!(I'm looking for a job!)</a><br>
-    <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
-  </div>
   <div class="masthead-inner">
     <div class="masthead-title">
       My Brother,<br>My Brother
@@ -387,6 +478,10 @@
     </div>
     <div class="masthead-divider"></div>
     <div class="masthead-meta" id="masthead-meta">Loading…</div>
+    <div class="masthead-about">
+      Made by James Howe <a href="https://jah0383.github.io" target="_blank" rel="noopener">Check out my other stuff!(I'm looking for a job!)</a><br>
+      <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
+    </div>
   </div>
 </header>
 
@@ -850,11 +945,12 @@ async function doSearch() {
         <div class="chart-card-body">
           <canvas id="search-chart"></canvas>
           <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
-          <table class="totals-table" style="margin-top:1.25rem">
+          <div class="totals-table-wrap">
+          <table class="totals-table">
             <thead><tr><th>Speaker</th><th>Total Uses</th><th>Share</th></tr></thead>
             <tbody>${tableRows}</tbody>
             <tfoot><tr><td>All speakers</td><td>${grandTotal.toLocaleString()}</td><td>100%</td></tr></tfoot>
-          </table>
+          </table></div>
         </div>
       </div>`;
 
@@ -995,10 +1091,11 @@ async function doCompare() {
         <div class="chart-card-body">
           <canvas id="tw-chart"></canvas>
           <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
-          <table class="totals-table" style="margin-top:1.25rem">
+          <div class="totals-table-wrap">
+          <table class="totals-table">
             <thead><tr><th>Term</th>${spkHeaders}<th>Total</th></tr></thead>
             <tbody>${tableRows}</tbody>
-          </table>
+          </table></div>
         </div>
       </div>`;
 
