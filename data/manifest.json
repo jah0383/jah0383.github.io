@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count": 305,
+  "episode_count": 341,
   "episodes": [
     {
       "id": 1,
@@ -25,6 +25,11 @@
       "id": 5,
       "title": "Mega-Jessup",
       "date": "May 10th, 2010"
+    },
+    {
+      "id": 6,
+      "title": "Unknown",
+      "date": "May 17th, 2010"
     },
     {
       "id": 7,
@@ -50,6 +55,16 @@
       "id": 11,
       "title": "The Lesbian Apocalypse",
       "date": "June 28th, 2010"
+    },
+    {
+      "id": 12,
+      "title": "Unknown",
+      "date": "July 5th, 2010"
+    },
+    {
+      "id": 13,
+      "title": "Unknown",
+      "date": "July 13th, 2010"
     },
     {
       "id": 14,
@@ -87,6 +102,11 @@
       "date": "August 30, 2010"
     },
     {
+      "id": 21,
+      "title": "Drunting",
+      "date": null
+    },
+    {
       "id": 22,
       "title": "Lovegoose",
       "date": "September 20, 2010"
@@ -95,6 +115,11 @@
       "id": 23,
       "title": "Dad Stew",
       "date": "September 27, 2010"
+    },
+    {
+      "id": 24,
+      "title": "Hey Hon, How’s Your Day?",
+      "date": null
     },
     {
       "id": 25,
@@ -182,9 +207,19 @@
       "date": "February 7, 2011"
     },
     {
+      "id": 42,
+      "title": "Unknown",
+      "date": null
+    },
+    {
       "id": 43,
       "title": "A Horse Called Robbie",
       "date": "February 21st, 2011"
+    },
+    {
+      "id": 44,
+      "title": "Unknown",
+      "date": null
     },
     {
       "id": 45,
@@ -200,6 +235,11 @@
       "id": 47,
       "title": "Sleeve It",
       "date": "March 22, 2011"
+    },
+    {
+      "id": 48,
+      "title": "Math Blaster",
+      "date": null
     },
     {
       "id": 49,
@@ -382,6 +422,11 @@
       "date": "November 27, 2017"
     },
     {
+      "id": 383,
+      "title": "Fins Up",
+      "date": null
+    },
+    {
       "id": 391,
       "title": "Jeff Wolfworthy",
       "date": "January 29, 2018"
@@ -405,6 +450,11 @@
       "id": 399,
       "title": "Stink Bar",
       "date": "March 26th, 2018"
+    },
+    {
+      "id": 400,
+      "title": "The Escape to Margaritaville Red Carpet",
+      "date": "April 2nd, 2018"
     },
     {
       "id": 401,
@@ -587,6 +637,11 @@
       "date": "September 21st, 2020"
     },
     {
+      "id": 529,
+      "title": "Throw Me In the Dumpster Behind the Applebee’s",
+      "date": "September 29th, 2020"
+    },
+    {
       "id": 530,
       "title": "Boat Beauties",
       "date": "October 5th, 2020"
@@ -627,6 +682,21 @@
       "date": "November 30th, 2020"
     },
     {
+      "id": 538,
+      "title": "Shoegaze Mopeytones",
+      "date": null
+    },
+    {
+      "id": 539,
+      "title": "Quantum Beef",
+      "date": null
+    },
+    {
+      "id": 540,
+      "title": "Bubblestar Metallica",
+      "date": null
+    },
+    {
       "id": 541,
       "title": "Angels in the Ragnarok",
       "date": "December 28th, 2020"
@@ -637,14 +707,44 @@
       "date": "January 4th, 2021"
     },
     {
+      "id": 543,
+      "title": "Charles Equality Cheese",
+      "date": null
+    },
+    {
+      "id": 544,
+      "title": "Quantum Cheez-Its",
+      "date": null
+    },
+    {
       "id": 545,
       "title": "Blood is Thicker than the Bun",
       "date": "January 25th, 2020"
     },
     {
+      "id": 546,
+      "title": "A Force Sandwich with Lightsaber Sauce",
+      "date": null
+    },
+    {
+      "id": 547,
+      "title": "Chili Wonka",
+      "date": null
+    },
+    {
+      "id": 548,
+      "title": "Jeans All the Way Down",
+      "date": null
+    },
+    {
       "id": 549,
       "title": "Bros Better, Bros Best, Ch. 153-169",
       "date": "February 22, 2021"
+    },
+    {
+      "id": 550,
+      "title": "The Spider-Man Truth",
+      "date": null
     },
     {
       "id": 551,
@@ -662,6 +762,11 @@
       "date": "March 22nd, 2021"
     },
     {
+      "id": 554,
+      "title": "Tub Pumpkin",
+      "date": null
+    },
+    {
       "id": 555,
       "title": "Come Get a Sack",
       "date": null
@@ -670,6 +775,16 @@
       "id": 556,
       "title": "New Virtual Wing Concept",
       "date": "April 19, 2021"
+    },
+    {
+      "id": 557,
+      "title": "Morgan Beeman Strikes Again",
+      "date": null
+    },
+    {
+      "id": 558,
+      "title": "The Star of the Sandwich Show",
+      "date": null
     },
     {
       "id": 559,
@@ -737,6 +852,21 @@
       "date": "August 16th, 2021"
     },
     {
+      "id": 574,
+      "title": "My Burger My Burger and Me",
+      "date": null
+    },
+    {
+      "id": 575,
+      "title": "Fluffy Like a Sandwich, Folded Like a Taco",
+      "date": null
+    },
+    {
+      "id": 576,
+      "title": "Several Iguanadons",
+      "date": null
+    },
+    {
       "id": 577,
       "title": "Canonically Assassinated",
       "date": "September 13th, 2021"
@@ -755,6 +885,31 @@
       "id": 580,
       "title": "Density of Fifty Hard Boiled Eggs",
       "date": "October 4th, 2021"
+    },
+    {
+      "id": 581,
+      "title": "Boo-ty Ghoul-iani",
+      "date": null
+    },
+    {
+      "id": 582,
+      "title": "Bony Butt Stabber in Coastal Maine",
+      "date": null
+    },
+    {
+      "id": 583,
+      "title": "Soccertes",
+      "date": null
+    },
+    {
+      "id": 585,
+      "title": "One Year Closer to Salsa",
+      "date": null
+    },
+    {
+      "id": 586,
+      "title": "How was Hell this Time?",
+      "date": null
     },
     {
       "id": 587,
@@ -820,6 +975,11 @@
       "id": 600,
       "title": "Awesome Sanguine Meridian Response",
       "date": "March 7th, 2022"
+    },
+    {
+      "id": 601,
+      "title": "Sherlock Holmes and the Mystery of the Perfect Beach",
+      "date": "March 14, 2022"
     },
     {
       "id": 602,
@@ -950,6 +1110,11 @@
       "id": 629,
       "title": "Millennial Seinfeld",
       "date": "September 26, 2022"
+    },
+    {
+      "id": 630,
+      "title": "Face 2 Face: Alabaster Hawk, Governor of the",
+      "date": "October 3, 2022"
     },
     {
       "id": 631,
@@ -1112,6 +1277,11 @@
       "date": "March 11th, 2024"
     },
     {
+      "id": 703,
+      "title": "Unknown",
+      "date": "March 18th, 2024"
+    },
+    {
       "id": 704,
       "title": "Cheques Mix",
       "date": "March 25th, 2024"
@@ -1252,6 +1422,11 @@
       "date": "October 21, 2024"
     },
     {
+      "id": 735,
+      "title": "Face 2 Face: Take Me to Monster World, Pregnant",
+      "date": "October 28th, 2024"
+    },
+    {
       "id": 736,
       "title": "School You're Allowed to Drink At",
       "date": "November 4, 2024"
@@ -1340,6 +1515,11 @@
       "id": 758,
       "title": "Ostrichhood",
       "date": "April 14th, 2025"
+    },
+    {
+      "id": 759,
+      "title": "Face 2 Face: Mommy's Special Sweets For Good",
+      "date": "April 21st, 2025"
     },
     {
       "id": 760,
