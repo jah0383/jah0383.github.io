@@ -558,7 +558,7 @@
         <button class="ngram-btn" data-mode="stage">Stage Direction</button>
       </div>
       <div class="search-input-row">
-        <input class="search-input" type="text" id="word-input" placeholder="e.g.  thunderzone" />
+        <input class="search-input" type="text" id="word-input" placeholder="e.g.  Brother or Griffin" />
         <button class="search-go" id="search-btn">Search</button>
       </div>
       <div class="badge-row">
@@ -578,7 +578,7 @@
     <div class="tw-panel">
       <div class="tw-panel-label">Enter words or phrases, comma-separated(Might have issues on mobile devices)</div>
       <input class="tw-input" type="text" id="tw-input"
-             placeholder="e.g.  yahoo, kiss your dad, monster factory, thunderzone" />
+             placeholder="e.g.  yahoo, kiss your dad, unless, modern era" />
       <div class="tw-presets-label">Presets</div>
       <div class="tw-presets" id="tw-presets"></div>
       <div class="tw-bottom-row">
@@ -608,8 +608,8 @@ const FALLBACK = { line: '#9A7D58', area: 'rgba(154,125,88,0.15)', bar: 'rgba(15
 const sc = spk => SPEAKER_COLORS[spk] ?? FALLBACK;
 
 const PRESETS = [
-  { label: 'Catchphrases',    terms: 'yahoo, thunderzone, kiss your dad, taako' },
-  { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters]' },
+  { label: 'Catchphrases',    terms: 'yahoo, unless, kiss your dad, modern era' },
+  { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters], [wheezes]' },
   { label: 'Podcast bits',    terms: 'munch squad, money zone, haunted doll watch' },
   { label: 'Advice words',    terms: 'advice, question, problem, help' },
   { label: 'Relationships',   terms: 'wife, husband, brother, family, friend' },
@@ -654,8 +654,8 @@ document.querySelectorAll('.ngram-btn').forEach(btn => {
     setSearchStatus('', '');
 
     const hints = {
-      word:    'e.g.  thunderzone  or  griffin',
-      bigram:  'e.g.  monster factory  or  bad idea',
+      word:    'e.g.  brother  or  griffin',
+      bigram:  'e.g.  modern era  or  bad idea',
       trigram: 'e.g.  kiss your dad  or  bad idea blanket',
       stage:   'e.g.  laughs  or  chortles  — brackets added automatically',
     };
