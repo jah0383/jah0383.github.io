@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBMBaM Word Stats</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Lora:ital,wght@0,400;0,600;1,400&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #F0E6CE;
+      --cream-d: #E2D4B4;
+      --cream-dd:#CABB94;
+      --coral:   #D0492A;
+      --coral-d: #A83820;
+      --teal:    #3AB5B2;
+      --teal-d:  #289694;
+      --gold:    #E8B234;
+      --ink:     #2B1D0E;
+      --ink-mid: #6B4F30;
+      --ink-lite:#9A7D58;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      mix-blend-mode: multiply;
+    }
+
+    /* ── MASTHEAD ─────────────────────────────────────────── */
+    .masthead {
+      position: relative;
+      background: var(--cream-d);
+      border-bottom: 4px solid var(--ink);
+      overflow: hidden;
+    }
+    .masthead-stripes { display: flex; height: 10px; }
+    .masthead-stripes span { flex: 1; }
+    .masthead-stripes span:nth-child(1) { background: var(--coral); }
+    .masthead-stripes span:nth-child(2) { background: var(--teal); }
+    .masthead-stripes span:nth-child(3) { background: var(--gold); }
+    .masthead-stripes span:nth-child(4) { background: var(--coral); }
+    .masthead-stripes span:nth-child(5) { background: var(--teal); }
+    .masthead-stripes span:nth-child(6) { background: var(--gold); }
+    .masthead-stripes span:nth-child(7) { background: var(--coral); }
+    .masthead-stripes span:nth-child(8) { background: var(--teal); }
+    .masthead-semi {
+      position: absolute; right: -80px; top: -60px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: var(--coral); opacity: 0.15;
+    }
+    .masthead-inner {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: 2.5rem; padding: 1.5rem 2.5rem;
+    }
+    .masthead-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 0.95; letter-spacing: -0.01em;
+      color: var(--ink); text-transform: uppercase;
+    }
+    .masthead-title .amp { color: var(--coral); font-style: italic; font-family: 'Lora', serif; font-size: 0.7em; }
+    .masthead-title .sub {
+      display: block; font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.3em; font-weight: 700; letter-spacing: 0.25em;
+      color: var(--ink-lite); text-transform: uppercase; margin-top: 0.5rem;
+    }
+    .masthead-divider { width: 3px; height: 60px; background: var(--ink); opacity: 0.2; flex-shrink: 0; }
+    .masthead-meta {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mid); line-height: 1.8;
+    }
+    .masthead-meta strong { color: var(--coral); font-weight: 700; }
+
+    /* ── NAV ──────────────────────────────────────────────── */
+    .site-nav {
+      background: var(--ink); display: flex; padding: 0 2.5rem;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .site-nav button {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      background: none; border: none; border-bottom: 3px solid transparent;
+      color: #b8a888; padding: 1rem 1.5rem 0.85rem; cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .site-nav button:hover  { color: var(--cream); }
+    .site-nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ── LAYOUT ───────────────────────────────────────────── */
+    main { padding: 2.5rem; max-width: 1180px; margin: 0 auto; }
+    section { display: none; }
+    section.active { display: block; }
+
+    .section-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .section-heading h2 { font-family: 'Alfa Slab One', serif; font-size: 1.8rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    .section-heading .rule {
+      flex: 1; height: 2px;
+      background: repeating-linear-gradient(to right, var(--ink) 0, var(--ink) 6px, transparent 6px, transparent 12px);
+      opacity: 0.15;
+    }
+
+    /* ── STAT CARDS ───────────────────────────────────────── */
+    .stat-band { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--ink); color: var(--cream); border-radius: 4px; padding: 1rem 1.5rem; min-width: 140px; }
+    .stat-card .sc-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #b8a888; margin-bottom: 0.35rem;
+    }
+    .stat-card .sc-value { font-family: 'Alfa Slab One', serif; font-size: 1.5rem; line-height: 1; }
+
+    /* ── CHART CARD ───────────────────────────────────────── */
+    .chart-card {
+      background: white; border: 2px solid var(--ink); border-radius: 4px;
+      margin-bottom: 1.5rem; overflow: hidden; box-shadow: 5px 5px 0 var(--ink);
+    }
+    .chart-card-head {
+      background: var(--ink); color: var(--cream); padding: 0.65rem 1.25rem;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .chart-card-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    .chart-card-body { padding: 1.25rem 1.5rem; }
+
+    /* ── CHART CONTROLS ───────────────────────────────────── */
+    .chart-controls {
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+      padding: 0.6rem 1.25rem;
+      background: #1e120600;
+      border-top: 1px solid rgba(43,29,14,0.1);
+    }
+    .chart-controls-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-lite);
+      white-space: nowrap;
+    }
+    .ctrl-group { display: flex; align-items: center; gap: 0.4rem; }
+    .ctrl-sep { width: 1px; height: 18px; background: rgba(43,29,14,0.15); margin: 0 0.25rem; }
+    .ctrl-input {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+      background: var(--cream-d); border: 1px solid var(--cream-dd); border-radius: 3px;
+      color: var(--ink); padding: 0.25rem 0.5rem; width: 5.5rem; outline: none;
+      transition: border-color 0.15s;
+    }
+    .ctrl-input:focus { border-color: var(--coral); }
+    .ctrl-input.narrow { width: 4rem; }
+    .ctrl-btn-group { display: flex; border: 1px solid var(--cream-dd); border-radius: 3px; overflow: hidden; }
+    .ctrl-btn {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; background: var(--cream-d);
+      border: none; border-right: 1px solid var(--cream-dd); color: var(--ink-lite);
+      padding: 0.28rem 0.65rem; cursor: pointer; transition: all 0.12s;
+    }
+    .ctrl-btn:last-child { border-right: none; }
+    .ctrl-btn:hover  { background: var(--cream-dd); color: var(--ink); }
+    .ctrl-btn.active { background: var(--ink); color: var(--cream); }
+    .ctrl-apply {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; background: var(--coral);
+      border: none; border-radius: 3px; color: white; padding: 0.3rem 0.85rem;
+      cursor: pointer; transition: background 0.12s;
+    }
+    .ctrl-apply:hover { background: var(--coral-d); }
+
+    /* ── TOTALS TABLE ─────────────────────────────────────── */
+    .totals-table {
+      width: 100%; border-collapse: collapse; margin-top: 1rem;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .totals-table th {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-lite);
+      border-bottom: 1px solid var(--cream-dd); padding: 0.4rem 0.75rem;
+      text-align: left;
+    }
+    .totals-table td {
+      padding: 0.5rem 0.75rem; font-size: 0.88rem;
+      border-bottom: 1px solid rgba(43,29,14,0.07);
+    }
+    .totals-table tr:last-child td { border-bottom: none; }
+    .totals-table .spk-swatch {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 0.5rem; vertical-align: middle;
+    }
+    .totals-table .count-val { font-weight: 700; font-size: 1rem; }
+    .totals-table .pct-val { color: var(--ink-lite); font-size: 0.8rem; }
+    .totals-table tfoot td {
+      font-weight: 700; color: var(--ink-mid);
+      border-top: 2px solid var(--cream-dd); padding-top: 0.6rem;
+    }
+
+    /* ── LEGEND HINT ──────────────────────────────────────── */
+    .legend-hint {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.08em; color: var(--ink-lite);
+      text-align: right; margin-top: 0.5rem;
+    }
+    .legend-hint::before { content: '↑ '; }
+
+    /* ── SEARCH PANEL ─────────────────────────────────────── */
+    .search-panel {
+      background: var(--ink); border-radius: 4px; padding: 1.75rem 2rem;
+      margin-bottom: 2rem; position: relative; overflow: hidden;
+    }
+    .search-panel::before {
+      content: ''; position: absolute; right: -60px; bottom: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: var(--coral); opacity: 0.18;
+    }
+    .search-panel-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #b8a888; margin-bottom: 1rem;
+    }
+    .ngram-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .ngram-btn {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; border: 2px solid #4a3820;
+      background: transparent; color: #b8a888; padding: 0.45rem 1rem; border-radius: 2px;
+      cursor: pointer; transition: all 0.12s;
+    }
+    .ngram-btn:hover  { border-color: var(--gold); color: var(--gold); }
+    .ngram-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+
+    .search-input-row { display: flex; gap: 0.75rem; align-items: stretch; }
+    .search-input {
+      flex: 1; background: #1a1008; border: 2px solid #4a3820; border-radius: 2px;
+      color: var(--cream); font-family: 'Lora', serif; font-size: 1rem;
+      padding: 0.7rem 1rem; outline: none; transition: border-color 0.15s;
+    }
+    .search-input::placeholder { color: #6a5030; }
+    .search-input:focus { border-color: var(--gold); }
+    .search-go {
+      font-family: 'Alfa Slab One', serif; font-size: 0.9rem; letter-spacing: 0.05em;
+      text-transform: uppercase; background: var(--coral); border: 2px solid var(--coral);
+      color: white; padding: 0.7rem 1.5rem; border-radius: 2px; cursor: pointer;
+      transition: background 0.15s; white-space: nowrap; z-index: 1;
+    }
+    .search-go:hover    { background: var(--coral-d); border-color: var(--coral-d); }
+    .search-go:disabled { background: #3a2a18; border-color: #3a2a18; color: #6a5030; cursor: default; }
+
+    .badge-row { display: flex; gap: 0.5rem; margin-top: 0.9rem; flex-wrap: wrap; }
+    .idx-badge {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; display: inline-flex;
+      align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 2px;
+      border: 1px solid #4a3820; color: #6a5030;
+    }
+    .idx-badge.loaded  { border-color: var(--teal); color: var(--teal); }
+    .idx-badge.loading { border-color: var(--gold); color: var(--gold); }
+    .idx-badge .dot    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+    .search-status {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.04em; color: #b8a888; margin-top: 0.75rem; min-height: 1.2em;
+    }
+    .search-status.error { color: #f08060; }
+
+    /* ── TOP WORDS ────────────────────────────────────────── */
+    .tw-panel {
+      background: var(--ink); border-radius: 4px; padding: 1.75rem 2rem;
+      margin-bottom: 2rem; position: relative; overflow: hidden;
+    }
+    .tw-panel::before {
+      content: ''; position: absolute; right: -80px; top: -80px;
+      width: 250px; height: 250px; border-radius: 50%;
+      background: var(--teal); opacity: 0.1;
+    }
+    .tw-panel-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #b8a888; margin-bottom: 0.75rem;
+    }
+    .tw-input {
+      width: 100%; background: #1a1008; border: 2px solid #4a3820; border-radius: 2px;
+      color: var(--cream); font-family: 'Lora', serif; font-size: 0.95rem;
+      padding: 0.7rem 1rem; outline: none; transition: border-color 0.15s; margin-bottom: 1rem;
+    }
+    .tw-input::placeholder { color: #6a5030; }
+    .tw-input:focus { border-color: var(--teal); }
+
+    .tw-presets-label {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; color: #6a5030; margin-bottom: 0.5rem;
+    }
+    .tw-presets { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .tw-preset {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid #4a3820;
+      background: transparent; color: #b8a888; padding: 0.3rem 0.75rem; border-radius: 2px;
+      cursor: pointer; transition: all 0.12s;
+    }
+    .tw-preset:hover { border-color: var(--teal); color: var(--teal); }
+
+    .tw-bottom-row { display: flex; gap: 0.75rem; align-items: center; }
+    .tw-hint {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.06em; color: #6a5030; flex: 1;
+    }
+    .tw-go {
+      font-family: 'Alfa Slab One', serif; font-size: 0.9rem; letter-spacing: 0.05em;
+      text-transform: uppercase; background: var(--teal); border: 2px solid var(--teal);
+      color: white; padding: 0.7rem 1.5rem; border-radius: 2px; cursor: pointer;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    .tw-go:hover    { background: var(--teal-d); border-color: var(--teal-d); }
+    .tw-go:disabled { background: #3a2a18; border-color: #3a2a18; color: #6a5030; cursor: default; }
+
+    .tw-status {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.04em; color: #b8a888; margin-top: 0.75rem; min-height: 1.2em;
+    }
+    .tw-status.error { color: #f08060; }
+
+    /* ── STRIPE RULE ──────────────────────────────────────── */
+    .stripe-rule {
+      height: 6px; border-radius: 3px; margin-bottom: 2.5rem; opacity: 0.6;
+      background: repeating-linear-gradient(
+        to right, var(--coral) 0, var(--coral) 20px,
+        var(--teal) 20px, var(--teal) 40px,
+        var(--gold) 40px, var(--gold) 60px
+      );
+    }
+
+    .loading-state {
+      text-align: center; padding: 6rem 0;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-lite);
+    }
+    .loading-state::before { content: '— '; }
+    .loading-state::after  { content: ' —'; }
+
+    .masthead-about {
+      position: absolute; top: 18px; right: 1.5rem;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem;
+      letter-spacing: 0.05em; color: var(--ink-lite);
+      text-align: right; line-height: 1.7; z-index: 2;
+    }
+    .masthead-about a {
+      color: var(--coral); text-decoration: none; font-weight: 700;
+      transition: color 0.15s;
+    }
+    .masthead-about a:hover { color: var(--coral-d); }
+    .masthead-about .disclaimer {
+      display: block; margin-top: 0.1rem; opacity: 0.7; font-size: 0.6rem;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--cream-d); }
+    ::-webkit-scrollbar-thumb { background: var(--cream-dd); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ink-lite); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-stripes">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="masthead-semi"></div>
+  <div class="masthead-about">
+    Made by James Howe <a href="https://jah0383.github.io" target="_blank" rel="noopener">Check out my other stuff!(I'm looking for a job!)</a><br>
+    <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
+  </div>
+  <div class="masthead-inner">
+    <div class="masthead-title">
+      My Brother,<br>My Brother
+      <span class="amp">&amp;</span> Me
+      <span class="sub">Word Statistics</span>
+    </div>
+    <div class="masthead-divider"></div>
+    <div class="masthead-meta" id="masthead-meta">Loading…</div>
+  </div>
+</header>
+
+<nav class="site-nav">
+  <button class="active" data-tab="overview">Overview</button>
+  <button data-tab="search">Word Search</button>
+  <button data-tab="topwords">Compare Words</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="active">
+    <div class="loading-state" id="overview-loading">Loading episode data</div>
+    <div id="overview-content" style="display:none">
+      <div class="section-heading"><h2>Overview</h2><div class="rule"></div></div>
+      <div class="stat-band" id="stat-band"></div>
+      <div class="stripe-rule"></div>
+      <div class="chart-card">
+        <div class="chart-card-head"><span class="dot"></span>Words Spoken Per Episode — By Brother</div>
+        <div class="chart-controls">
+          <span class="chart-controls-label">Range</span>
+          <div class="ctrl-group">
+            <input class="ctrl-input narrow" type="number" id="ov-ep-from" placeholder="Ep from" />
+            <span style="font-family:'Josefin Sans';font-size:0.75rem;color:var(--ink-lite)">—</span>
+            <input class="ctrl-input narrow" type="number" id="ov-ep-to"   placeholder="Ep to" />
+            <button class="ctrl-apply" id="ov-apply">Apply</button>
+          </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Smooth</span>
+          <div class="ctrl-btn-group" id="ov-smooth-group">
+            <button class="ctrl-btn active" data-smooth="1">Off</button>
+            <button class="ctrl-btn" data-smooth="5">5</button>
+            <button class="ctrl-btn" data-smooth="10">10</button>
+            <button class="ctrl-btn" data-smooth="20">20</button>
+          </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Type</span>
+          <div class="ctrl-btn-group" id="ov-type-group">
+            <button class="ctrl-btn active" data-type="line">Line</button>
+            <button class="ctrl-btn" data-type="area">Area</button>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <canvas id="chart-words" height="100"></canvas>
+          <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><span class="dot" style="background:var(--teal)"></span>Speaker Share Per Episode (%)</div>
+        <div class="chart-card-body">
+          <canvas id="chart-share" height="100"></canvas>
+          <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section id="search">
+    <div class="section-heading"><h2>Word Search</h2><div class="rule"></div></div>
+    <div class="search-panel">
+      <div class="search-panel-label">Search mode</div>
+      <div class="ngram-row">
+        <button class="ngram-btn active" data-mode="word">Single Word</button>
+        <button class="ngram-btn" data-mode="bigram">Two Words</button>
+        <button class="ngram-btn" data-mode="trigram">Three Words</button>
+        <button class="ngram-btn" data-mode="stage">Stage Direction</button>
+      </div>
+      <div class="search-input-row">
+        <input class="search-input" type="text" id="word-input" placeholder="e.g.  thunderzone" />
+        <button class="search-go" id="search-btn">Search</button>
+      </div>
+      <div class="badge-row">
+        <span id="badge-word"    class="idx-badge" style="display:none"><span class="dot"></span>Words</span>
+        <span id="badge-bigram"  class="idx-badge" style="display:none"><span class="dot"></span>Bigrams</span>
+        <span id="badge-trigram" class="idx-badge" style="display:none"><span class="dot"></span>Trigrams</span>
+        <span id="badge-stage"   class="idx-badge" style="display:none"><span class="dot"></span>Stage</span>
+      </div>
+      <div class="search-status" id="search-status">Select a mode, type a query, press Search or Enter.</div>
+    </div>
+    <div id="search-results"></div>
+  </section>
+
+  <!-- COMPARE WORDS -->
+  <section id="topwords">
+    <div class="section-heading"><h2>Compare Words</h2><div class="rule"></div></div>
+    <div class="tw-panel">
+      <div class="tw-panel-label">Enter words or phrases, comma-separated</div>
+      <input class="tw-input" type="text" id="tw-input"
+             placeholder="e.g.  yahoo, kiss your dad, monster factory, thunderzone" />
+      <div class="tw-presets-label">Presets</div>
+      <div class="tw-presets" id="tw-presets"></div>
+      <div class="tw-bottom-row">
+        <div class="tw-hint">
+          Mix word types freely — single words, bigrams, trigrams, and [stage directions] all work.
+          Brackets auto-added for stage directions.
+        </div>
+        <button class="tw-go" id="tw-btn">Compare</button>
+      </div>
+      <div class="tw-status" id="tw-status">Results will appear below.</div>
+    </div>
+    <div id="tw-results"></div>
+  </section>
+
+</main>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const DATA_BASE = './data';
+
+const SPEAKER_COLORS = {
+  Justin:  { line: '#3AB5B2', area: 'rgba(58,181,178,0.18)',  bar: 'rgba(58,181,178,0.7)'  },
+  Travis:  { line: '#D0492A', area: 'rgba(208,73,42,0.15)',   bar: 'rgba(208,73,42,0.7)'   },
+  Griffin: { line: '#C8920A', area: 'rgba(200,146,10,0.18)',  bar: 'rgba(200,146,10,0.7)'  },
+};
+const FALLBACK = { line: '#9A7D58', area: 'rgba(154,125,88,0.15)', bar: 'rgba(154,125,88,0.7)' };
+const sc = spk => SPEAKER_COLORS[spk] ?? FALLBACK;
+
+const PRESETS = [
+  { label: 'Catchphrases',    terms: 'yahoo, thunderzone, kiss your dad, taako' },
+  { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters]' },
+  { label: 'Podcast bits',    terms: 'munch squad, money zone, haunted doll watch' },
+  { label: 'Advice words',    terms: 'advice, question, problem, help' },
+  { label: 'Relationships',   terms: 'wife, husband, brother, family, friend' },
+  { label: 'Internet',        terms: 'twitter, reddit, yahoo answers, facebook' },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let manifest = null, episodeStats = null;
+
+let currentMode = 'word';
+
+const INDEX_CACHE = { word: null, bigram: null, trigram: null, stage: null };
+const INDEX_FILES = {
+  word:    'word_index.json',
+  bigram:  'bigram_index.json',
+  trigram: 'trigram_index.json',
+  stage:   'stage_index.json',
+};
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.site-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.site-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('main section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// ── Mode toggle (clears stale results) ───────────────────────────────────────
+document.querySelectorAll('.ngram-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.mode === currentMode) return;
+    document.querySelectorAll('.ngram-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+
+    // Clear stale results + chart
+    document.getElementById('search-results').innerHTML = '';
+    if (searchChart) { searchChart.destroy(); searchChart = null; }
+    setSearchStatus('', '');
+
+    const hints = {
+      word:    'e.g.  thunderzone  or  griffin',
+      bigram:  'e.g.  monster factory  or  bad idea',
+      trigram: 'e.g.  kiss your dad  or  bad idea blanket',
+      stage:   'e.g.  laughs  or  chortles  — brackets added automatically',
+    };
+    document.getElementById('word-input').placeholder = hints[currentMode];
+  });
+});
+
+// ── Data loaders ──────────────────────────────────────────────────────────────
+async function fetchJSON(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(`HTTP ${r.status} — ${path}`);
+  return r.json();
+}
+
+function loadIndex(mode) {
+  const cached = INDEX_CACHE[mode];
+  if (cached && typeof cached.then !== 'function') return Promise.resolve(cached);
+  if (cached) return cached;
+  setBadge(mode, 'loading');
+  const p = fetchJSON(`${DATA_BASE}/${INDEX_FILES[mode]}`).then(d => {
+    INDEX_CACHE[mode] = d;
+    setBadge(mode, 'loaded');
+    return d;
+  });
+  INDEX_CACHE[mode] = p;
+  return p;
+}
+
+function setBadge(mode, state) {
+  const el = document.getElementById(`badge-${mode}`);
+  if (el) { el.style.display = ''; el.className = `idx-badge ${state}`; }
+}
+
+async function init() {
+  try {
+    [manifest, episodeStats] = await Promise.all([
+      fetchJSON(`${DATA_BASE}/manifest.json`),
+      fetchJSON(`${DATA_BASE}/episode_stats.json`),
+    ]);
+    const { speakers, episode_count } = manifest;
+    document.getElementById('masthead-meta').innerHTML =
+      `<strong>${episode_count.toLocaleString()}</strong> Episodes<br>` +
+      speakers.map(s => `<strong style="color:${sc(s).line}">${s}</strong>`).join(' · ');
+    document.getElementById('overview-loading').style.display = 'none';
+    document.getElementById('overview-content').style.display = '';
+    renderOverview();
+    buildPresets();
+  } catch (err) {
+    document.getElementById('overview-loading').textContent = `Failed to load: ${err.message}`;
+  }
+}
+
+// ── Number formatting ────────────────────────────────────────────────────────
+function fmtN(n) {
+  if (n >= 1e6)  return (n / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(1).replace(/\.0$/, '')  + 'K';
+  return n.toLocaleString();
+}
+
+// ── Chart base options ────────────────────────────────────────────────────────
+const baseOpts = () => ({
+  responsive: true,
+  animation: { duration: 400 },
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: {
+      labels: { color: '#6B4F30', boxWidth: 10, font: { size: 11, family: "'Josefin Sans'" } }
+    },
+    tooltip: {
+      backgroundColor: '#2B1D0E', borderColor: '#4a3820', borderWidth: 1,
+      titleColor: '#F0E6CE', bodyColor: '#b8a888', padding: 10,
+      titleFont: { family: "'Josefin Sans'", weight: '700', size: 11 },
+      bodyFont: { family: "'Lora'", size: 12 },
+    },
+  },
+  scales: {
+    x: {
+      ticks: { color: '#9A7D58', font: { size: 10, family: "'Josefin Sans'" }, maxTicksLimit: 25, maxRotation: 0 },
+      grid: { color: 'rgba(43,29,14,0.07)' }, border: { color: 'rgba(43,29,14,0.15)' },
+    },
+    y: {
+      ticks: {
+        color: '#9A7D58', font: { size: 10, family: "'Josefin Sans'" },
+        callback: v => fmtN(v),
+      },
+      grid: { color: 'rgba(43,29,14,0.07)' }, border: { color: 'rgba(43,29,14,0.15)' },
+    },
+  },
+});
+
+function lineDS(speaker, data, fill = false, radius = 0) {
+  const c = sc(speaker);
+  return {
+    label: speaker, data,
+    borderColor: c.line, backgroundColor: fill ? c.area : c.line,
+    borderWidth: 2, pointRadius: radius, pointHoverRadius: 5,
+    pointBackgroundColor: c.line, tension: 0.3, fill,
+  };
+}
+
+// ── Utilities: rolling average, range filter ──────────────────────────────────
+function rollingAvg(arr, window) {
+  if (window <= 1) return arr;
+  return arr.map((_, i) => {
+    const start = Math.max(0, i - Math.floor(window / 2));
+    const slice = arr.slice(start, start + window);
+    return slice.reduce((a, v) => a + v, 0) / slice.length;
+  });
+}
+
+function wireToggleGroup(groupId, onChange) {
+  document.getElementById(groupId)?.querySelectorAll('.ctrl-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById(groupId).querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      onChange(btn);
+    });
+  });
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+let ovWordsChart = null, ovShareChart = null;
+let ovSmooth = 1, ovFill = false;
+
+function renderOverview() {
+  const stats = episodeStats, speakers = manifest.speakers;
+  const totals = {};
+  for (const ep of stats)
+    for (const [spk, d] of Object.entries(ep.speakers))
+      totals[spk] = (totals[spk] ?? 0) + d.total_words;
+  const grand = Object.values(totals).reduce((s, v) => s + v, 0);
+
+  document.getElementById('stat-band').innerHTML = [
+    `<div class="stat-card"><div class="sc-label">Episodes</div><div class="sc-value">${stats.length.toLocaleString()}</div></div>`,
+    `<div class="stat-card"><div class="sc-label">Total Words</div><div class="sc-value">${fmtN(grand)}</div></div>`,
+    ...speakers.map(spk => {
+      const pct = grand ? ((totals[spk]??0)/grand*100).toFixed(1) : '0';
+      return `<div class="stat-card" style="background:${sc(spk).line};color:white">
+        <div class="sc-label" style="color:rgba(255,255,255,0.65)">${spk}</div>
+        <div class="sc-value">${fmtN(totals[spk]??0)} <span style="font-family:'Josefin Sans';font-size:0.6em;opacity:0.75">${pct}%</span></div>
+      </div>`;
+    }),
+  ].join('');
+
+  buildOvCharts(stats);
+  wireOvControls(stats);
+}
+
+function buildOvCharts(stats) {
+  const speakers = manifest.speakers;
+  const epFrom = parseInt(document.getElementById('ov-ep-from')?.value) || stats[0]?.id;
+  const epTo   = parseInt(document.getElementById('ov-ep-to')?.value)   || stats[stats.length-1]?.id;
+  const filtered = stats.filter(ep => ep.id >= epFrom && ep.id <= epTo);
+  const labels = filtered.map(ep => `Ep ${ep.id}`);
+
+  // Words chart
+  if (ovWordsChart) ovWordsChart.destroy();
+  const wordsData = speakers.map(s => ({
+    ...lineDS(s, rollingAvg(filtered.map(ep => ep.speakers[s]?.total_words ?? 0), ovSmooth), ovFill),
+  }));
+  ovWordsChart = new Chart(document.getElementById('chart-words'), {
+    type: 'line',
+    data: { labels, datasets: wordsData },
+    options: baseOpts(),
+  });
+
+  // Share chart
+  if (ovShareChart) ovShareChart.destroy();
+  const sOpts = baseOpts();
+  sOpts.scales.y.min = 0; sOpts.scales.y.max = 100;
+  sOpts.scales.y.ticks.callback = v => v + '%';
+  const shareData = speakers.map(s => ({
+    ...lineDS(s, rollingAvg(filtered.map(ep => {
+      const tot = speakers.reduce((a, k) => a + (ep.speakers[k]?.total_words ?? 0), 0);
+      return tot ? +((ep.speakers[s]?.total_words ?? 0) / tot * 100).toFixed(1) : 0;
+    }), ovSmooth), true),
+  }));
+  ovShareChart = new Chart(document.getElementById('chart-share'), {
+    type: 'line',
+    data: { labels, datasets: shareData },
+    options: sOpts,
+  });
+}
+
+function wireOvControls(stats) {
+  // Populate range defaults
+  const fromEl = document.getElementById('ov-ep-from');
+  const toEl   = document.getElementById('ov-ep-to');
+  if (fromEl && !fromEl.value) fromEl.value = stats[0]?.id ?? '';
+  if (toEl   && !toEl.value)   toEl.value   = stats[stats.length-1]?.id ?? '';
+
+  document.getElementById('ov-apply')?.addEventListener('click', () => buildOvCharts(stats));
+  fromEl?.addEventListener('keydown', e => { if (e.key === 'Enter') buildOvCharts(stats); });
+  toEl?.addEventListener('keydown',   e => { if (e.key === 'Enter') buildOvCharts(stats); });
+
+  wireToggleGroup('ov-smooth-group', btn => {
+    ovSmooth = parseInt(btn.dataset.smooth);
+    buildOvCharts(stats);
+  });
+
+  wireToggleGroup('ov-type-group', btn => {
+    ovFill = btn.dataset.type === 'area';
+    buildOvCharts(stats);
+  });
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
+let searchChart = null;
+let searchAllEps = [], searchEntry = null, searchSpeakers = [], searchSmooth = 1;
+
+document.getElementById('word-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+document.getElementById('search-btn').addEventListener('click', doSearch);
+
+async function doSearch() {
+  const raw = document.getElementById('word-input').value.trim().toLowerCase();
+  if (!raw) return;
+  const mode = currentMode, words = raw.split(/\s+/);
+  const exp = { word: 1, bigram: 2, trigram: 3 };
+  const btn = document.getElementById('search-btn');
+  const resEl = document.getElementById('search-results');
+
+  if (mode !== 'stage' && words.length !== exp[mode]) {
+    const lbl = { word: '1 word', bigram: '2 words', trigram: '3 words' };
+    setSearchStatus('error', `${mode} mode expects ${lbl[mode]} — got ${words.length}.`);
+    return;
+  }
+
+  btn.disabled = true;
+  resEl.innerHTML = '';
+  if (searchChart) { searchChart.destroy(); searchChart = null; }
+  const already = INDEX_CACHE[mode] && typeof INDEX_CACHE[mode].then !== 'function';
+  setSearchStatus('', already ? 'Searching…' : `Loading ${mode} index — one moment…`);
+
+  try {
+    const index = await loadIndex(mode);
+    const key   = mode === 'stage' ? `[${words.join(' ')}]` : words.join(' ');
+    const entry = index[key];
+
+    if (!entry) {
+      const hint = mode === 'stage'
+        ? ' (check spelling, or try without brackets)'
+        : mode !== 'word' ? ' (may have been trimmed at build time)' : '';
+      setSearchStatus('', `"${key}" — not found in any episode.${hint}`);
+      btn.disabled = false;
+      return;
+    }
+
+    const speakers = Object.keys(entry).sort();
+    const epLookup = Object.fromEntries(episodeStats.map(ep => [String(ep.id), ep]));
+    const allEps   = Array.from(new Set(speakers.flatMap(s => Object.keys(entry[s]))))
+      .map(id => epLookup[id]).filter(Boolean).sort((a, b) => a.id - b.id);
+
+    // stash for controls to reuse
+    searchAllEps = allEps; searchEntry = entry; searchSpeakers = speakers; searchSmooth = 1;
+
+    const spkTotals = Object.fromEntries(
+      speakers.map(s => [s, Object.values(entry[s]).reduce((a, v) => a + v, 0)])
+    );
+    const grandTotal = Object.values(spkTotals).reduce((a, v) => a + v, 0);
+    setSearchStatus('', `"${key}" found in ${allEps.length} episodes — ${grandTotal.toLocaleString()} total uses`);
+
+    const tableRows = speakers
+      .sort((a, b) => spkTotals[b] - spkTotals[a])
+      .map(s => `<tr>
+        <td><span class="spk-swatch" style="background:${sc(s).line}"></span>${s}</td>
+        <td><span class="count-val">${spkTotals[s].toLocaleString()}</span></td>
+        <td><span class="pct-val">${grandTotal ? (spkTotals[s]/grandTotal*100).toFixed(1) : 0}%</span></td>
+      </tr>`).join('');
+
+    resEl.innerHTML = `
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <span class="dot" style="background:var(--coral)"></span>
+          "${key}" — per episode by speaker
+        </div>
+        <div class="chart-controls">
+          <span class="chart-controls-label">Range</span>
+          <div class="ctrl-group">
+            <input class="ctrl-input narrow" type="number" id="sr-ep-from" value="${allEps[0]?.id ?? ''}" placeholder="From" />
+            <span style="font-family:'Josefin Sans';font-size:0.75rem;color:var(--ink-lite)">—</span>
+            <input class="ctrl-input narrow" type="number" id="sr-ep-to" value="${allEps[allEps.length-1]?.id ?? ''}" placeholder="To" />
+            <button class="ctrl-apply" id="sr-apply">Apply</button>
+          </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Smooth</span>
+          <div class="ctrl-btn-group" id="sr-smooth-group">
+            <button class="ctrl-btn active" data-smooth="1">Off</button>
+            <button class="ctrl-btn" data-smooth="5">5</button>
+            <button class="ctrl-btn" data-smooth="10">10</button>
+            <button class="ctrl-btn" data-smooth="20">20</button>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <canvas id="search-chart"></canvas>
+          <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
+          <table class="totals-table" style="margin-top:1.25rem">
+            <thead><tr><th>Speaker</th><th>Total Uses</th><th>Share</th></tr></thead>
+            <tbody>${tableRows}</tbody>
+            <tfoot><tr><td>All speakers</td><td>${grandTotal.toLocaleString()}</td><td>100%</td></tr></tfoot>
+          </table>
+        </div>
+      </div>`;
+
+    buildSearchChart();
+    wireSearchControls();
+  } catch (err) {
+    setSearchStatus('error', `Error: ${err.message}`);
+  }
+  btn.disabled = false;
+}
+
+function buildSearchChart() {
+  const fromId = parseInt(document.getElementById('sr-ep-from')?.value) || searchAllEps[0]?.id;
+  const toId   = parseInt(document.getElementById('sr-ep-to')?.value)   || searchAllEps[searchAllEps.length-1]?.id;
+  const filtered = searchAllEps.filter(ep => ep.id >= fromId && ep.id <= toId);
+  const labels   = filtered.map(ep => `Ep ${ep.id}`);
+  const datasets = searchSpeakers.map(s =>
+    lineDS(s, rollingAvg(filtered.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0), searchSmooth),
+           false, filtered.length > 80 ? 0 : 3)
+  );
+  if (searchChart) { searchChart.destroy(); searchChart = null; }
+  searchChart = new Chart(document.getElementById('search-chart'), {
+    type: 'line', data: { labels, datasets }, options: baseOpts(),
+  });
+}
+
+function wireSearchControls() {
+  const applyFn = () => buildSearchChart();
+  document.getElementById('sr-apply')?.addEventListener('click', applyFn);
+  document.getElementById('sr-ep-from')?.addEventListener('keydown', e => { if (e.key === 'Enter') applyFn(); });
+  document.getElementById('sr-ep-to')?.addEventListener('keydown',   e => { if (e.key === 'Enter') applyFn(); });
+  wireToggleGroup('sr-smooth-group', btn => {
+    searchSmooth = parseInt(btn.dataset.smooth);
+    buildSearchChart();
+  });
+}
+
+// ── Compare Words ─────────────────────────────────────────────────────────────
+let twChart = null;
+
+function buildPresets() {
+  const el = document.getElementById('tw-presets');
+  PRESETS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'tw-preset';
+    btn.textContent = p.label;
+    btn.addEventListener('click', () => { document.getElementById('tw-input').value = p.terms; });
+    el.appendChild(btn);
+  });
+}
+
+document.getElementById('tw-input').addEventListener('keydown', e => { if (e.key === 'Enter') doCompare(); });
+document.getElementById('tw-btn').addEventListener('click', doCompare);
+
+function termMode(term) {
+  const t = term.trim().toLowerCase();
+  if (t.startsWith('[') || t.endsWith(']')) return 'stage';
+  const words = t.split(/\s+/).filter(Boolean);
+  if (words.length === 1) return 'word';
+  if (words.length === 2) return 'bigram';
+  if (words.length === 3) return 'trigram';
+  return null;
+}
+function termKey(term) {
+  const t = term.trim().toLowerCase().replace(/^\[|\]$/g, '');
+  return termMode(term) === 'stage' ? `[${t}]` : t;
+}
+
+async function doCompare() {
+  const raw = document.getElementById('tw-input').value;
+  const btn = document.getElementById('tw-btn');
+  const resEl = document.getElementById('tw-results');
+  const terms = raw.split(',').map(t => t.trim()).filter(Boolean);
+  if (!terms.length) return;
+
+  const invalid = terms.filter(t => termMode(t) === null);
+  if (invalid.length) {
+    setTwStatus('error', `Phrases longer than 3 words aren't supported: ${invalid.map(t => `"${t}"`).join(', ')}`);
+    return;
+  }
+
+  btn.disabled = true;
+  resEl.innerHTML = '';
+  if (twChart) { twChart.destroy(); twChart = null; }
+  setTwStatus('', 'Loading indexes…');
+
+  try {
+    await Promise.all([...new Set(terms.map(termMode))].map(loadIndex));
+    const speakers = manifest.speakers;
+    const termData = [], missing = [];
+
+    for (const term of terms) {
+      const key   = termKey(term);
+      const index = INDEX_CACHE[termMode(term)];
+      const entry = (typeof index?.then === 'function') ? null : index?.[key];
+      if (!entry) { missing.push(key); continue; }
+      const totals = {};
+      for (const spk of speakers)
+        totals[spk] = entry[spk] ? Object.values(entry[spk]).reduce((a, v) => a + v, 0) : 0;
+      termData.push({ key, totals });
+    }
+
+    if (!termData.length) {
+      setTwStatus('error', `None found: ${missing.map(k => `"${k}"`).join(', ')}`);
+      btn.disabled = false;
+      return;
+    }
+
+    const parts = [];
+    if (missing.length) parts.push(`Not found: ${missing.map(k => `"${k}"`).join(', ')}`);
+    parts.push(`Showing ${termData.length} term(s)`);
+    setTwStatus('', parts.join(' · '));
+
+    const labels   = termData.map(d => d.key);
+    const datasets = speakers.map(spk => ({
+      label: spk,
+      data: termData.map(d => d.totals[spk] ?? 0),
+      backgroundColor: sc(spk).bar, borderColor: sc(spk).line,
+      borderWidth: 2, borderRadius: 3,
+    }));
+
+    const tableRows = termData.map(d => {
+      const tot = speakers.reduce((a, s) => a + (d.totals[s] ?? 0), 0);
+      return `<tr>
+        <td style="font-family:'Josefin Sans';font-weight:700">${d.key}</td>
+        ${speakers.map(s => `<td><span class="count-val">${(d.totals[s]??0).toLocaleString()}</span></td>`).join('')}
+        <td style="color:var(--ink-mid);font-weight:700">${tot.toLocaleString()}</td>
+      </tr>`;
+    }).join('');
+
+    const spkHeaders = speakers.map(s =>
+      `<th><span class="spk-swatch" style="background:${sc(s).line}"></span>${s}</th>`
+    ).join('');
+
+    resEl.innerHTML = `
+      <div class="chart-card">
+        <div class="chart-card-head"><span class="dot" style="background:var(--teal)"></span>Total uses across all episodes, by speaker</div>
+        <div class="chart-card-body">
+          <canvas id="tw-chart"></canvas>
+          <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
+          <table class="totals-table" style="margin-top:1.25rem">
+            <thead><tr><th>Term</th>${spkHeaders}<th>Total</th></tr></thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+        </div>
+      </div>`;
+
+    const twOpts = baseOpts();
+    twOpts.plugins.tooltip.callbacks = {
+      title: ctx => ctx[0].label,
+      label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`,
+    };
+    twChart = new Chart(document.getElementById('tw-chart'), {
+      type: 'bar', data: { labels, datasets }, options: twOpts,
+    });
+  } catch (err) {
+    setTwStatus('error', `Error: ${err.message}`);
+  }
+  btn.disabled = false;
+}
+
+// ── Status helpers ────────────────────────────────────────────────────────────
+function setSearchStatus(cls, text) {
+  const el = document.getElementById('search-status');
+  el.className = cls ? `search-status ${cls}` : 'search-status';
+  el.textContent = text;
+}
+function setTwStatus(cls, text) {
+  const el = document.getElementById('tw-status');
+  el.className = cls ? `tw-status ${cls}` : 'tw-status';
+  el.textContent = text;
+}
+
+init();
+</script>
+</body>
+</html>
