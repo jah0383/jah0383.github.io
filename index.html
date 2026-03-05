@@ -1,284 +1,572 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Resume</title>
-  <!-- Bootstrap -->
-  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
-  <script src="p5js/p5.js"></script>
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James — Engineer, Denver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #e0e0e0;
+            --text-mid: rgba(224,224,224,0.55);
+            --text-dim: rgba(224,224,224,0.22);
+            --accent: #6b8f3c;
+            --border: rgba(224,224,224,0.10);
+            --border-hover: rgba(224,224,224,0.25);
+            --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+            --mono: 'IBM Plex Mono', 'Consolas', monospace;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content:'';
+            position:fixed; inset:0;
+            pointer-events:none; z-index:9999;
+            opacity:0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 128px;
+        }
+
+        ::selection { background:var(--accent); color:var(--bg); }
+        a { color:var(--text); text-decoration:none; transition:color .2s; }
+        a:hover { color:var(--accent); }
+
+        .page { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ---- TOP BAR ---- */
+        .topbar {
+            position: fixed; top:0; left:0; right:0;
+            height: 44px;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .topbar-name {
+            font-family: var(--display);
+            font-weight: 800; font-size: 14px;
+            letter-spacing: 0.12em; text-transform: uppercase;
+        }
+
+        .topbar-actions { display: flex; gap: 1.25rem; align-items: center; }
+
+        .topbar-actions a {
+            font-size: 10px; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--text-mid);
+        }
+
+        .topbar-btn {
+            font-family: var(--mono);
+            font-size: 10px; font-weight: 500;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 6px 14px;
+            border: 1px solid var(--text);
+            background: transparent; color: var(--text);
+            cursor: pointer; transition: all .15s;
+        }
+        .topbar-btn:hover { background: var(--text); color: var(--bg); }
+
+        /* ---- HERO ---- */
+        .hero {
+            padding: 7rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-label {
+            font-size: 10px; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--text-dim);
+            margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .hero-label .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            line-height: 0.92;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-sub {
+            font-family: var(--display);
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--text-mid);
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+
+        .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+
+        .label {
+            font-size: 9px; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--text-dim);
+        }
+        .value {
+            font-size: 12px; letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ---- SECTIONS ---- */
+        .section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+
+        .section-head {
+            display: flex; align-items: baseline;
+            gap: 0.75rem; margin-bottom: 1.5rem;
+        }
+
+        .section-num { font-size: 10px; letter-spacing: 0.08em; color: var(--accent); }
+
+        .section-title {
+            font-family: var(--display); font-weight: 700;
+            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.06em;
+        }
+
+        /* ---- EXPERIENCE ---- */
+        .entry {
+            border-top: 1px solid var(--border);
+            cursor: pointer; transition: background .15s;
+        }
+        .entry:last-child { border-bottom: 1px solid var(--border); }
+
+        .entry-header {
+            display: grid; grid-template-columns: 1fr auto;
+            align-items: center; padding: 1rem 0; gap: 1rem;
+        }
+
+        .entry-main {
+            display: flex; align-items: baseline;
+            gap: 0.75rem; flex-wrap: wrap;
+        }
+
+        .entry-org {
+            font-family: var(--display); font-weight: 700;
+            font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+
+        .entry-role {
+            font-size: 11px; letter-spacing: 0.06em;
+            color: var(--accent); text-transform: uppercase;
+        }
+
+        .entry-right {
+            display: flex; align-items: center; gap: 1rem;
+        }
+
+        .entry-date {
+            font-size: 10px; letter-spacing: 0.08em;
+            color: var(--text-dim); text-transform: uppercase; white-space: nowrap;
+        }
+
+        .entry-toggle {
+            font-size: 14px; color: var(--text-dim);
+            transition: transform .25s, color .2s; user-select: none;
+        }
+
+        .entry.open .entry-toggle { transform: rotate(45deg); color: var(--accent); }
+
+        .entry-details {
+            max-height: 0; overflow: hidden;
+            transition: max-height .35s ease, padding .35s ease;
+        }
+        .entry.open .entry-details { max-height: 300px; padding: 0 0 1.25rem 0; }
+
+        .entry-details ul {
+            list-style: none; display: flex;
+            flex-direction: column; gap: 6px;
+        }
+
+        .entry-details li {
+            font-size: 12px; line-height: 1.6;
+            color: var(--text-mid); padding-left: 1rem; position: relative;
+        }
+        .entry-details li::before {
+            content:'—'; position:absolute; left:0; color:var(--text-dim);
+        }
+
+        .entry-loc {
+            font-size: 10px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px;
+        }
+
+        /* ---- EDUCATION ---- */
+        .edu-row {
+            display: flex; justify-content: space-between;
+            align-items: baseline; flex-wrap: wrap;
+            gap: 0.5rem 2rem; padding: 0.75rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .edu-left {
+            display: flex; align-items: baseline;
+            gap: 0.75rem; flex-wrap: wrap;
+        }
+
+        .edu-school {
+            font-family: var(--display); font-weight: 700;
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .edu-degree {
+            font-size: 11px; letter-spacing: 0.06em;
+            color: var(--accent); text-transform: uppercase;
+        }
+
+        .edu-right { display: flex; gap: 1.5rem; align-items: baseline; }
+
+        .edu-stat {
+            font-size: 11px; letter-spacing: 0.05em;
+            color: var(--text-mid); text-transform: uppercase;
+        }
+        .edu-stat strong { color: var(--text); font-weight: 600; }
+
+        /* ---- CERT ---- */
+        .cert-row {
+            display: flex; justify-content: space-between;
+            align-items: baseline; flex-wrap: wrap;
+            gap: 0.5rem 2rem; padding: 0.75rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cert-name {
+            font-family: var(--display); font-weight: 700;
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .cert-detail {
+            font-size: 10px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim);
+        }
+        .cert-detail .active { color: var(--accent); }
+
+        /* ---- PROJECT ---- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .project {
+            background: var(--bg);
+            padding: 1.5rem; transition: border-color .25s;
+        }
+        .project:hover { background: #0e0e0e; }
+
+        .project-tag {
+            font-size: 10px; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
+        }
+
+        .project h3 {
+            font-family: var(--display); font-weight: 700;
+            font-size: 1.15rem; text-transform: uppercase;
+            letter-spacing: 0.03em; margin-bottom: 0.5rem;
+        }
+
+        .project p {
+            font-size: 12px; line-height: 1.65;
+            color: var(--text-mid); margin-bottom: 1rem;
+        }
+
+        .project-link {
+            font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+            border-bottom: 1px solid var(--border); padding-bottom: 2px;
+            transition: color .2s, border-color .2s;
+        }
+        .project-link:hover { color: var(--accent); border-color: var(--accent); }
+
+        /* ---- FOOTER ---- */
+        .footer {
+            padding: 2rem 0; display: flex;
+            justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 0.75rem;
+        }
+
+        .footer-left {
+            font-size: 10px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim);
+        }
+        .footer-right { display: flex; gap: 1.5rem; }
+        .footer-right a {
+            font-size: 10px; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--text-mid);
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 640px) {
+            .page { padding: 0 1.25rem; }
+            .topbar { padding: 0 1.25rem; }
+            .topbar-actions a.hide-mobile { display: none; }
+            .hero { padding: 6rem 0 2.5rem; }
+            .hero-meta { gap: 1.25rem; }
+            .entry-main { flex-direction: column; gap: 2px; }
+            .edu-row, .cert-row { flex-direction: column; gap: 4px; }
+            .edu-right { gap: 1rem; }
+            .footer { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* ---- LOAD ANIMATION ---- */
+        .fi { opacity:0; transform:translateY(10px); animation:fadeUp .5s ease forwards; }
+        .d1{animation-delay:.05s} .d2{animation-delay:.12s}
+        .d3{animation-delay:.2s}  .d4{animation-delay:.28s}
+        .d5{animation-delay:.36s} .d6{animation-delay:.44s}
+        .d7{animation-delay:.52s}
+
+        @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <hr>
-    <div class="row">
-      <div class="col">
-        <div class="row">
-          <div class="col text-center">
-            <h1><span class="Name align-middle">John Doe</span></h1>
-          </div>
-          <div class="col text-center">
-            <a class="Link1" target="_blank" href="">My Art Portfolio</a><br>
-            <a class="Link2" target="_blank" href="">My LinkedIn</a><br>
-            <a class="Link3" target="_blank" href="">Download My Resume</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-8 col-sm-12">
-        <div class="media">
-          <!-- <img class="mr-3" src="/images/115X115.gif" alt="Generic placeholder image"> -->
-          <div class="media-body">
-            <h5 class="mt-0"><span class="JobTitle">Web Developer</span></h5>
-            <span class="Bio">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-              sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
-              ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <div class="row justify-content-md-around m-1">
-          <address>
-            <strong><span class="Name">John Doe</span></strong><br>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" fill="currentColor" class="bi bi-phone"
-              viewBox="0 1 16 16">
-              <path
-                d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z" />
-              <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-            </svg> <span class="Phone">(123) 456-7890</span><br>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
-            </svg> <a href="mailto:#" class="Email">first.last@example.com</a>
-            <span class="AddressLine1">1355 Market St, Suite 900</span><br>
-            <span class="AddressLine2">San Francisco, CA 94103</span><br>
-          </address>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <h2>Education</h2>
-        <hr>
-        <div class="row">
-          <div class="col-6">
-            <h4><strong>Bucknell University,</strong> Lewisburg, PA </h4>
-          </div>
-          <div class="col-6">
-            <h5 class="text-right"><span aria-hidden="true"></span> Aug 2019 - May 2023</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Bachelor of Science in Computer Engineering</span></h5>
-        <div class="row">
-          <div class="col">
-            <p>Mathematics Minor<br><strong>GPA 3.63/4.0</strong><br>Dean's List: 7 Semesters</p>
-          </div>
-          <div class="col">
-            <p><strong>(Some)Courses Taken</strong><br>
-            Diff. Eq <strong>◊</strong> Lin. Alg<br>Machine Learning<br>Image Processing<br>Data Mining<br>Design & Analysis of Algorithms</p>
 
-          </div>
+    <div class="topbar">
+        <span class="topbar-name">James</span>
+        <div class="topbar-actions">
+            <!-- ▼ REPLACE HREF ▼ -->
+            <a href="#" class="hide-mobile">LinkedIn</a>
+            <a href="https://github.com/jah0383" target="_blank" rel="noopener" class="hide-mobile">GitHub</a>
+            <!-- ▼ REPLACE HREF WITH RESUME PDF ▼ -->
+            <a href="#" class="topbar-btn">Resume ↓</a>
         </div>
+    </div>
 
-      </div>
+    <div class="page">
 
-      <div class="col-md-6 col-sm-12">
-        <h2>Skill Set</h2>
-        <hr>
-        <div id="Skills"></div>
-      </div>
-    </div>
-    <div class="row">
-      <h2>Certifications</h2>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-sm">
-        <p><b>Cisco Certified Network Associate (CCNA)</b><br>
-        <i>Cisco, December 2024<br>
-        Expires 2027</i></p>
-      </div>
-    </div>
-    <hr>
-    <div class="text-center">
-      <p style="font-size: larger">A recent(embeddable) project</p>
-      <p style="font-size: large">A way to explore how different easing functions look for gears(or gear like objects in this case), made with p5.js<br>
-      Work Experience Below, more art stuff <a class="Link1" target="_blank" href="">here</a><br>(this looks better on a desktop)</p>
-      <div class="container"><iframe style="border:none;" src="p5js/gear.html" width="100%" height="600px"></iframe></div>
-    </div>
-    <hr>
-    <h2>Work Experience</h2>
-    <hr>
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col">
-            <h4>Kyndryl</h4>
-          </div>
-          <div class="col-5">
-            <h5 class="text-right"><span aria-hidden="true"></span>July 2023<br>July 2024</h5>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <h5>Denver, CO</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Senior Network Associate</span></h5>
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, recusandae, corporis, tempore nam fugit
-          deleniti sequi excepturi quod repellat laboriosam soluta laudantium amet dicta non ratione distinctio nihil
-          dignissimos esse!</p> -->
-        <ul>
-          <li>Researched and developed automation to optimize client’s Azure and AWS cloud networks with Terraform and Python</li>
-          <li>Developed network architect skills, how to fulfill client needs and how to communicate plans to clients </li>
-          <li>Shadowed client meetings, discussing pricing and developing solutions </li>
-        </ul>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col">
-            <h4>Senior Capstone Project</h4>
-          </div>
-          <div class="col-5">
-            <h5 class="text-right"><span aria-hidden="true"></span>Aug 2022<br>May 2023</h5>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <h5>Bucknell University, Lewisburg, PA</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Design Engineer</span></h5>
-        <iframe width="100%" height="315" 
-        src="https://www.youtube.com/embed/D0x8wGczHyg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-        </iframe>
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, recusandae, corporis, tempore nam fugit
-          deleniti sequi excepturi quod repellat laboriosam soluta laudantium amet dicta non ratione distinctio nihil
-          dignissimos esse!</p> -->
-        <ul>
-          <li>Developed an image recognition AI with Keras, Tensorflow, and Python</li>
-          <li>Used VMware alongside Docker to construct a containerized microservice architecture on a Linux os</li>
-          <li>Presented the finished project at the Hannover-Messe industrial trade fair in Germany</li>
-        </ul>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col">
-            <h4><a href="https://makere.maker.bucknell.edu/">Makerspace</a></h4>
-          </div>
-          <div class="col-5">
-            <h5 class="text-right"><span aria-hidden="true"></span>July 2021<br>May 2023</h5>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <h5>Bucknell University, Lewisburg, PA</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Lead Student Programmer</span></h5>
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, recusandae, corporis, tempore nam fugit
-          deleniti sequi excepturi quod repellat laboriosam soluta laudantium amet dicta non ratione distinctio nihil
-          dignissimos esse!</p> -->
-        <ul>
-          <li><a href="https://portalbox.blogs.bucknell.edu/">Refactored the Makerspace’s RF card access system for its Linux based embedded machines</a></li>
-          <li>Documented systems to express functionality for new programmers and managers</li>
-          <li>Designed and maintained a full-stack system for the Makerspace’s RF card access system</li>
-          <li>Created and maintained RESTful API calls for a MySQL database to connect with a web application</li>
-          <li>Maintained version control for multiple Git repositories</li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col">
-            <h4>CSCI 205: Software Engineering and Design</h4>
-          </div>
-          <div class="col-3">
-            <h5 class="text-right"><span aria-hidden="true"></span>May 2021</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Scrum Master for Final project</span></h5>
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, recusandae, corporis, tempore nam fugit
-          deleniti sequi excepturi quod repellat laboriosam soluta laudantium amet dicta non ratione distinctio nihil
-          dignissimos esse!</p> -->
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-            <li><a tabindex="-1" href="#">Action</a></li>
-            <li><a tabindex="-1" href="#">Another action</a></li>
-            <li><a tabindex="-1" href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a tabindex="-1" href="#">Separated link</a></li>
-          </ul>
-        <ul>
-          <li>Utilized the Scrum workflow to complete a working video game in Java with a team of 4</li>
-          <li>Designed user interfaces in Java using a Model View Controller architecture</li>
-          <li>Created Java Unit tests for scalable testing and rabid debugging</li>
-        </ul>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col">
-            <h4 style="margin-block-start:0px; margin:0px">Bucknell Theater Department</h4>
-          </div>
-          <div class="col-4">
-            <h5 class="text-right"><span aria-hidden="true"></span>Sep 2019<br>May 2023</h5>
-          </div>
-        </div>
-        <h5><span class="badge badge-secondary">Stage Manager</span></h5>
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, recusandae, corporis, tempore nam fugit
-          deleniti sequi excepturi quod repellat laboriosam soluta laudantium amet dicta non ratione distinctio nihil
-          dignissimos esse!</p> -->
-        <ul>
-          <li>Managed ensembles of actors up to 20 students, organizing schedules and planning rehearsals</li>
-          <li>Required to be flexible and learn new skills quickly to fill in for anyone who is unavailable</li>
-          <li>Take extensive notes on the production and communicate those with relevant people</li>
-        </ul>
-      </div>
-    </div>
-    <!-- <hr>
-    <h2>Portfolio</h2>
-    <hr>
-    <div class="container">
-      <div class="row text-center">
-        
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-      </div>
-      <div class="row text-center">
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-        <div class="col-sm-4 col-12 p-0"><img class="img-thumbnail" src="images/300X200.gif" alt=""></div>
-      </div>
-    </div> -->
-    <hr>
+        <section class="hero">
+            <div class="hero-label fi d1"><span class="dot"></span> Available for work</div>
+            <h1 class="fi d2">James</h1>
+            <p class="hero-sub fi d3">Network Infrastructure&nbsp;&nbsp;/&nbsp;&nbsp;Cloud&nbsp;&nbsp;/&nbsp;&nbsp;Automation</p>
+            <div class="hero-meta fi d4">
+                <div class="hero-meta-item">
+                    <span class="label">Location</span>
+                    <span class="value">Denver, CO</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">Local</span>
+                    <span class="value" id="clock">--:--</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">Focus</span>
+                    <span class="value">Industrial Systems</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">Cert</span>
+                    <span class="value">CCNA</span>
+                </div>
+            </div>
+        </section>
 
-    
-    <footer class="text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <p>Copyright © <span class="Name">John Doe</span>. All rights reserved. <br>
-            Based on Adobe DreamWeaver Bootstrap Resume Template</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </div>
-  <script src="scripts/main.js"></script>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap-4.4.1.js"></script>
-  
-</body>
+        <section class="section fi d5">
+            <div class="section-head">
+                <span class="section-num">01</span>
+                <h2 class="section-title">Experience</h2>
+            </div>
 
-</html>
+            <div class="entry" onclick="this.classList.toggle('open')">
+                <div class="entry-header">
+                    <div class="entry-main">
+                        <span class="entry-org">Kyndryl</span>
+                        <span class="entry-role">Senior Network Associate</span>
+                    </div>
+                    <div class="entry-right">
+                        <span class="entry-date">2023 — 2024</span>
+                        <span class="entry-toggle">+</span>
+                    </div>
+                </div>
+                <div class="entry-details">
+                    <div class="entry-loc">Denver, CO</div>
+                    <ul>
+                        <li>Built automation for client Azure and AWS cloud networks with Terraform and Python</li>
+                        <li>Developed network architecture plans, scoped and communicated solutions to clients</li>
+                        <li>Contributed to pricing discussions and solution development in client meetings</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry" onclick="this.classList.toggle('open')">
+                <div class="entry-header">
+                    <div class="entry-main">
+                        <span class="entry-org">Senior Capstone</span>
+                        <span class="entry-role">Design Engineer</span>
+                    </div>
+                    <div class="entry-right">
+                        <span class="entry-date">2022 — 2023</span>
+                        <span class="entry-toggle">+</span>
+                    </div>
+                </div>
+                <div class="entry-details">
+                    <div class="entry-loc">Bucknell University, PA</div>
+                    <ul>
+                        <li>Built image recognition system with Keras, TensorFlow, and Python</li>
+                        <li>Containerized microservice architecture using VMware and Docker on Linux</li>
+                        <li>Presented at Hannover Messe industrial trade fair in Germany</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry" onclick="this.classList.toggle('open')">
+                <div class="entry-header">
+                    <div class="entry-main">
+                        <span class="entry-org"><a href="https://makere.maker.bucknell.edu/" target="_blank" rel="noopener" onclick="event.stopPropagation()">Makerspace</a></span>
+                        <span class="entry-role">Lead Student Programmer</span>
+                    </div>
+                    <div class="entry-right">
+                        <span class="entry-date">2021 — 2023</span>
+                        <span class="entry-toggle">+</span>
+                    </div>
+                </div>
+                <div class="entry-details">
+                    <div class="entry-loc">Bucknell University, PA</div>
+                    <ul>
+                        <li>Refactored RF card access system for Linux-based embedded machines</li>
+                        <li>Designed full-stack system — RESTful APIs, MySQL database, web front-end</li>
+                        <li>Maintained docs and version control across multiple repositories</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry" onclick="this.classList.toggle('open')">
+                <div class="entry-header">
+                    <div class="entry-main">
+                        <span class="entry-org">CSCI 205</span>
+                        <span class="entry-role">Scrum Master</span>
+                    </div>
+                    <div class="entry-right">
+                        <span class="entry-date">2021</span>
+                        <span class="entry-toggle">+</span>
+                    </div>
+                </div>
+                <div class="entry-details">
+                    <div class="entry-loc">Bucknell University, PA</div>
+                    <ul>
+                        <li>Led a team of four through Scrum workflow to ship a working Java game</li>
+                        <li>Designed UI with Model-View-Controller architecture, wrote unit tests</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry" onclick="this.classList.toggle('open')">
+                <div class="entry-header">
+                    <div class="entry-main">
+                        <span class="entry-org">Theater Dept</span>
+                        <span class="entry-role">Stage Manager</span>
+                    </div>
+                    <div class="entry-right">
+                        <span class="entry-date">2019 — 2023</span>
+                        <span class="entry-toggle">+</span>
+                    </div>
+                </div>
+                <div class="entry-details">
+                    <div class="entry-loc">Bucknell University, PA</div>
+                    <ul>
+                        <li>Managed ensembles up to 20 — scheduling, rehearsal planning, cross-department coordination</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fi d6">
+            <div class="section-head">
+                <span class="section-num">02</span>
+                <h2 class="section-title">Education</h2>
+            </div>
+            <div class="edu-row">
+                <div class="edu-left">
+                    <span class="edu-school">Bucknell University</span>
+                    <span class="edu-degree">B.S. Computer Engineering, Math Minor</span>
+                </div>
+                <div class="edu-right">
+                    <span class="edu-stat"><strong>3.63</strong> GPA</span>
+                    <span class="edu-stat">Dean's List <strong>×7</strong></span>
+                    <span class="edu-stat">2019 — 2023</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fi d6">
+            <div class="section-head">
+                <span class="section-num">03</span>
+                <h2 class="section-title">Certifications</h2>
+            </div>
+            <div class="cert-row">
+                <span class="cert-name">CCNA</span>
+                <span class="cert-detail">Cisco&nbsp;&nbsp;·&nbsp;&nbsp;Dec 2024&nbsp;&nbsp;·&nbsp;&nbsp;<span class="active">Valid through 2027</span></span>
+            </div>
+        </section>
+
+        <section class="section fi d7">
+            <div class="section-head">
+                <span class="section-num">04</span>
+                <h2 class="section-title">Projects</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project">
+                    <div class="project-tag">Data Visualization / Python</div>
+                    <h3>MBMBaM Transcript Dashboard</h3>
+                    <p>Precomputed word and phrase frequency analysis across 500+ podcast episodes. Search any term and see usage by speaker, over time, and across episodes — no raw transcripts stored, just queryable stats.</p>
+                    <!-- ▼ REPLACE HREF ▼ -->
+                    <a href="#" class="project-link" target="_blank" rel="noopener">View dashboard →</a>
+                </div>
+                <div class="project">
+                    <div class="project-tag">Machine Learning / PyTorch</div>
+                    <h3>MNIST Digit Game</h3>
+                    <p>Draw a digit, a convolutional neural network guesses what you wrote. CNN trained on the MNIST dataset with PyTorch, deployed as an interactive browser game.</p>
+                    <a href="https://jah0383.github.io/mnist-debate-game.html" class="project-link" target="_blank" rel="noopener">Play it →</a>
+                </div>
+                <div class="project">
+                    <div class="project-tag">Interactive / p5.js</div>
+                    <h3>Gear Easing Explorer</h3>
+                    <p>A tool for visualizing how different easing functions affect the motion of gear-like objects.</p>
+                    <!-- ▼ REPLACE HREF ▼ -->
+                    <a href="#" class="project-link" target="_blank" rel="noopener">View project →</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span class="footer-left">© <span id="yr"></span> James</span>
+            <div class="footer-right">
+                <!-- ▼ REPLACE HREFS ▼ -->
+                <a href="#">LinkedIn</a>
+                <a href="https://github.com/jah0383" target="_blank" rel="noopener">GitHub</a>
+                <a href="/cdn-cgi/l/email-protection#94edfbe1e6d4f1f9f5fdf8baf7fbf9">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function tick() {
+            const d = new Date();
+            const h = d.getHours() % 12 || 12;
+            const m = String(d.getMinutes()).padStart(2,'0');
+            document.getElementById('clock').textContent = `${h}:${m} ${d.getHours()>=12?'PM':'AM'}`;
+        }
