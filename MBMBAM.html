@@ -824,6 +824,56 @@ document.querySelectorAll('.ngram-btn').forEach(btn => {
   });
 });
 
+// ── Memory management ────────────────────────────────────────────────────────
+//
+// Mobile browsers (and low-RAM desktops) can OOM-kill a tab when multiple
+// large index files are held in memory simultaneously.  The strategy here is
+// simple: before loading a new index, evict every *other* resolved index from
+// the cache so the GC can reclaim the memory.
+//
+// We only do this on memory-constrained devices, because on desktop the files
+// are small relative to available RAM and evicting them would just cause
+// unnecessary re-fetches.
+//
+// Detection logic (two signals combined):
+//   1. navigator.deviceMemory  — Chrome/Edge only; returns RAM in GB, capped
+//      at 8 for privacy. We treat < 4 GB as constrained.
+//   2. Screen width fallback   — Firefox and Safari don't expose deviceMemory,
+//      so we use a narrow screen (≤ 768px) as a proxy for "probably mobile".
+//      This will wrongly evict on a small desktop window, but that's safer
+//      than wrongly keeping everything on a low-RAM phone.
+
+function isMemoryConstrained() {
+  if (typeof navigator.deviceMemory === 'number') {
+    return navigator.deviceMemory < 4;
+  }
+  // Fallback: narrow viewport suggests mobile
+  return window.screen.width <= 768;
+}
+
+function evictOtherIndexes(keepMode) {
+  // keepMode is the one we're about to use — leave it alone.
+  // Only evict indexes that have fully resolved (pending fetches are tiny
+  // Promise objects, not the multi-MB parsed data, so they're harmless).
+  const LARGE_INDEXES = ['word', 'bigram', 'trigram', 'stage'];
+  let evicted = [];
+  for (const mode of LARGE_INDEXES) {
+    if (mode === keepMode) continue;
+    const entry = INDEX_CACHE[mode];
+    // typeof .then === 'function' means it's still a pending Promise — skip it
+    if (entry !== null && typeof entry.then !== 'function') {
+      INDEX_CACHE[mode] = null;
+      setBadge(mode, '');  // reset the loaded badge
+      evicted.push(mode);
+    }
+  }
+  // Prod the GC with a zero-byte allocation — this is a well-known mobile
+  // browser hint (not guaranteed, but costs nothing and often helps).
+  if (evicted.length) {
+    try { void new ArrayBuffer(0); } catch (_) {}
+  }
+}
+
 // ── Data loaders ──────────────────────────────────────────────────────────────
 async function fetchJSON(path) {
   const r = await fetch(path);
@@ -832,6 +882,11 @@ async function fetchJSON(path) {
 }
 
 function loadIndex(mode) {
+  // Evict unused indexes before loading a new one, but only on mobile/low-RAM.
+  // We check *before* looking at the cache so that even a cache-hit path goes
+  // through eviction — the user may have changed modes since the last load.
+  if (isMemoryConstrained()) evictOtherIndexes(mode);
+
   const cached = INDEX_CACHE[mode];
   if (cached && typeof cached.then !== 'function') return Promise.resolve(cached);
   if (cached) return cached;
