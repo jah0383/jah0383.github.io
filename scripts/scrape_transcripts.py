@@ -33,11 +33,7 @@ import re
 import time
 import argparse
 from pathlib import Path
-<<<<<<< HEAD
-from urllib.parse import urljoin, quote
-=======
->>>>>>> 8808f337bbe55a077f27e65296bc8b06a831efc8
-
+from urllib.parse import quote
 
 import requests
 
@@ -149,46 +145,6 @@ def download_pdf(
     """
     import json
 
-<<<<<<< HEAD
-        if new_this_page == 0:
-            print(f'  No new episodes on page {page}, stopping.')
-            break
-
-        print(f'  Found {new_this_page} MBMBaM episodes on page {page}')
-        page += 1
-        time.sleep(0.5)
-
-    return episodes
-
-
-# ── Step 2: Find PDF URL on an episode page ───────────────────────────────────
-
-PDF_RE = re.compile(r'\.pdf(\?|$)', re.IGNORECASE)
-
-def find_pdf_url(episode_url: str, session: requests.Session) -> str | None:
-    r = get(episode_url, session)
-    if r is None:
-        return None
-    soup = BeautifulSoup(r.text, 'html.parser')
-
-    # Look for anchor tags whose href ends in .pdf
-    for a in soup.find_all('a', href=True):
-        href = a['href']
-        if PDF_RE.search(href):
-            # Make absolute if relative
-            return urljoin(episode_url, href)
-    return None
-
-
-# ── Step 3: Download PDF ──────────────────────────────────────────────────────
-
-def download_pdf(filename, dest, session):
-    # Construct direct download URL from the shared folder base.
-    # The folder URL already points to the MBMBaM subfolder, so we
-    # just append the filename with dl=1 to force a download.
-    base = 'https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM'
-    url = f'{base}/{quote(filename)}?dl=1'
-=======
     api_arg = json.dumps({
         'url':  SHARED_FOLDER_URL,
         'path': f'/{filename}',
@@ -197,13 +153,8 @@ def download_pdf(filename, dest, session):
         'Authorization':   f'Bearer {access_token}',
         'Dropbox-API-Arg': api_arg,
     }
->>>>>>> 8808f337bbe55a077f27e65296bc8b06a831efc8
     try:
-<<<<<<< HEAD
-        r = session.get(url, timeout=120, stream=True)
-=======
         r = session.post(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
->>>>>>> 8808f337bbe55a077f27e65296bc8b06a831efc8
         r.raise_for_status()
         with open(dest, 'wb') as f:
             for chunk in r.iter_content(chunk_size=65536):
