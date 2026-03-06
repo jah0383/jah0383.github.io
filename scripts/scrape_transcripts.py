@@ -239,7 +239,7 @@ def main():
             continue
 
         print(f'  ↓ Downloading…')
-        ok = download_pdf(filename, dest, access_token, session)
+        ok = download_pdf(filename, dest, session)
         if ok:
             size_kb = dest.stat().st_size / 1024
             print(f'  ✓ {size_kb:.0f} KB')
