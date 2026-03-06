@@ -40,6 +40,10 @@ WORD_RE = re.compile(r"\b[a-z'][a-z']*\b")
 
 
 def tokenize(text: str) -> list:
+    # Normalize curly/smart apostrophes → straight apostrophe before matching.
+    # PDFs frequently use U+2019 (') or U+2018 (') instead of U+0027 ('),
+    # which causes "it's" to split into ["it", "s"] in bigrams etc.
+    text = text.replace('’', "'").replace('‘', "'")
     return WORD_RE.findall(text.lower())
 
 
