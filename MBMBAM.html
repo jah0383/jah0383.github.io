@@ -518,7 +518,7 @@
     }
     .browse-table th {
       position: sticky;
-      top: var(--nav-h);
+      top: calc(var(--nav-h) - 2px); /* the -2px is because otherwise theres a very thin gap on mobile*/
       z-index: 10;       /* above table rows (default 0), below nav (z-index:100) */
       background: #f5ead4; /* solid — can't use rgba here or rows show through */
       font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
