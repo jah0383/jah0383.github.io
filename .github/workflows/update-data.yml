@@ -51,15 +51,19 @@ jobs:
       # ── 3. Scrape — download only PDFs that aren't already cached ──────────
       #    We use a dedicated runner cache keyed on the manifest so the PDF
       #    folder persists across runs. PDFs are never committed to the repo.
-      - name: Restore PDF cache
-        id: pdf-cache
+      - name: Restore scrape cache
+        id: scrape-cache
         uses: actions/cache@v4
         with:
-          path: pdfs/
+          # Cache both the PDFs and parsed_episodes.json together.
+          # parsed_episodes.json is what --incremental reads to skip already-parsed episodes.
+          path: |
+            pdfs/
+            parsed_episodes.json
           # Key includes the latest episode ID from the committed manifest
           # so the cache is considered stale when a new episode lands.
-          key: pdfs-${{ hashFiles('data/manifest.json') }}
-          restore-keys: pdfs-
+          key: scrape-${{ hashFiles('data/manifest.json') }}
+          restore-keys: scrape-
 
       - name: Scrape new transcripts
         run: |
