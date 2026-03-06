@@ -49,7 +49,6 @@
     .masthead {
       position: relative;
       background: var(--cream-d);
-      border-bottom: 4px solid var(--ink);
       overflow: hidden;
     }
     .masthead-stripes {
@@ -99,7 +98,7 @@
     /* ── NAV ──────────────────────────────────────────────── */
     .site-nav {
       background: var(--ink); display: flex; padding: 0 2.5rem;
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 100; padding-top: 4px;
     }
     .site-nav button {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem;
@@ -410,7 +409,7 @@
       .masthead-semi { width: 180px; height: 180px; right: -15%; top: -30%; }
 
       /* Nav: equal-width buttons, smaller text */
-      .site-nav { padding: 0; }
+      .site-nav { padding: 0; padding-top: 4px;}
       .site-nav button {
         flex: 1;
         padding: 0.8rem 0.25rem;
@@ -587,7 +586,7 @@
     .site-nav::before {
       content: '';
       position: absolute;
-      bottom: 110%;        /* sits flush against the top of the nav */
+      bottom: 100%;        /* sits flush against the top of the nav */
       left: 0; right: 0;
       height: 600px;       /* tall enough to cover any browser chrome */
       background: var(--cream-d);
@@ -595,6 +594,7 @@
       visibility: visible; /* always visible now, opacity does the hiding */
       pointer-events: none;
     }
+
     body.nav-stuck .site-nav::before { visibility: visible; }
 
     /* ── ABOUT PAGE ──────────────────────────────────────────── */
