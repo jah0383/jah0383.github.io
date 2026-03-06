@@ -32,8 +32,10 @@ import os
 import re
 import time
 import argparse
+import json
 from pathlib import Path
 from urllib.parse import quote
+
 
 import requests
 
@@ -133,14 +135,17 @@ def list_folder(access_token: str) -> list[dict]:
 
 # ── Download ──────────────────────────────────────────────────────────────────
 
-def download_pdf(filename, dest, session):
-    # Construct direct download URL from the shared folder base.
-    # The folder URL already points to the MBMBaM subfolder, so we
-    # just append the filename with dl=1 to force a download.
-    base = 'https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM'
-    url = f'{base}/{quote(filename)}?dl=1'
+def download_pdf(filename: str, dest: Path, access_token: str) -> bool:
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Dropbox-API-Arg': json.dumps({
+            'url': 'https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM?dl=0',
+            'path': f'/{filename}',
+        }),
+    }
+
     try:
-        r = session.get(url, timeout=120, stream=True)
+        r = requests.get(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
         r.raise_for_status()
         with open(dest, 'wb') as f:
             for chunk in r.iter_content(chunk_size=65536):
@@ -148,6 +153,9 @@ def download_pdf(filename, dest, session):
         return True
     except requests.RequestException as e:
         print(f'    ✗ Download failed: {e}')
+        # Add these two lines:
+        if hasattr(e, 'response') and e.response is not None:
+            print(f'    ✗ Response body: {e.response.text}')
         if dest.exists():
             dest.unlink()
         return False
@@ -224,7 +232,6 @@ def main():
     print('─' * 60)
     print('Step 3: Downloading new PDFs…')
 
-    session = requests.Session()
     downloaded = skipped = failed = 0
 
     for i, entry in enumerate(pdfs, 1):
@@ -239,7 +246,7 @@ def main():
             continue
 
         print(f'  ↓ Downloading…')
-        ok = download_pdf(filename, dest, session)
+        ok = download_pdf(filename, dest, access_token)
         if ok:
             size_kb = dest.stat().st_size / 1024
             print(f'  ✓ {size_kb:.0f} KB')
