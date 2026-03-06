@@ -12,6 +12,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      --nav-h:   42px;
       --cream:   #F0E6CE;
       --cream-d: #E2D4B4;
       --cream-dd:#CABB94;
@@ -510,7 +511,10 @@
       font-family: 'Josefin Sans', sans-serif;
     }
     .browse-table th {
-      background: rgba(43,29,14,0.04);
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 10;       /* above table rows (default 0), below nav (z-index:100) */
+      background: #f5ead4; /* solid — can't use rgba here or rows show through */
       font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
       text-transform: uppercase; color: var(--ink-lite);
       padding: 0.5rem 1rem; border-bottom: 2px solid var(--cream-dd);
@@ -563,6 +567,21 @@
       .browse-table th { font-size: 0.55rem; }
       .browse-table td.term-cell { font-size: 0.8rem; }
     }
+
+    /* ── NAV SHADE ─────────────────────────────────────────────
+    Fixed strip that covers content peeking above the sticky nav
+    on mobile. Hidden until .nav-stuck is added to <body>.      */
+    .nav-shade {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--ink);
+      z-index: 99;          /* just below nav (100), above everything else */
+      opacity: 0;
+      pointer-events: none; /* never blocks clicks */
+      transition: opacity 0.15s;
+    }
+    body.nav-stuck .nav-shade { opacity: 1; }
   </style>
   <script data-goatcounter="https://madjam1231.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -738,13 +757,13 @@
 
     <div id="browse-status" class="browse-status">Loading vocabulary…</div>
 
-    <div class="chart-card" id="browse-card" style="display:none">
+    <div class="chart-card" id="browse-card" style="display:none;overflow:clip">
       <div class="chart-card-head">
         <span class="dot" style="background:var(--gold)"></span>
         <span id="browse-card-title">All speakers · Words</span>
         <span id="browse-count-badge" class="browse-count-badge"></span>
       </div>
-      <div class="chart-card-body" style="padding:0">
+      <div class="chart-card-body" style="padding:0;overflow:visible">
         <table class="browse-table" id="browse-table">
           <thead id="browse-thead"></thead>
           <tbody id="browse-tbody"></tbody>
@@ -1587,6 +1606,26 @@ function setTwStatus(cls, text) {
 }
 
 init();
+// ── Nav shade (mobile top-gap cover) ─────────────────────────────────────────
+// Adds .nav-stuck to <body> once the nav has scrolled to the top of the
+// viewport. This makes the .nav-shade strip visible, covering the gap between
+// the very top of the screen and the sticky nav.
+(function () {
+  const masthead = document.querySelector('.masthead');
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      // nav sticks when scrollY >= masthead's bottom edge
+      const threshold = masthead ? masthead.offsetHeight : 0;
+      document.body.classList.toggle('nav-stuck', window.scrollY >= threshold);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run once on load in case page is already scrolled
+})();
 </script>
 </body>
 </html>
