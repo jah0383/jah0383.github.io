@@ -60,14 +60,14 @@
       z-index: 10;
     }
     .masthead-stripes span { flex: 1; }
-    .masthead-stripes span:nth-child(1) { background: var(--coral); }
-    .masthead-stripes span:nth-child(2) { background: var(--teal); }
-    .masthead-stripes span:nth-child(3) { background: var(--gold); }
-    .masthead-stripes span:nth-child(4) { background: var(--coral); }
-    .masthead-stripes span:nth-child(5) { background: var(--teal); }
-    .masthead-stripes span:nth-child(6) { background: var(--gold); }
-    .masthead-stripes span:nth-child(7) { background: var(--coral); }
-    .masthead-stripes span:nth-child(8) { background: var(--teal); }
+    .masthead-stripes span:nth-child(1) { background: var(--coral); z-index: 10; }
+    .masthead-stripes span:nth-child(2) { background: var(--teal); z-index: 10; }
+    .masthead-stripes span:nth-child(3) { background: var(--gold); z-index: 10; }
+    .masthead-stripes span:nth-child(4) { background: var(--coral); z-index: 10; }
+    .masthead-stripes span:nth-child(5) { background: var(--teal); z-index: 10; }
+    .masthead-stripes span:nth-child(6) { background: var(--gold); z-index: 10; }
+    .masthead-stripes span:nth-child(7) { background: var(--coral); z-index: 10; } 
+    .masthead-stripes span:nth-child(8) { background: var(--teal); z-index: 10; }
     .masthead-semi {
       position: absolute; right: -80px; top: -60px;
       width: 320px; height: 320px; border-radius: 50%;
@@ -579,9 +579,9 @@
        that peeks above it. Because it's part of the nav element,
        it moves with the nav when it sticks — no separate fixed
        element needed, no alignment mismatch on Safari.           */
-    .site-nav {
+    /* .site-nav {
       overflow: visible; /* allow ::before to extend above the nav box */
-    }
+    } */
     .site-nav::before {
       content: '';
       position: absolute;
