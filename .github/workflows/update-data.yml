@@ -43,9 +43,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
+          cache-dependency-path: scripts/requirements.txt
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 pdfplumber
+        run: pip install -r scripts/requirements.txt
 
       # ── 3. Scrape — download only PDFs that aren't already cached ──────────
       #    We use a dedicated runner cache keyed on the manifest so the PDF
