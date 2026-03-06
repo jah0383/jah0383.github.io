@@ -1,170 +1,159 @@
 """
 scrape_transcripts.py
 ─────────────────────
-Scrapes MBMBaM transcript PDFs from maximumfun.org.
+Downloads MBMBaM transcript PDFs from the official McElroy Dropbox folder.
+
+The folder is public but listing its contents requires a Dropbox API access
+token (any Dropbox account's token will do — you don't need to own the folder).
+See SETUP.md for instructions on getting one.
 
 Steps:
-  1. Pages through the transcript listing to collect all episode URLs.
-  2. Filters out non-MBMBaM entries (Adventure Zone, etc.).
-  3. Visits each episode page, finds the PDF download link.
-  4. Downloads the PDF, skipping files that already exist.
+  1. Exchange refresh token + app credentials for a short-lived access token.
+  2. List all files in the shared Dropbox folder via the API.
+  3. Filter to PDFs that look like MBMBaM transcripts.
+  4. Download any that don't already exist locally.
+
+Credentials are read from environment variables (set as GitHub Actions secrets):
+  DROPBOX_APP_KEY       — your Dropbox app's key
+  DROPBOX_APP_SECRET    — your Dropbox app's secret
+  DROPBOX_REFRESH_TOKEN — offline refresh token obtained during setup
 
 Usage:
     python scrape_transcripts.py
     python scrape_transcripts.py --output ./pdfs
-    python scrape_transcripts.py --output ./pdfs --delay 1.5
-    python scrape_transcripts.py --dry-run        # list URLs without downloading
+    python scrape_transcripts.py --dry-run     # list files without downloading
+    python scrape_transcripts.py --delay 0.5   # seconds between downloads
 
 Dependencies:
-    pip install requests beautifulsoup4
+    pip install requests
 """
 
+import os
 import re
 import time
 import argparse
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup
 
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-LISTING_URL  = 'https://maximumfun.org/transcripts/my-brother-my-brother-and-me/'
-HEADERS      = {'User-Agent': 'Mozilla/5.0 (compatible; MBMBaM-transcript-scraper/1.0)'}
+# The public shared-folder URL (the MBMBaM subfolder specifically).
+# This is the URL you were given — do not change it.
+SHARED_FOLDER_URL = (
+    'https://www.dropbox.com/sh/egqdua6s38oxb9p/'
+    'AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM?dl=0'
+)
 
-# Titles containing any of these are NOT MBMBaM and will be skipped.
-# Everything else on the MBMBaM listing page is assumed to be MBMBaM.
-# Add to this list if other shows start appearing in the feed.
-NON_MBMBAM = [
-    'adventure zone',
-    'judge john hodgman',
-    'still buffering',
-    'sawbones',
-    'shmanners',
-    'wonderful!',
-    'young people',
-    'feed drop',
-    'minority korner'
-]
+DROPBOX_TOKEN_URL  = 'https://api.dropbox.com/oauth2/token'
+DROPBOX_LIST_URL   = 'https://api.dropboxapi.com/2/files/list_folder'
+DROPBOX_LIST_CONT  = 'https://api.dropboxapi.com/2/files/list_folder/continue'
+DROPBOX_DL_URL     = 'https://content.dropboxapi.com/2/sharing/get_shared_link_file'
 
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
-def get(url: str, session: requests.Session, retries: int = 3) -> requests.Response | None:
-    for attempt in range(retries):
-        try:
-            r = session.get(url, headers=HEADERS, timeout=20)
-            r.raise_for_status()
-            return r
-        except requests.RequestException as e:
-            if attempt < retries - 1:
-                time.sleep(2 ** attempt)
-            else:
-                print(f'  ✗ Failed after {retries} attempts: {url} — {e}')
-                return None
+# Matches the MBMBaM transcript filename pattern, including the known 'Eo' typo.
+# Examples this handles:
+#   MBMBaM Ep002 Holding a Stranger's Hand.pdf
+#   MBMBaM Eo246 Face 2 Face Hot Beans.pdf     ← typo: Eo instead of Ep
+#   MBMBaM Ep91 Feeding Frenzy.pdf             ← no zero-padding
+#   MBMBaM Ep665 Face 2 Face Cody-Pendant.pdf
+MBMBAM_PDF_RE = re.compile(
+    r'^MBMBaM\s+E[oOpP](\d+)\s+.+\.pdf$',
+    re.IGNORECASE,
+)
 
 
-def is_mbmbam(title: str) -> bool:
+# ── Auth ──────────────────────────────────────────────────────────────────────
+
+def get_access_token(app_key: str, app_secret: str, refresh_token: str) -> str:
     """
-    Assume everything on the MBMBaM listing page is MBMBaM unless the title
-    contains a known marker for another show.
+    Exchange a refresh token for a short-lived access token.
+    Dropbox deprecated permanent tokens in 2021; this is the correct approach.
+    The refresh token itself never expires (unless you revoke it).
     """
-    t = title.lower()
-    return not any(marker in t for marker in NON_MBMBAM)
+    r = requests.post(
+        DROPBOX_TOKEN_URL,
+        data={
+            'grant_type':    'refresh_token',
+            'refresh_token': refresh_token,
+            'client_id':     app_key,
+            'client_secret': app_secret,
+        },
+        timeout=30,
+    )
+    r.raise_for_status()
+    token = r.json().get('access_token')
+    if not token:
+        raise RuntimeError(f'No access_token in response: {r.json()}')
+    return token
 
 
-# ── Step 1: Collect episode page URLs from listing ────────────────────────────
+# ── List folder ───────────────────────────────────────────────────────────────
 
-def collect_episode_urls(session: requests.Session) -> list[dict]:
+def list_folder(access_token: str) -> list[dict]:
     """
-    Pages through the transcript listing and returns all MBMBaM entries
-    as a list of {title, url} dicts.
-
-    Tries common WordPress pagination patterns (?page=N and ?paged=N).
-    Stops when a page returns no new episode links or returns a 404.
+    Returns all file entries in the shared Dropbox folder.
+    Handles pagination automatically (Dropbox caps each page at 2000 entries).
+    Each entry is a Dropbox file metadata dict; we care about 'name' and '.tag'.
     """
-    episodes = []
-    seen_urls = set()
-    page = 1
+    headers = {'Authorization': f'Bearer {access_token}'}
 
-    while True:
-        # Try both common WordPress pagination params
-        url = LISTING_URL if page == 1 else f'{LISTING_URL}?_paged={page}'
-        print(f'  Listing page {page}: {url}')
+    # Initial request — path="" means "the root of the shared link"
+    payload = {
+        'path':        '',
+        'shared_link': {'url': SHARED_FOLDER_URL},
+        'recursive':   False,
+        'limit':       2000,
+    }
+    r = requests.post(DROPBOX_LIST_URL, json=payload, headers=headers, timeout=60)
+    r.raise_for_status()
+    data = r.json()
 
-        r = get(url, session)
-        if r is None:
-            break
+    entries = data.get('entries', [])
+    cursor  = data.get('cursor')
+    has_more = data.get('has_more', False)
 
-        soup = BeautifulSoup(r.text, 'html.parser')
+    # Paginate if there are more entries
+    while has_more and cursor:
+        r = requests.post(
+            DROPBOX_LIST_CONT,
+            json={'cursor': cursor},
+            headers=headers,
+            timeout=60,
+        )
+        r.raise_for_status()
+        data = r.json()
+        entries.extend(data.get('entries', []))
+        cursor   = data.get('cursor')
+        has_more = data.get('has_more', False)
 
-        # Episode links are <h4> or <h3> anchors inside article/li elements.
-        # More robustly: find all links whose href is under the transcript path
-        # and whose text looks like an episode title.
-        new_this_page = 0
-        for a in soup.find_all('a', href=True):
-            href = a['href']
-            # Must be a transcript sub-page (not the listing itself)
-            if '/transcripts/my-brother-my-brother-and-me/' not in href:
-                continue
-            if href.rstrip('/') == LISTING_URL.rstrip('/'):
-                continue
-            if href in seen_urls:
-                continue
-
-            title_text = a.get_text(strip=True)
-            # Skip navigation links (← Previous, → Next, image-only links)
-            if len(title_text) < 8:
-                continue
-            # Skip "← Previous" / "→ Next" navigation
-            if any(s in title_text for s in ['←', '→', 'Previous', 'Next']):
-                continue
-
-            seen_urls.add(href)
-
-            if is_mbmbam(title_text):
-                episodes.append({'title': title_text, 'url': href})
-                new_this_page += 1
-            else:
-                print(f'    skip (not MBMBaM): {title_text[:60]}')
-
-        if new_this_page == 0:
-            print(f'  No new episodes on page {page}, stopping.')
-            break
-
-        print(f'  Found {new_this_page} MBMBaM episodes on page {page}')
-        page += 1
-        time.sleep(0.5)
-
-    return episodes
+    return entries
 
 
-# ── Step 2: Find PDF URL on an episode page ───────────────────────────────────
+# ── Download ──────────────────────────────────────────────────────────────────
 
-PDF_RE = re.compile(r'\.pdf(\?|$)', re.IGNORECASE)
+def download_pdf(
+    filename: str,
+    dest: Path,
+    access_token: str,
+    session: requests.Session,
+) -> bool:
+    """
+    Download a single PDF from the shared folder via the Dropbox content API.
+    The 'path' in the API arg is relative to the shared folder root.
+    """
+    import json
 
-def find_pdf_url(episode_url: str, session: requests.Session) -> str | None:
-    r = get(episode_url, session)
-    if r is None:
-        return None
-    soup = BeautifulSoup(r.text, 'html.parser')
-
-    # Look for anchor tags whose href ends in .pdf
-    for a in soup.find_all('a', href=True):
-        href = a['href']
-        if PDF_RE.search(href):
-            # Make absolute if relative
-            return urljoin(episode_url, href)
-    return None
-
-
-# ── Step 3: Download PDF ──────────────────────────────────────────────────────
-
-def download_pdf(pdf_url: str, dest: Path, session: requests.Session) -> bool:
+    api_arg = json.dumps({
+        'url':  SHARED_FOLDER_URL,
+        'path': f'/{filename}',
+    })
+    headers = {
+        'Authorization':   f'Bearer {access_token}',
+        'Dropbox-API-Arg': api_arg,
+    }
     try:
-        r = session.get(pdf_url, headers=HEADERS, timeout=60, stream=True)
+        r = session.post(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
         r.raise_for_status()
         with open(dest, 'wb') as f:
             for chunk in r.iter_content(chunk_size=65536):
@@ -181,75 +170,92 @@ def download_pdf(pdf_url: str, dest: Path, session: requests.Session) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Download MBMBaM transcript PDFs from maximumfun.org.',
+        description='Download MBMBaM transcript PDFs from the McElroy Dropbox.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument('--output', type=Path, default=Path('./pdfs'),
+    parser.add_argument('--output',  type=Path, default=Path('./pdfs'),
                         help='Directory to save PDFs into')
-    parser.add_argument('--delay', type=float, default=1.0,
-                        help='Seconds to wait between PDF downloads (be polite)')
+    parser.add_argument('--delay',   type=float, default=0.5,
+                        help='Seconds to wait between downloads')
     parser.add_argument('--dry-run', action='store_true',
-                        help='Discover and list URLs without downloading anything')
+                        help='List files without downloading anything')
     args = parser.parse_args()
+
+    # ── Credentials from environment
+    app_key       = os.environ.get('DROPBOX_APP_KEY')
+    app_secret    = os.environ.get('DROPBOX_APP_SECRET')
+    refresh_token = os.environ.get('DROPBOX_REFRESH_TOKEN')
+
+    if not all([app_key, app_secret, refresh_token]):
+        raise SystemExit(
+            'Missing Dropbox credentials.\n'
+            'Set DROPBOX_APP_KEY, DROPBOX_APP_SECRET, and DROPBOX_REFRESH_TOKEN '
+            'as environment variables.\n'
+            'See SETUP.md for instructions.'
+        )
 
     if not args.dry_run:
         args.output.mkdir(parents=True, exist_ok=True)
 
-    session = requests.Session()
-
-    # ── Step 1: collect all episode page URLs
+    # ── Step 1: auth
     print('─' * 60)
-    print('Step 1: Collecting episode list…')
-    print('─' * 60)
-    episodes = collect_episode_urls(session)
-    print(f'\nFound {len(episodes)} MBMBaM episodes total.\n')
+    print('Step 1: Authenticating with Dropbox…')
+    access_token = get_access_token(app_key, app_secret, refresh_token)
+    print('  ✓ Got access token')
 
-    if not episodes:
+    # ── Step 2: list folder
+    print('─' * 60)
+    print('Step 2: Listing folder contents…')
+    all_entries = list_folder(access_token)
+
+    # Filter to MBMBaM PDFs only
+    pdfs = [
+        e for e in all_entries
+        if e.get('.tag') == 'file' and MBMBAM_PDF_RE.match(e['name'])
+    ]
+    # Sort by episode number for tidy output
+    def ep_num(entry):
+        m = MBMBAM_PDF_RE.match(entry['name'])
+        return int(m.group(1)) if m else 0
+    pdfs.sort(key=ep_num)
+
+    non_pdf = len(all_entries) - len(pdfs)
+    print(f'  Found {len(all_entries)} total entries, '
+          f'{len(pdfs)} MBMBaM PDFs, {non_pdf} skipped (non-matching)')
+
+    if not pdfs:
         print('Nothing to download.')
         return
 
     if args.dry_run:
-        print('Dry run — episode URLs:')
-        for ep in episodes:
-            print(f'  {ep["title"]}')
-            print(f'    {ep["url"]}')
+        print('\nDry run — matching files:')
+        for e in pdfs:
+            print(f"  {e['name']}")
         return
 
-    # ── Step 2 + 3: for each episode, find PDF and download
+    # ── Step 3: download new files
     print('─' * 60)
-    print('Step 2: Downloading PDFs…')
-    print('─' * 60)
+    print('Step 3: Downloading new PDFs…')
 
+    session = requests.Session()
     downloaded = skipped = failed = 0
 
-    for i, ep in enumerate(episodes, 1):
-        title  = ep['title']
-        ep_url = ep['url']
-        print(f'\n[{i}/{len(episodes)}] {title}')
+    for i, entry in enumerate(pdfs, 1):
+        filename = entry['name']
+        dest     = args.output / filename
 
-        # Find PDF URL
-        pdf_url = find_pdf_url(ep_url, session)
-        if not pdf_url:
-            print(f'  ✗ No PDF link found on page')
-            failed += 1
-            continue
-
-        # Derive filename from PDF URL (preserves the original name)
-        filename = pdf_url.split('/')[-1].split('?')[0]
-        if not filename.lower().endswith('.pdf'):
-            filename += '.pdf'
-        dest = args.output / filename
+        print(f'\n[{i}/{len(pdfs)}] {filename}')
 
         if dest.exists():
-            print(f'  ↷ Already exists: {filename}')
+            print(f'  ↷ Already exists — skipping')
             skipped += 1
             continue
 
-        print(f'  ↓ {filename}')
-        ok = download_pdf(pdf_url, dest, session)
+        print(f'  ↓ Downloading…')
+        ok = download_pdf(filename, dest, access_token, session)
         if ok:
             size_kb = dest.stat().st_size / 1024
-            print(f'    ✓ {size_kb:.0f} KB')
+            print(f'  ✓ {size_kb:.0f} KB')
             downloaded += 1
         else:
             failed += 1
