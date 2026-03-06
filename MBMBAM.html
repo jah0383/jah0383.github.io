@@ -578,14 +578,16 @@
        ::before on the sticky nav extends upward, covering content
        that peeks above it. Because it's part of the nav element,
        it moves with the nav when it sticks — no separate fixed
-       element needed, no alignment mismatch on Safari.           */
+       element needed, no alignment mismatch on Safari.           
+       I sometimes call this "mast cover" in my commits
+    */
     .site-nav {
       overflow: visible; /* allow ::before to extend above the nav box */
     }
     .site-nav::before {
       content: '';
       position: absolute;
-      bottom: 100%;        /* sits flush against the top of the nav */
+      bottom: 110%;        /* sits flush against the top of the nav */
       left: 0; right: 0;
       height: 600px;       /* tall enough to cover any browser chrome */
       background: var(--cream-d);
