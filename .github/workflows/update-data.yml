@@ -1,0 +1,113 @@
+# .github/workflows/update-data.yml
+#
+# Scrapes new MBMBaM transcript PDFs, parses them incrementally,
+# rebuilds the site data JSON files, and commits the result.
+#
+# Triggers:
+#   - Weekly on Monday at 09:00 UTC (new episodes drop Mondays)
+#   - Manual trigger via Actions → Run workflow
+
+name: Update transcript data
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # Monday 09:00 UTC
+  workflow_dispatch:        # manual trigger
+    inputs:
+      full_rebuild:
+        description: 'Force full rebuild (re-parse all PDFs, ignore existing data)'
+        type: boolean
+        default: false
+
+# Only one run at a time — prevents races on the JSON files
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit back to the repo
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # ── 2. Python ──────────────────────────────────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 pdfplumber
+
+      # ── 3. Scrape — download only PDFs that aren't already cached ──────────
+      #    We use a dedicated runner cache keyed on the manifest so the PDF
+      #    folder persists across runs. PDFs are never committed to the repo.
+      - name: Restore PDF cache
+        id: pdf-cache
+        uses: actions/cache@v4
+        with:
+          path: pdfs/
+          # Key includes the latest episode ID from the committed manifest
+          # so the cache is considered stale when a new episode lands.
+          key: pdfs-${{ hashFiles('data/manifest.json') }}
+          restore-keys: pdfs-
+
+      - name: Scrape new transcripts
+        run: |
+          mkdir -p pdfs
+          python scripts/scrape_transcripts.py \
+            --output pdfs \
+            --delay 1.5
+
+      # ── 4. Parse — incremental unless full rebuild requested ───────────────
+      - name: Parse transcripts
+        run: |
+          INCREMENTAL_FLAG=""
+          if [ "${{ inputs.full_rebuild }}" != "true" ]; then
+            INCREMENTAL_FLAG="--incremental"
+          fi
+
+          python scripts/parse_transcripts.py pdfs \
+            --output parsed_episodes.json \
+            $INCREMENTAL_FLAG
+
+      # ── 5. Rebuild indexes ─────────────────────────────────────────────────
+      - name: Build indexes
+        run: |
+          python scripts/build_index.py parsed_episodes.json \
+            --output-dir data
+
+      # parsed_episodes.json is large and contains raw transcript text.
+      # We don't commit it — it lives only on the runner and in the PDF cache.
+
+      # ── 6. Commit updated data files if anything changed ───────────────────
+      - name: Check for changes
+        id: check
+        run: |
+          git diff --quiet data/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          # Show what changed in the commit message
+          SUMMARY=$(git diff --cached --stat data/ | tail -1)
+          git commit -m "data: auto-update transcripts [skip ci]
+
+          $SUMMARY
+          Triggered by: ${{ github.event_name }}"
+          git push
+
+      - name: No changes
+        if: steps.check.outputs.changed != 'true'
+        run: echo "Data files are already up to date — nothing to commit."
