@@ -588,8 +588,10 @@
       left: 0; right: 0;
       height: 600px;       /* tall enough to cover any browser chrome */
       background: var(--ink);
-      visibility: hidden;
+      opacity: var(--shade-opacity, 0);
+      visibility: visible; /* always visible now, opacity does the hiding */
       pointer-events: none;
+
     }
     body.nav-stuck .site-nav::before { visibility: visible; }
   </style>
@@ -1638,7 +1640,12 @@ init();
     ticking = true;
     requestAnimationFrame(() => {
       const threshold = masthead ? masthead.offsetHeight : 0;
-      document.body.classList.toggle('nav-stuck', window.scrollY >= threshold);
+      const opacity = threshold > 0
+        ? Math.min(1, window.scrollY / threshold)
+        : (window.scrollY > 0 ? 1 : 0);
+      nav.style.setProperty('--shade-opacity', opacity);
+      // document.body.classList.toggle('nav-stuck', window.scrollY >= threshold);
+      // so getting the distance to threshold would be threshold - window.scrollY
       ticking = false;
     });
   }
