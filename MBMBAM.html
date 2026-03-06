@@ -99,8 +99,6 @@
     .site-nav {
       background: var(--ink); display: flex; padding: 0 2.5rem;
       position: sticky; top: 0; z-index: 100;
-      /* push nav buttons below notch/Dynamic Island */
-      padding-top: env(safe-area-inset-top, 0px);
     }
     .site-nav button {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem;
@@ -411,11 +409,7 @@
       .masthead-semi { width: 180px; height: 180px; right: -40px; top: -30px; }
 
       /* Nav: equal-width buttons, smaller text */
-      .site-nav {
-        padding-left: 0;
-        padding-right: 0;
-        /* padding-top intentionally NOT zeroed — keeps env(safe-area-inset-top) */
-      }
+      .site-nav { padding: 0; }
       .site-nav button {
         flex: 1;
         padding: 0.8rem 0.25rem;
@@ -579,20 +573,25 @@
       .browse-table td.term-cell { font-size: 0.8rem; }
     }
 
-    /* ── NAV SHADE ─────────────────────────────────────────────
-    Fixed strip that covers content peeking above the sticky nav
-    on mobile. Hidden until .nav-stuck is added to <body>.      */
-    .nav-shade {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
-      background: var(--ink);
-      z-index: 99;          /* just below nav (100), above everything else */
-      opacity: 0;
-      pointer-events: none; /* never blocks clicks */
-      transition: opacity 0.15s;
+    /* ── NAV BACKDROP ──────────────────────────────────────────
+       ::before on the sticky nav extends upward, covering content
+       that peeks above it. Because it's part of the nav element,
+       it moves with the nav when it sticks — no separate fixed
+       element needed, no alignment mismatch on Safari.           */
+    .site-nav {
+      overflow: visible; /* allow ::before to extend above the nav box */
     }
-    body.nav-stuck .nav-shade { opacity: 1; }
+    .site-nav::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;        /* sits flush against the top of the nav */
+      left: 0; right: 0;
+      height: 600px;       /* tall enough to cover any browser chrome */
+      background: var(--ink);
+      visibility: hidden;
+      pointer-events: none;
+    }
+    body.nav-stuck .site-nav::before { visibility: visible; }
   </style>
   <script data-goatcounter="https://madjam1231.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
