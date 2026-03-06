@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count": 540,
+  "episode_count": 798,
   "episodes": [
     {
       "id": 1,
@@ -312,6 +312,11 @@
       "date": null
     },
     {
+      "id": 62,
+      "title": "My Dark Twisted Pretzel Fantasy",
+      "date": null
+    },
+    {
       "id": 63,
       "title": "R.I.P.B.E.P",
       "date": "July 18, 2011"
@@ -330,6 +335,11 @@
       "id": 66,
       "title": "Beaches: The Book of the Movie",
       "date": "August 8th, 2011"
+    },
+    {
+      "id": 67,
+      "title": "Borrowed from a Horse",
+      "date": "August 15th, 2011"
     },
     {
       "id": 68,
@@ -512,6 +522,11 @@
       "date": "May 7th, 2012"
     },
     {
+      "id": 104,
+      "title": "I Hate You, Ron",
+      "date": "May 14th, 2012"
+    },
+    {
       "id": 105,
       "title": "Daymare Pile of Watercolor Donors",
       "date": "May 21st, 2012"
@@ -527,14 +542,994 @@
       "date": null
     },
     {
+      "id": 108,
+      "title": "The Garfield Monstrosity",
+      "date": null
+    },
+    {
+      "id": 109,
+      "title": "Flapjack Nickelsack",
+      "date": "June 18th, 2012"
+    },
+    {
+      "id": 110,
+      "title": "J.R. Junior Jr.",
+      "date": "June 25th, 2012"
+    },
+    {
+      "id": 111,
+      "title": "Sacrilice",
+      "date": "July 9th, 2012"
+    },
+    {
+      "id": 112,
+      "title": "The Channing Switcheroo",
+      "date": "July 16th, 2012"
+    },
+    {
+      "id": 113,
+      "title": "Dolphin Jockey",
+      "date": "July 23rd, 2012"
+    },
+    {
+      "id": 114,
+      "title": "Roker Poker",
+      "date": "August 6th, 2012"
+    },
+    {
+      "id": 115,
+      "title": "Womenade",
+      "date": "April 13th, 2012"
+    },
+    {
+      "id": 116,
+      "title": "Ritter Rider",
+      "date": "August 21st, 2012"
+    },
+    {
+      "id": 117,
+      "title": "Romneycoladas",
+      "date": "August 29th, 2012"
+    },
+    {
+      "id": 118,
+      "title": "Celebrity Dream Date",
+      "date": "September 3rd, 2012"
+    },
+    {
+      "id": 119,
+      "title": "Drop the Beat, Francis",
+      "date": "September 10th, 2012"
+    },
+    {
+      "id": 120,
+      "title": "Shuddering Ectoplasm",
+      "date": "September 17th, 2012"
+    },
+    {
+      "id": 121,
+      "title": "Dyump",
+      "date": "September 24th, 2012"
+    },
+    {
+      "id": 122,
+      "title": "In Your Tarzan Boy",
+      "date": "October 1st, 2012"
+    },
+    {
+      "id": 123,
+      "title": "Contraband Future Dildos",
+      "date": "October 8th, 2012"
+    },
+    {
+      "id": 124,
+      "title": "This is Our Rumours",
+      "date": "October 15th, 2012"
+    },
+    {
+      "id": 125,
+      "title": "Tuggies",
+      "date": null
+    },
+    {
+      "id": 126,
+      "title": "Blast My Cache",
+      "date": "October 29th, 2012"
+    },
+    {
+      "id": 127,
+      "title": "UNK",
+      "date": "November 5th, 2012"
+    },
+    {
+      "id": 128,
+      "title": "Y Tu Hermano Tambien",
+      "date": "November 12th, 2012"
+    },
+    {
+      "id": 129,
+      "title": "Krumping Across America",
+      "date": "November 21st, 2012"
+    },
+    {
+      "id": 130,
+      "title": "Holy Terror",
+      "date": "November 26th, 2012"
+    },
+    {
+      "id": 131,
+      "title": "Outliers",
+      "date": "December 3rd, 2012"
+    },
+    {
+      "id": 132,
+      "title": "iJolene",
+      "date": "December 10th, 2012"
+    },
+    {
+      "id": 133,
+      "title": "Candlenights the IIIrd",
+      "date": "December 16th, 2012"
+    },
+    {
+      "id": 134,
+      "title": "Dukes Down, Dunks Up",
+      "date": "December 31st, 2012"
+    },
+    {
+      "id": 135,
+      "title": "TWENTY-DIRT",
+      "date": "January 7th, 2013"
+    },
+    {
+      "id": 136,
+      "title": "Taken Babies",
+      "date": "January 14th, 2013"
+    },
+    {
+      "id": 137,
+      "title": "Tangentz",
+      "date": "January 21st, 2013"
+    },
+    {
+      "id": 138,
+      "title": "Under the Bottom",
+      "date": "January 28th, 2013"
+    },
+    {
+      "id": 139,
+      "title": "Minority Groundhog Report",
+      "date": "February 4th, 2013"
+    },
+    {
+      "id": 140,
+      "title": "Hops for Pops",
+      "date": "February 18th, 2013"
+    },
+    {
+      "id": 141,
+      "title": "Dan the Man with the Flan Plan",
+      "date": "Feb 25th, 2013"
+    },
+    {
+      "id": 142,
+      "title": "Tom Bosley Upskirts",
+      "date": "March 5th, 2013"
+    },
+    {
+      "id": 143,
+      "title": "Daniel Day Nutchuckles",
+      "date": "March 11th, 2013"
+    },
+    {
+      "id": 144,
+      "title": "Kick it Forward",
+      "date": "March 18th, 2013"
+    },
+    {
+      "id": 145,
+      "title": "Three’s Company High",
+      "date": "March 26th, 2013"
+    },
+    {
+      "id": 146,
+      "title": "Kenan by Way of Kel",
+      "date": "April 1st, 2013"
+    },
+    {
+      "id": 147,
+      "title": "The Legend of Corn Cob Boy",
+      "date": "April 8th, 2013"
+    },
+    {
+      "id": 148,
+      "title": "The Best Part of Waking Up",
+      "date": "April 15th, 2013"
+    },
+    {
+      "id": 149,
+      "title": "Terminatored",
+      "date": "April 22nd, 2013"
+    },
+    {
+      "id": 150,
+      "title": "Wolf School",
+      "date": "April 29th, 2013"
+    },
+    {
+      "id": 151,
+      "title": "Orb is Horse",
+      "date": "May 6th, 2013"
+    },
+    {
+      "id": 152,
+      "title": "Heaton Up",
+      "date": "May 13th, 2013"
+    },
+    {
+      "id": 153,
+      "title": "God Made a Bridge Troll",
+      "date": "May 20th, 2013"
+    },
+    {
+      "id": 154,
+      "title": "DDSM",
+      "date": "May 28th, 2013"
+    },
+    {
+      "id": 155,
+      "title": "Face 2 Face 6: MaxFunCon 2013",
+      "date": "June 4th, 2013"
+    },
+    {
+      "id": 156,
+      "title": "The Sound of One Hand Twerking",
+      "date": "June 17th, 2013"
+    },
+    {
+      "id": 157,
+      "title": "Chris Sabones",
+      "date": "June 24th, 2013"
+    },
+    {
+      "id": 158,
+      "title": "The Taco Nexus",
+      "date": "July 1st, 2013"
+    },
+    {
+      "id": 159,
+      "title": "Home Alone Castle Doctrine",
+      "date": "July 8th, 2013"
+    },
+    {
+      "id": 160,
+      "title": "The Ballad of Dunkleman",
+      "date": "July 22nd, 2013"
+    },
+    {
+      "id": 161,
+      "title": "Bro’s Better, Bro’s Best Ch. 1 – 13",
+      "date": "July 29th, 2013"
+    },
+    {
+      "id": 162,
+      "title": "Mystery at the Petting Zoo",
+      "date": "August 5th, 2013"
+    },
+    {
+      "id": 163,
+      "title": "The Smoochatorium",
+      "date": "August 12th, 2013"
+    },
+    {
+      "id": 164,
+      "title": "Gaperboy",
+      "date": "August 19th, 2013"
+    },
+    {
+      "id": 165,
+      "title": "Johnny Billyseed",
+      "date": "August 27th, 2013"
+    },
+    {
+      "id": 166,
+      "title": "Boys in the House",
+      "date": "September 3rd, 2013"
+    },
+    {
+      "id": 167,
+      "title": "Monday Morning Duffy",
+      "date": "September 9th, 2013"
+    },
+    {
+      "id": 168,
+      "title": "I Say Wopato",
+      "date": "September 16th, 2013"
+    },
+    {
+      "id": 169,
+      "title": "Mr. Sweats",
+      "date": "September 23rd, 2013"
+    },
+    {
+      "id": 170,
+      "title": "Land Before Time But After Pizza",
+      "date": "September 30th, 2013"
+    },
+    {
+      "id": 171,
+      "title": "The Sweetin Furnace",
+      "date": "October 10th, 2013"
+    },
+    {
+      "id": 172,
+      "title": "Juggalo Church Camp",
+      "date": "October 14th, 2013"
+    },
+    {
+      "id": 173,
+      "title": "Bro’s Better, Bro’s Best Ch. 16-30",
+      "date": "October 28th, 2013"
+    },
+    {
+      "id": 174,
+      "title": "Starbucks Castle Doctrine",
+      "date": "November 4th, 2013"
+    },
+    {
+      "id": 175,
+      "title": "Torsey",
+      "date": "November 11th, 2013"
+    },
+    {
+      "id": 176,
+      "title": "Wizard Beard Decade",
+      "date": "November 18th, 2013"
+    },
+    {
+      "id": 177,
+      "title": "Juicy Crust",
+      "date": "November 26th, 2013"
+    },
+    {
+      "id": 178,
+      "title": "Freedom to Burger Out",
+      "date": "December 2nd, 2013"
+    },
+    {
+      "id": 179,
+      "title": "Tuesdays with Luncho",
+      "date": "December 15th, 2013"
+    },
+    {
+      "id": 180,
+      "title": "Candlenights IV",
+      "date": "December 24th, 2013"
+    },
+    {
+      "id": 181,
+      "title": "Boycar",
+      "date": "December 30th, 2013"
+    },
+    {
+      "id": 182,
+      "title": "Yogi the Stareater",
+      "date": "January 6th, 2014"
+    },
+    {
+      "id": 183,
+      "title": "C—3P—Oh Yeaaahhhhh",
+      "date": "January 13th, 2014"
+    },
+    {
+      "id": 184,
+      "title": "YOLT",
+      "date": "January 21st, 2014"
+    },
+    {
+      "id": 185,
+      "title": "Draining a Niner",
+      "date": "January 27th, 2014"
+    },
+    {
+      "id": 186,
+      "title": "Nipple Aesthetics",
+      "date": "February 3rd, 2014"
+    },
+    {
+      "id": 187,
+      "title": "Yu-Gi-Oh Barber Shop",
+      "date": "February 10th, 2014"
+    },
+    {
+      "id": 188,
+      "title": "Holler Smarts",
+      "date": "February 19th, 2014"
+    },
+    {
+      "id": 189,
+      "title": "Sex Toy Story",
+      "date": "February 24th, 2014"
+    },
+    {
+      "id": 190,
+      "title": "Pastamization",
+      "date": "March 3rd, 2014"
+    },
+    {
+      "id": 191,
+      "title": "Married to the Mice King",
+      "date": "March 10th, 2014"
+    },
+    {
+      "id": 192,
+      "title": "Long Bums",
+      "date": "March 17th, 2014"
+    },
+    {
+      "id": 193,
+      "title": "Journey to the Center of the Bear",
+      "date": "March 24th, 2014"
+    },
+    {
+      "id": 194,
+      "title": "Popeye’s Daedalus Protocol",
+      "date": "March 31st, 2014"
+    },
+    {
+      "id": 195,
+      "title": "Bod God",
+      "date": "April 7th, 2014"
+    },
+    {
+      "id": 196,
+      "title": "An Old, Rotten Boat",
+      "date": "April 14th, 2014"
+    },
+    {
+      "id": 197,
+      "title": "Number the Veins",
+      "date": "April 21st, 2014"
+    },
+    {
+      "id": 198,
+      "title": "The Soul Furnace",
+      "date": "May 1st, 2014"
+    },
+    {
+      "id": 199,
+      "title": "Cool Pee Book",
+      "date": "May 5th, 2014"
+    },
+    {
+      "id": 200,
+      "title": "The Two—Hundredth One",
+      "date": "May 12th, 2014"
+    },
+    {
+      "id": 201,
+      "title": "Bro’s Better, Bro’s Better, Bro’s Best Ch 31-45",
+      "date": "May 19th, 2014"
+    },
+    {
+      "id": 202,
+      "title": "Face 2 Face 7: Big Snapple",
+      "date": null
+    },
+    {
+      "id": 203,
+      "title": "Upper Montana",
+      "date": "June 2nd, 2014"
+    },
+    {
+      "id": 204,
+      "title": "Bait Kids",
+      "date": "June 9th, 2014"
+    },
+    {
+      "id": 205,
+      "title": "Face 2 Face 8: Wedding Stiffness",
+      "date": null
+    },
+    {
+      "id": 206,
+      "title": "Hodor Hoarders",
+      "date": "June 23rd, 2014"
+    },
+    {
+      "id": 207,
+      "title": "Thank Travis for Travis",
+      "date": "June 30th, 2014"
+    },
+    {
+      "id": 208,
+      "title": "Face 2 Face 9: Grunt Art",
+      "date": "July 7th, 2014"
+    },
+    {
+      "id": 209,
+      "title": "BurgerTime 4 Ketchup",
+      "date": "July 14th, 2014"
+    },
+    {
+      "id": 210,
+      "title": "Yippee Ki-yay, Holy Father",
+      "date": "July 21st, 2014"
+    },
+    {
+      "id": 211,
+      "title": "Mrs. Doubtfire 2",
+      "date": "July 28th, 2014"
+    },
+    {
+      "id": 212,
+      "title": "Turn Downton for What",
+      "date": "August 5th, 2014"
+    },
+    {
+      "id": 213,
+      "title": "Flavorizer Overload",
+      "date": "August 11th, 2014"
+    },
+    {
+      "id": 214,
+      "title": "Face 2 Face X: Craigslist Croutons",
+      "date": null
+    },
+    {
+      "id": 215,
+      "title": "Glass Shark",
+      "date": "September 2nd, 2014"
+    },
+    {
+      "id": 216,
+      "title": "Under the Crust",
+      "date": "September 8th, 2014"
+    },
+    {
+      "id": 217,
+      "title": "Clippy Lovemaking Tips",
+      "date": "September 15th, 2014"
+    },
+    {
+      "id": 218,
+      "title": "Kelly Rrrrrrripa",
+      "date": "September 22nd, 2014"
+    },
+    {
+      "id": 219,
+      "title": "Pizza Delivery Clone",
+      "date": "September 29th, 2014"
+    },
+    {
+      "id": 220,
+      "title": "Pissbeards and Pooh Corner",
+      "date": "October 6th, 2014"
+    },
+    {
+      "id": 221,
+      "title": "Jareth Defense Tactics",
+      "date": "October 13th, 2014"
+    },
+    {
+      "id": 222,
+      "title": "The Rich Kids Camp",
+      "date": "October 20th, 2014"
+    },
+    {
+      "id": 223,
+      "title": "Bro’s Better, Bro’s Best Ch. 46-61",
+      "date": "October 27th, 2014"
+    },
+    {
+      "id": 224,
+      "title": "Pubic Snakes",
+      "date": "November 4th, 2014"
+    },
+    {
+      "id": 225,
+      "title": "Jingle Defense Force",
+      "date": "November 10th, 2014"
+    },
+    {
+      "id": 226,
+      "title": "A Delicious Twistery",
+      "date": "November 18th, 2014"
+    },
+    {
+      "id": 227,
+      "title": "Streaks on the China",
+      "date": "November 24th, 2014"
+    },
+    {
+      "id": 228,
+      "title": "Sex Draculas",
+      "date": "December 1st, 2014"
+    },
+    {
+      "id": 229,
+      "title": "A Premium Swallow",
+      "date": "December 8th, 2014"
+    },
+    {
+      "id": 230,
+      "title": "Chipocalypse",
+      "date": null
+    },
+    {
+      "id": 231,
+      "title": "Candlenights 2014",
+      "date": "December 22nd, 2014"
+    },
+    {
+      "id": 232,
+      "title": "Rim Allen",
+      "date": "December 29th, 2014"
+    },
+    {
+      "id": 233,
+      "title": "Bedtime Thank You",
+      "date": "January 5th, 2015"
+    },
+    {
+      "id": 234,
+      "title": "The Legend of Cracker Barrel",
+      "date": "January 12th, 2015"
+    },
+    {
+      "id": 235,
+      "title": "Audio Billboards",
+      "date": "January 20th, 2015"
+    },
+    {
+      "id": 236,
+      "title": "Chobani Hell",
+      "date": "January 26th, 2015"
+    },
+    {
+      "id": 237,
+      "title": "John Turturro Robot Watersports",
+      "date": "February 2nd, 2015"
+    },
+    {
+      "id": 238,
+      "title": "Face 2 Face 11: No One Goes Home Alone",
+      "date": null
+    },
+    {
+      "id": 240,
+      "title": "Teen Google",
+      "date": "February 23rd, 2015"
+    },
+    {
+      "id": 241,
+      "title": "Foghorn LeZydeco",
+      "date": "March 3rd, 2015"
+    },
+    {
+      "id": 242,
+      "title": "In the Mouth of Mango",
+      "date": "March 9th, 2015"
+    },
+    {
+      "id": 243,
+      "title": "Lenny Kravitz Marinara Breast Milk",
+      "date": "March 16th, 2015"
+    },
+    {
+      "id": 244,
+      "title": "Slimefoot",
+      "date": "March 23rd, 2015"
+    },
+    {
+      "id": 245,
+      "title": "Bro’s Better, Bro’s Best Ch. 62-71",
+      "date": "March 30th, 2015"
+    },
+    {
+      "id": 246,
+      "title": "Face 2 Face: Hot Beans",
+      "date": "April 6th, 2015"
+    },
+    {
+      "id": 247,
+      "title": "Tangled Up in Carl",
+      "date": "April 13th, 2015"
+    },
+    {
+      "id": 248,
+      "title": "Face 2 Face: Bumblefoot",
+      "date": "April 20th, 2015"
+    },
+    {
+      "id": 249,
+      "title": "Toyota Bigraft",
+      "date": "April 27th, 2015"
+    },
+    {
+      "id": 250,
+      "title": "The Best in the Biz",
+      "date": "May 4th, 2015"
+    },
+    {
+      "id": 251,
+      "title": "Cycle 2.0",
+      "date": "May 11th, 2015"
+    },
+    {
+      "id": 252,
+      "title": "Face 2 Face: Sock Detectives",
+      "date": "May 18th, 2015"
+    },
+    {
+      "id": 253,
+      "title": "Bye-Bye Boy",
+      "date": "May 26th, 2015"
+    },
+    {
+      "id": 254,
+      "title": "Dunkey",
+      "date": "June 1st, 2015"
+    },
+    {
+      "id": 255,
+      "title": "Kangaroo Jack Blood",
+      "date": "June 8th, 2015"
+    },
+    {
+      "id": 256,
+      "title": "Face 2 Face: I Made Some horse Stamps in Potato",
+      "date": "June 15th, 2015"
+    },
+    {
+      "id": 257,
+      "title": "Swag Dads",
+      "date": "June 22nd, 2015"
+    },
+    {
+      "id": 258,
+      "title": "OOH, MOMMY!",
+      "date": "June 29th, 2015"
+    },
+    {
+      "id": 259,
+      "title": "Birthday Surprise Hole",
+      "date": "July 6th, 2015"
+    },
+    {
+      "id": 260,
+      "title": "Bro’s Better, Bro’s Best Ch. 72-81",
+      "date": "July 13th, 2015"
+    },
+    {
+      "id": 261,
+      "title": "Island Boy Begins",
+      "date": "July 20th, 2015"
+    },
+    {
+      "id": 262,
+      "title": "Where Everybody Flies a Plane",
+      "date": "July 28th, 2015"
+    },
+    {
+      "id": 263,
+      "title": "Prank House",
+      "date": null
+    },
+    {
+      "id": 264,
+      "title": "Expecto Punchtronum",
+      "date": "August 10th, 2015"
+    },
+    {
+      "id": 265,
+      "title": "The Ballad of Tit Liquid",
+      "date": "August 19th, 2015"
+    },
+    {
+      "id": 266,
+      "title": "Pizza is Illegal in Tennessee",
+      "date": "August 24th, 2015"
+    },
+    {
+      "id": 267,
+      "title": "Face 2 Face: Target Conditioning",
+      "date": "September 2nd, 2015"
+    },
+    {
+      "id": 268,
+      "title": "Hot Boils Beans and Bacon",
+      "date": "September 7th, 2015"
+    },
+    {
       "id": 269,
       "title": "Face 2 Face: Loose Gravy",
       "date": "Sep 14, 2015"
     },
     {
+      "id": 270,
+      "title": "The Juice Will Flow",
+      "date": "September 23rd, 2015"
+    },
+    {
+      "id": 271,
+      "title": "Bro’s Better Bro’s Best 82-91",
+      "date": "September 28th, 2015"
+    },
+    {
+      "id": 272,
+      "title": "Dr. Strings",
+      "date": "October 12th, 2015"
+    },
+    {
+      "id": 273,
+      "title": "Smizing Through the Tears",
+      "date": "October 19th, 2015"
+    },
+    {
+      "id": 274,
+      "title": "The Najimy Museum",
+      "date": "October 26th, 2015"
+    },
+    {
+      "id": 275,
+      "title": "The Podcast Krampus",
+      "date": "November 2nd, 2015"
+    },
+    {
+      "id": 276,
+      "title": "Luda Tells It Best",
+      "date": "November 10th, 2015"
+    },
+    {
+      "id": 277,
+      "title": "The Taz Rebellion",
+      "date": "November 16th, 2015"
+    },
+    {
+      "id": 278,
+      "title": "The Gushie Tapes",
+      "date": "November 24th, 2015"
+    },
+    {
+      "id": 279,
+      "title": "Sad Cabbage Boy’s Candy Contest",
+      "date": "November 30th, 2015"
+    },
+    {
+      "id": 280,
+      "title": "Great Job",
+      "date": "December 7th, 2015"
+    },
+    {
+      "id": 281,
+      "title": "Sisterball of the Dribbling Shorts",
+      "date": "December 14th, 2015"
+    },
+    {
+      "id": 282,
+      "title": "Candlenights 2015",
+      "date": "December 22nd, 2015"
+    },
+    {
+      "id": 283,
+      "title": "Building Bridges",
+      "date": "December 30th, 2015"
+    },
+    {
+      "id": 284,
+      "title": "Hope and Slime",
+      "date": "January 4th, 2016"
+    },
+    {
+      "id": 285,
+      "title": "Home Alone 0: Blood in the Snow",
+      "date": "January 11th, 2016"
+    },
+    {
+      "id": 286,
+      "title": "Coyotes Ate Our Dad",
+      "date": "January 19th, 2016"
+    },
+    {
+      "id": 287,
+      "title": "Glistening Fishlifters",
+      "date": "January 25th, 2016"
+    },
+    {
+      "id": 288,
+      "title": "Shuriken Dip",
+      "date": "February 1st, 2016"
+    },
+    {
+      "id": 289,
+      "title": "Ben Stiller’s Museum Nights",
+      "date": "February 8th, 2016"
+    },
+    {
+      "id": 290,
+      "title": "Kung Fu Panda 3 Watch",
+      "date": "February 16th, 2016"
+    },
+    {
+      "id": 291,
+      "title": "Most Likely to Boat",
+      "date": "February 22nd, 2016"
+    },
+    {
       "id": 292,
       "title": "Remain on the Smooth Tip",
       "date": null
+    },
+    {
+      "id": 293,
+      "title": "Dark Ages Teen Life",
+      "date": "March 7th, 2016"
+    },
+    {
+      "id": 294,
+      "title": "Goofbusters",
+      "date": "March 14th, 2016"
+    },
+    {
+      "id": 295,
+      "title": "Goofbusters II",
+      "date": "March 21st, 2016"
+    },
+    {
+      "id": 296,
+      "title": "Shower Boys",
+      "date": "March 28th, 2016"
+    },
+    {
+      "id": 297,
+      "title": "Justin Wide",
+      "date": "April 4th, 2016"
+    },
+    {
+      "id": 298,
+      "title": "The Impossible Joke",
+      "date": null
+    },
+    {
+      "id": 299,
+      "title": "The Shorting Hat",
+      "date": "April 18th, 2016"
+    },
+    {
+      "id": 300,
+      "title": "The Three Hundredth One",
+      "date": "April 25th, 2016"
+    },
+    {
+      "id": 301,
+      "title": "The Pirate King",
+      "date": "May 2nd, 2016"
+    },
+    {
+      "id": 302,
+      "title": "Honkin’ on Bruno",
+      "date": "May 9th, 2016"
+    },
+    {
+      "id": 303,
+      "title": "Toot Me to Cabo",
+      "date": "May 16th, 2016"
+    },
+    {
+      "id": 304,
+      "title": "Chicken Soup for Boys",
+      "date": "May 23rd, 2016"
+    },
+    {
+      "id": 305,
+      "title": "Bubble Jug Life",
+      "date": "May 30th, 2016"
+    },
+    {
+      "id": 306,
+      "title": "Face 2 Face: Foggy Bottoms",
+      "date": "June 7th, 2016"
     },
     {
       "id": 307,
@@ -545,6 +1540,206 @@
       "id": 308,
       "title": "Burgertrees",
       "date": null
+    },
+    {
+      "id": 309,
+      "title": "Here Comes Ray Donovan",
+      "date": "June 28th, 2016"
+    },
+    {
+      "id": 310,
+      "title": "A Tale of Two Gallaghers",
+      "date": "July 4th, 2016"
+    },
+    {
+      "id": 311,
+      "title": "Amber is the Color of Our Energy",
+      "date": "July 11th, 2016"
+    },
+    {
+      "id": 312,
+      "title": "Face 2 Face: Live from Drowzee City",
+      "date": "July 18th, 2016"
+    },
+    {
+      "id": 313,
+      "title": "Bone Dry Feeners",
+      "date": "July 25th, 2016"
+    },
+    {
+      "id": 314,
+      "title": "MBMBaM Summer Club",
+      "date": "August 1st, 2016"
+    },
+    {
+      "id": 315,
+      "title": "No Gods, No Kings, Only McCheese",
+      "date": "August 8th, 2016"
+    },
+    {
+      "id": 317,
+      "title": "Jimmy Buffett’s Betrayal-Ville",
+      "date": null
+    },
+    {
+      "id": 318,
+      "title": "French Butterfly Kisses",
+      "date": null
+    },
+    {
+      "id": 319,
+      "title": "Kenny Rogers GameFAQs",
+      "date": null
+    },
+    {
+      "id": 320,
+      "title": "Murder Circus",
+      "date": null
+    },
+    {
+      "id": 321,
+      "title": "Which One Vapes?",
+      "date": null
+    },
+    {
+      "id": 322,
+      "title": "“Margaret, It Happened Again!”",
+      "date": null
+    },
+    {
+      "id": 323,
+      "title": "How I Lost the Fateful Basketball Game to Mr.",
+      "date": null
+    },
+    {
+      "id": 324,
+      "title": "A Heroic and Well—Reviewed Lizard",
+      "date": "October 10th, 2016"
+    },
+    {
+      "id": 325,
+      "title": "Caveman Tears",
+      "date": null
+    },
+    {
+      "id": 326,
+      "title": "Open-Source Burger King",
+      "date": "October 24th, 2016"
+    },
+    {
+      "id": 327,
+      "title": "Bro’s Better, Bro’s Best Ch. 92 – 111",
+      "date": "October 31st, 2016"
+    },
+    {
+      "id": 328,
+      "title": "The Anxiety-Free Cruise",
+      "date": "November 7th, 2016"
+    },
+    {
+      "id": 329,
+      "title": "The Laser Tag Embassy",
+      "date": "November 14th, 2016"
+    },
+    {
+      "id": 330,
+      "title": "President Shaq Neal",
+      "date": "November 21st, 2016"
+    },
+    {
+      "id": 331,
+      "title": "Bro’s Better, Bro’s Best Ch. 112 - 121",
+      "date": "November 28th, 2016"
+    },
+    {
+      "id": 332,
+      "title": "TV Toilet Tourist",
+      "date": "December 5th, 2016"
+    },
+    {
+      "id": 333,
+      "title": "The Full Randal",
+      "date": "December 12th, 2016"
+    },
+    {
+      "id": 334,
+      "title": "BYOBurger",
+      "date": null
+    },
+    {
+      "id": 335,
+      "title": "Rise of the Star King",
+      "date": "December 26th, 2016"
+    },
+    {
+      "id": 336,
+      "title": "Twenty-Something-Teen",
+      "date": "January 3rd, 2017"
+    },
+    {
+      "id": 337,
+      "title": "Seaburglars of the Archipelago",
+      "date": null
+    },
+    {
+      "id": 338,
+      "title": "Thunderwall",
+      "date": "January 17th, 2017"
+    },
+    {
+      "id": 339,
+      "title": "Scatman Zozo",
+      "date": "January 23rd, 2017"
+    },
+    {
+      "id": 340,
+      "title": "Doritos—Blasted Crow",
+      "date": "January 30th, 2017"
+    },
+    {
+      "id": 341,
+      "title": "An Erotic Balloon Puzzle",
+      "date": null
+    },
+    {
+      "id": 342,
+      "title": "Pigeons in the Strike Zone",
+      "date": null
+    },
+    {
+      "id": 343,
+      "title": "The Sauce Doctor’s Blessing",
+      "date": null
+    },
+    {
+      "id": 345,
+      "title": "Face 2 Face: Candlenights in September",
+      "date": "March 6th, 2017"
+    },
+    {
+      "id": 346,
+      "title": "Blue Eyes, White Dragon, Can’t Lose",
+      "date": "March 13th, 2017"
+    },
+    {
+      "id": 347,
+      "title": "Donut Miss This Episode!",
+      "date": "March 20th, 2017"
+    },
+    {
+      "id": 348,
+      "title": "Stardust and Dino Piss",
+      "date": "March 27th, 2017"
+    },
+    {
+      "id": 349,
+      "title": "Face 2 Face: Remembering How to Do Live Shows in",
+      "date": "April 3rd, 2017"
+    },
+    {
+      "id": 350,
+      "title": "The 2018 Olympic Laser Tag Team",
+      "date": "April 10th, 2017"
     },
     {
       "id": 351,
@@ -597,6 +1792,11 @@
       "date": null
     },
     {
+      "id": 361,
+      "title": "Gelsey Krammer",
+      "date": "June 26th, 2017"
+    },
+    {
       "id": 362,
       "title": "Travis McElroy Presents Waffle Friend",
       "date": null
@@ -605,6 +1805,11 @@
       "id": 363,
       "title": "Breathing in Space",
       "date": null
+    },
+    {
+      "id": 364,
+      "title": "Face 2 Face: Dumbledore’s Magic Buffalo Wings",
+      "date": "July 25th, 2017"
     },
     {
       "id": 365,
@@ -662,6 +1867,11 @@
       "date": "October 9th, 2017"
     },
     {
+      "id": 376,
+      "title": "Face 2 Face: Shrimp, Heaven, Live!",
+      "date": "October 16th, 2017"
+    },
+    {
       "id": 377,
       "title": "Face 2 Face: One Great Potato!",
       "date": "October 24, 2017"
@@ -675,6 +1885,16 @@
       "id": 379,
       "title": "6969 Cool Street",
       "date": "November 6th, 2017"
+    },
+    {
+      "id": 380,
+      "title": "Nuthead",
+      "date": "November 13th, 2017"
+    },
+    {
+      "id": 381,
+      "title": "Face 2 Face: Griffin's Big, Brave Stunt",
+      "date": "November 21st, 2017"
     },
     {
       "id": 382,
@@ -694,6 +1914,11 @@
     {
       "id": 385,
       "title": "Horses in the Drift",
+      "date": null
+    },
+    {
+      "id": 386,
+      "title": "Candlenights 2017",
       "date": null
     },
     {
@@ -890,6 +2115,11 @@
       "id": 426,
       "title": "The Home of Smooth Daddy",
       "date": "September 24th, 2018"
+    },
+    {
+      "id": 427,
+      "title": "Face two Face: Adult Big Green Reptiles",
+      "date": null
     },
     {
       "id": 428,
@@ -1602,6 +2832,16 @@
       "date": "July 26th, 2021"
     },
     {
+      "id": 571,
+      "title": "The Gru of Popsicles",
+      "date": "August 2nd, 2021"
+    },
+    {
+      "id": 572,
+      "title": "Sky Captain and the World of Giamatti",
+      "date": "August 9th, 2021"
+    },
+    {
       "id": 573,
       "title": "Bro’s Better, Bro’s Best: Ch. 200 – 216",
       "date": "August 16th, 2021"
@@ -1635,6 +2875,11 @@
       "id": 578,
       "title": "Greg’s Upstairs High-Performance Tea Kettle",
       "date": "September 21st, 2021"
+    },
+    {
+      "id": 579,
+      "title": "Twoklahoma",
+      "date": "September 27th, 2021"
     },
     {
       "id": 580,
@@ -1732,6 +2977,11 @@
       "date": null
     },
     {
+      "id": 599,
+      "title": "The Hand That Drinks You",
+      "date": null
+    },
+    {
       "id": 600,
       "title": "Awesome Sanguine Meridian Response",
       "date": "March 7th, 2022"
@@ -1749,6 +2999,11 @@
     {
       "id": 603,
       "title": "A Cold One Between the Shoulders",
+      "date": null
+    },
+    {
+      "id": 604,
+      "title": "Fluffybutt Acres",
       "date": null
     },
     {
@@ -1922,6 +3177,11 @@
       "date": "December 5, 2022"
     },
     {
+      "id": 639,
+      "title": "62 Minutes of Three Men Gnawing",
+      "date": "December 12, 2022"
+    },
+    {
       "id": 640,
       "title": "Playing the Gravy Card",
       "date": "December 19, 2022"
@@ -2087,6 +3347,16 @@
       "date": "August 7, 2023"
     },
     {
+      "id": 673,
+      "title": "Face 2 Face: You Will Pass Your Stones",
+      "date": "August 14, 2023"
+    },
+    {
+      "id": 674,
+      "title": "Plato's Rave",
+      "date": "August 21, 2023"
+    },
+    {
       "id": 675,
       "title": "A Great Lay But a Real Wet Hug",
       "date": "August 28, 2023"
@@ -2202,8 +3472,18 @@
       "date": null
     },
     {
+      "id": 698,
+      "title": "Don’t Piss on a Shark",
+      "date": null
+    },
+    {
       "id": 699,
       "title": "The Platonic Dad",
+      "date": null
+    },
+    {
+      "id": 700,
+      "title": "Good Choices Today, Business Man",
       "date": null
     },
     {
@@ -2467,6 +3747,11 @@
       "date": "March 3rd, 2025"
     },
     {
+      "id": 753,
+      "title": "The Dicktine Chapel",
+      "date": null
+    },
+    {
       "id": 754,
       "title": "Dinglebuff Hufferbuff",
       "date": "March 17th, 2025"
@@ -2705,6 +3990,11 @@
       "id": 800,
       "title": "Platonic Soapbox Sex Coffin",
       "date": "February 16th, 2026"
+    },
+    {
+      "id": 802,
+      "title": "Assassinating the Moon Queen",
+      "date": "February 22nd, 2026"
     }
   ]
 }
