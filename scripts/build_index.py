@@ -360,7 +360,7 @@ def main():
         help='Directory to write output JSON files',
     )
     parser.add_argument(
-        '--min-bigram-count', type=int, default=5, metavar='N',
+        '--min-bigram-count', type=int, default=10, metavar='N',
         help='Drop bigrams with fewer than N total uses across all episodes/speakers. '
              'Lower = bigger file, more rare phrases covered. Recommended range: 2-10.',
     )
