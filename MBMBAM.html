@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>MBMBaM Word Stats</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,7 +12,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --nav-h:   42px;
+      --nav-h:   42px;   /* overwritten by JS on load/resize */
       --cream:   #F0E6CE;
       --cream-d: #E2D4B4;
       --cream-dd:#CABB94;
@@ -94,6 +94,8 @@
     .site-nav {
       background: var(--ink); display: flex; padding: 0 2.5rem;
       position: sticky; top: 0; z-index: 100;
+      /* push nav buttons below notch/Dynamic Island */
+      padding-top: env(safe-area-inset-top, 0px);
     }
     .site-nav button {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem;
@@ -1612,19 +1614,35 @@ init();
 // the very top of the screen and the sticky nav.
 (function () {
   const masthead = document.querySelector('.masthead');
+  const nav      = document.querySelector('.site-nav');
+
+  function setNavHeight() {
+    // Measure the nav's actual rendered height and write it to --nav-h.
+    // This accounts for the mobile media query changing button padding,
+    // and for the safe-area inset that env() adds on notch devices.
+    const h = nav ? nav.offsetHeight : 42;
+    document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+
   let ticking = false;
   function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      // nav sticks when scrollY >= masthead's bottom edge
       const threshold = masthead ? masthead.offsetHeight : 0;
       document.body.classList.toggle('nav-stuck', window.scrollY >= threshold);
       ticking = false;
     });
   }
+
+  // Set immediately (best-effort before fonts load), then re-measure once
+  // fonts are ready — Josefin Sans affects button height and can cause
+  // offsetHeight to be a few pixels off on the first measurement.
+  setNavHeight();
+  document.fonts.ready.then(setNavHeight);
+  window.addEventListener('resize', setNavHeight, { passive: true });
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); // run once on load in case page is already scrolled
+  onScroll();
 })();
 </script>
 </body>
