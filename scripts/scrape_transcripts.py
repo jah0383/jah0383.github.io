@@ -33,6 +33,7 @@ import re
 import time
 import argparse
 from pathlib import Path
+from urllib.parse import quote
 
 import requests
 
@@ -132,28 +133,14 @@ def list_folder(access_token: str) -> list[dict]:
 
 # ── Download ──────────────────────────────────────────────────────────────────
 
-def download_pdf(
-    filename: str,
-    dest: Path,
-    access_token: str,
-    session: requests.Session,
-) -> bool:
-    """
-    Download a single PDF from the shared folder via the Dropbox content API.
-    The 'path' in the API arg is relative to the shared folder root.
-    """
-    import json
-
-    api_arg = json.dumps({
-        'url':  SHARED_FOLDER_URL,
-        'path': f'/{filename}',
-    })
-    headers = {
-        'Authorization':   f'Bearer {access_token}',
-        'Dropbox-API-Arg': api_arg,
-    }
+def download_pdf(filename, dest, session):
+    # Construct direct download URL from the shared folder base.
+    # The folder URL already points to the MBMBaM subfolder, so we
+    # just append the filename with dl=1 to force a download.
+    base = 'https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM'
+    url = f'{base}/{quote(filename)}?dl=1'
     try:
-        r = session.post(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
+        r = session.get(url, timeout=120, stream=True)
         r.raise_for_status()
         with open(dest, 'wb') as f:
             for chunk in r.iter_content(chunk_size=65536):
