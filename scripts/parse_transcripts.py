@@ -57,7 +57,7 @@ DATE_RE = re.compile(
 # Group 1: speaker name   Group 2: optional role (may be None)   Group 3: rest of line
 SPEAKER_RE = re.compile(
     r'^([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)'   # speaker name
-    r'(?:\s*\[[Aa]s\s+([^\]]+)\])?'         # optional [as Character Name]
+    r'(?:\s*\[[Aa]s\s+([^\]]+)\])?'           # optional [as Character Name]
     r'\s*:\s*(.*)'                          # colon + rest of line
 )
 
@@ -67,9 +67,6 @@ STAGE_LINE_RE = re.compile(r'^\[.*\]$')
 # Inline stage direction: [laughs], [sings], etc.
 INLINE_STAGE_RE = re.compile(r'\[.*?\]')
 
-# Post-colon role annotation: "[as Richard Stink] rest..."
-# Matches only [as ...] at the very start of the post-colon text.
-POST_COLON_ROLE_RE = re.compile(r'^\[as\s+([^\]]+)\]\s*', re.IGNORECASE)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -137,18 +134,14 @@ def parse_utterances(text: str, known_speakers: set) -> list:
     current_speaker    = None
     current_tokens     = []
     current_directions = []
-    current_role_val   = None
 
     def flush():
         if current_speaker and (current_tokens or current_directions):
-            utt = {
+            utterances.append({
                 'speaker':    current_speaker,
                 'text':       ' '.join(current_tokens),
                 'directions': current_directions[:],
-            }
-            if current_role_val:
-                utt['role'] = current_role_val
-            utterances.append(utt)
+            })
 
     def capture_directions(s: str) -> list:
         return [m.lower() for m in re.findall(r'\[([^\]]+)\]', s)]
@@ -168,16 +161,12 @@ def parse_utterances(text: str, known_speakers: set) -> list:
                 current_speaker = candidate
                 rest_raw        = m.group(3)
 
-                # Role can be before the colon: "Justin [as X]: text"  → group 2
-                # or after the colon:           "Justin: [as X] text"  → start of group 3
-                role = m.group(2).strip() if m.group(2) else None
-                if not role:
-                    pr = POST_COLON_ROLE_RE.match(rest_raw)
-                    if pr:
-                        role     = pr.group(1).strip()
-                        rest_raw = rest_raw[pr.end():]  # strip the [as X] from the text
+                # Pre-colon format: "Justin [as Richard Stink]: text"
+                # Group 2 holds the role — prepend it as a bracketed token so
+                # capture_directions and INLINE_STAGE_RE treat it like [laughs].
+                if m.group(2):
+                    rest_raw = f'[as {m.group(2).strip()}] {rest_raw}'
 
-                current_role_val   = role
                 current_directions = capture_directions(rest_raw)
                 rest = INLINE_STAGE_RE.sub('', rest_raw).strip()
                 current_tokens     = [rest] if rest else []
