@@ -1,11 +1,16 @@
 # .github/workflows/update-data.yml
 #
-# Scrapes new MBMBaM transcript PDFs, parses them incrementally,
-# rebuilds the site data JSON files, and commits the result.
+# Downloads new MBMBaM transcript PDFs from the official McElroy Dropbox,
+# parses them incrementally, rebuilds the site data JSON files, and commits.
 #
 # Triggers:
 #   - Weekly on Monday at 09:00 UTC (new episodes drop Mondays)
 #   - Manual trigger via Actions → Run workflow
+#
+# Required secrets (Settings → Secrets and variables → Actions):
+#   DROPBOX_APP_KEY       — your Dropbox app key
+#   DROPBOX_APP_SECRET    — your Dropbox app secret
+#   DROPBOX_REFRESH_TOKEN — offline refresh token (see SETUP.md)
 
 name: Update transcript data
 
@@ -49,28 +54,28 @@ jobs:
         run: pip install -r scripts/requirements.txt
 
       # ── 3. Scrape — download only PDFs that aren't already cached ──────────
-      #    We use a dedicated runner cache keyed on the manifest so the PDF
-      #    folder persists across runs. PDFs are never committed to the repo.
+      #    The PDF folder and parsed_episodes.json are cached between runs so
+      #    only new episodes get downloaded and re-parsed each week.
       - name: Restore scrape cache
         id: scrape-cache
         uses: actions/cache@v4
         with:
-          # Cache both the PDFs and parsed_episodes.json together.
-          # parsed_episodes.json is what --incremental reads to skip already-parsed episodes.
           path: |
             pdfs/
             parsed_episodes.json
-          # Key includes the latest episode ID from the committed manifest
-          # so the cache is considered stale when a new episode lands.
           key: scrape-${{ hashFiles('data/manifest.json') }}
           restore-keys: scrape-
 
       - name: Scrape new transcripts
+        env:
+          DROPBOX_APP_KEY:       ${{ secrets.DROPBOX_APP_KEY }}
+          DROPBOX_APP_SECRET:    ${{ secrets.DROPBOX_APP_SECRET }}
+          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
         run: |
           mkdir -p pdfs
           python scripts/scrape_transcripts.py \
             --output pdfs \
-            --delay 1.5
+            --delay 0.5
 
       # ── 4. Parse — incremental unless full rebuild requested ───────────────
       - name: Parse transcripts
@@ -90,9 +95,6 @@ jobs:
           python scripts/build_index.py parsed_episodes.json \
             --output-dir data
 
-      # parsed_episodes.json is large and contains raw transcript text.
-      # We don't commit it — it lives only on the runner and in the PDF cache.
-
       # ── 6. Commit updated data files if anything changed ───────────────────
       - name: Check for changes
         id: check
@@ -105,7 +107,6 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          # Show what changed in the commit message
           SUMMARY=$(git diff --cached --stat data/ | tail -1)
           git commit -m "data: auto-update transcripts [skip ci]
 

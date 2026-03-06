@@ -99,7 +99,7 @@
     /* ── NAV ──────────────────────────────────────────────── */
     .site-nav {
       background: var(--ink); display: flex; padding: 0 2.5rem;
-      position: sticky; top: 0; z-index: 100; overflow: hidden;
+      position: sticky; top: 0; z-index: 100;
     }
     .site-nav button {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem;
@@ -594,9 +594,95 @@
       opacity: var(--shade-opacity, 0);
       visibility: visible; /* always visible now, opacity does the hiding */
       pointer-events: none;
-
     }
     body.nav-stuck .site-nav::before { visibility: visible; }
+
+    /* ── ABOUT PAGE ──────────────────────────────────────────── */
+    .about-section { max-width: 680px; }
+
+    .about-block {
+      margin-bottom: 2.5rem;
+    }
+    .about-block h3 {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink); margin: 0 0 0.75rem;
+    }
+    .about-block p {
+      font-size: 0.95rem; line-height: 1.7;
+      color: var(--ink-mid); margin: 0 0 0.6rem;
+    }
+    .about-block p:last-child { margin-bottom: 0; }
+    .about-block a { color: var(--coral); text-decoration: none; }
+    .about-block a:hover { text-decoration: underline; }
+
+    /* pipeline steps */
+    .pipeline {
+      display: flex; flex-direction: column; gap: 0;
+      margin: 1rem 0;
+      border-left: 3px solid var(--cream-dd);
+      padding-left: 1.25rem;
+    }
+    .pipeline-step {
+      padding: 0.5rem 0;
+      font-size: 0.88rem; line-height: 1.6; color: var(--ink-mid);
+    }
+    .pipeline-step strong {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink);
+      display: block; margin-bottom: 0.15rem;
+    }
+
+    /* limitations callout */
+    .about-callout {
+      background: var(--ink); color: var(--cream);
+      border-radius: 4px; padding: 1rem 1.25rem;
+      font-size: 0.88rem; line-height: 1.65;
+      margin: 1rem 0;
+    }
+    .about-callout ul {
+      margin: 0.5rem 0 0; padding-left: 1.2rem;
+      color: rgba(240,230,206,0.8);
+    }
+    .about-callout ul li { margin-bottom: 0.3rem; }
+    .about-callout a { color: var(--gold); text-decoration: none; }
+    .about-callout a:hover { text-decoration: underline; }
+
+    /* stat highlights */
+    .highlight-grid {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-top: 1rem;
+    }
+    .highlight-card {
+      flex: 1 1 280px;
+      background: var(--cream-d);
+      border-radius: 4px;
+      padding: 1.1rem 1.25rem 1rem;
+      border-left: 4px solid var(--coral);
+      position: relative;
+    }
+    .highlight-card.teal  { border-left-color: var(--teal); }
+    .highlight-card.gold  { border-left-color: var(--gold); }
+    .highlight-card .hc-stat {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1.6rem; line-height: 1.1;
+      color: var(--ink); margin-bottom: 0.3rem;
+    }
+    .highlight-card .hc-label {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-lite);
+      margin-bottom: 0.5rem;
+    }
+    .highlight-card .hc-note {
+      font-size: 0.85rem; line-height: 1.55; color: var(--ink-mid);
+    }
+
+    @media (max-width: 599px) {
+      .highlight-card { flex: 1 1 100%; }
+      .about-block p  { font-size: 0.9rem; }
+    }
   </style>
   <script data-goatcounter="https://madjam1231.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -629,6 +715,7 @@
   <button data-tab="search">Word Search</button>
   <button data-tab="topwords">Compare Words</button>
   <button data-tab="browse">Browse</button>
+  <button data-tab="about">About</button>
 </nav>
 
 <main>
@@ -787,6 +874,109 @@
       <div class="browse-pagination" id="browse-pagination"></div>
     </div>
   </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-heading"><h2>About</h2><div class="rule"></div></div>
+    <div class="about-section">
+
+      <div class="about-block">
+        <h3>What is this?</h3>
+        <p>A searchable, browsable breakdown of every word spoken across 800+ episodes of <em>My Brother, My Brother and Me</em> — You can search for how often a word or phrase has been said, who says it most, and how usage has shifted over time.</p>
+      </div>
+
+      <div class="stripe-rule"></div>
+
+      <div class="about-block">
+        <h3>How it works</h3>
+        <p>Episode transcripts are published alongside episodes(Give the transcriber a raise, they are amazing!). And every week, an automated process runs and does the following:</p>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <strong>1 — Scrape</strong>
+            A script checks the transcript archive for any episodes that haven't been processed yet and downloads them as PDFs.
+          </div>
+          <div class="pipeline-step">
+            <strong>2 — Parse</strong>
+            Each PDF is read line by line. Speaker attribution, dialogue, and stage directions (the stuff in brackets like <em>[laughs]</em>) are extracted and structured.
+          </div>
+          <div class="pipeline-step">
+            <strong>3 — Index</strong>
+            Every word, two-word phrase, and three-word phrase gets counted per speaker per episode — roughly 60,000 unique terms across the full run. The result is a set of JSON files that power the search and browse features on this site.
+          </div>
+          <div class="pipeline-step">
+            <strong>4 — Deploy</strong>
+            If anything changed, the updated data is committed automatically to GitHub and the site updates within seconds. No server, no database — just static files.
+          </div>
+        </div>
+        <p>The whole thing runs on GitHub Actions on a weekly schedule, so the site stays current without any manual work.</p>
+      </div>
+
+      <div class="stripe-rule"></div>
+
+      <div class="about-block">
+        <h3>Data source &amp; limitations</h3>
+        <p>All transcript data comes from the <a href="https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM?dl=0&subfolder_nav_tracking=1" target="_blank" rel="noopener">McElroy family website</a>. A few things worth knowing:</p>
+        <div class="about-callout">
+          <ul>
+            <li>Transcripts aren't available for every episode - some early ones are missing entirely.</li>
+            <li>PDF formatting isn't perfectly consistent across 800 episodes, so occasionally a line gets misattributed or missed during parsing.</li>
+            <li>Speaker counts reflect transcript text only - if a transcript labels something wrong, the data inherits that error.</li>
+            <li>Stage directions like <em>[laughs]</em> are searchable but counted separately from spoken words.</li>
+            <li>2 word and 3 word phrases have a cutoff so filesizes don't balloon, if they were said less than 10 times they aren't here.</li>
+          </ul>
+          <p style="margin-top:0.75rem; color: rgba(240,230,206,0.8)">If you notice anything off, feel free to email <a href="mailto:madjam1231@gmail.com">madjam1231@gmail.com</a>.</p>
+        </div>
+      </div>
+
+      <div class="stripe-rule"></div>
+
+      <div class="about-block">
+        <h3>Highlights</h3>
+        <p>Some things the data turned up. Fill these in.</p>
+        <div class="highlight-grid">
+
+          <div class="highlight-card">
+            <div class="hc-stat"></div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+          <div class="highlight-card teal">
+            <div class="hc-stat">–</div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+          <div class="highlight-card gold">
+            <div class="hc-stat">–</div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+          <div class="highlight-card">
+            <div class="hc-stat">–</div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+          <div class="highlight-card teal">
+            <div class="hc-stat">–</div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+          <div class="highlight-card gold">
+            <div class="hc-stat">–</div>
+            <div class="hc-label">Stat label here</div>
+            <div class="hc-note">Your note about why this is funny or interesting goes here.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 </main>
 
 <script>
@@ -1572,7 +1762,6 @@ function renderBrowse() {
   const tbody = document.getElementById('browse-tbody');
   tbody.innerHTML = slice.map((row, i) => {
     const rank = safePage * pageSize + i + 1;
-    const isTop = rank <= 3 && sort === 'total' && !filter;
     const spkCells = showIndividual
       ? activeSpks.map(s => {
           const idx = speakers.indexOf(s);
@@ -1582,7 +1771,7 @@ function renderBrowse() {
     return `<tr>
       <td class="term-cell">${highlight(row.term)}</td>
       ${spkCells}
-      <td class="num${isTop ? ' top' : ''}">${row.displayTotal.toLocaleString()}</td>
+      <td class="num">${row.displayTotal.toLocaleString()}</td>
     </tr>`;
   }).join('');
 
