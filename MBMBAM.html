@@ -997,9 +997,9 @@ const FALLBACK = { line: '#9A7D58', area: 'rgba(154,125,88,0.15)', bar: 'rgba(15
 const sc = spk => SPEAKER_COLORS[spk] ?? FALLBACK;
 
 const PRESETS = [
-  { label: 'Catchphrases',    terms: 'yahoo, unless, kiss your dad, modern era' },
+  { label: 'Catchphrases',    terms: 'yahoo, unless, kiss your dad, modern era, trav nation' },
   { label: 'Laugh reactions', terms: '[laughs], [chuckles], [chortles], [guffaws], [titters], [wheezes]' },
-  { label: 'Podcast bits',    terms: 'munch squad, money zone, haunted doll watch' },
+  { label: 'Podcast bits',    terms: 'munch squad, money zone, haunted doll watch, work of fart' },
   { label: 'Advice words',    terms: 'advice, question, problem, help' },
   { label: 'Relationships',   terms: 'wife, husband, brother, family, friend' },
   { label: 'Internet',        terms: 'twitter, reddit, yahoo answers, facebook' },
@@ -1045,8 +1045,8 @@ document.querySelectorAll('.ngram-btn').forEach(btn => {
 
     const hints = {
       word:    'e.g.  brother  or  griffin',
-      bigram:  'e.g.  modern era  or  bad idea',
-      trigram: 'e.g.  kiss your dad  or  bad idea blanket',
+      bigram:  'e.g.  modern era  or  count donut',
+      trigram: 'e.g.  kiss your dad  or  tummy buddy life',
       stage:   'e.g.  laughs  or  chortles  — brackets added automatically',
     };
     document.getElementById('word-input').placeholder = hints[currentMode];
