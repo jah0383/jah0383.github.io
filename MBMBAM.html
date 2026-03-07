@@ -1328,7 +1328,7 @@ function wireOvControls(stats) {
 
 // ── Search ────────────────────────────────────────────────────────────────────
 let searchChart = null;
-let searchAllEps = [], searchEntry = null, searchSpeakers = [], searchSmooth = 1, searchCumulative = false;
+let searchAllEps = [], searchEntry = null, searchSpeakers = [], searchSmooth = 1, searchCumulative = false, searchSkipEmpty = false;
 
 document.getElementById('word-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 document.getElementById('search-btn').addEventListener('click', doSearch);
@@ -1373,7 +1373,7 @@ async function doSearch() {
       .map(id => epLookup[id]).filter(Boolean).sort((a, b) => a.id - b.id);
 
     // stash for controls to reuse
-    searchAllEps = allEps; searchEntry = entry; searchSpeakers = speakers; searchSmooth = 1; searchCumulative = false;
+    searchAllEps = allEps; searchEntry = entry; searchSpeakers = speakers; searchSmooth = 1; searchCumulative = false; searchSkipEmpty = true;
 
     const spkTotals = Object.fromEntries(
       speakers.map(s => [s, Object.values(entry[s]).reduce((a, v) => a + v, 0)])
@@ -1417,6 +1417,12 @@ async function doSearch() {
             <button class="ctrl-btn active" data-count="per">Per Episode</button>
             <button class="ctrl-btn" data-count="cumulative">Cumulative</button>
           </div>
+          <div class="ctrl-sep"></div>
+          <span class="chart-controls-label">Zeros</span>
+          <div class="ctrl-btn-group" id="sr-skip-group">
+            <button class="ctrl-btn active" data-skip="skip">Skip</button>
+            <button class="ctrl-btn" data-skip="show">Show</button>
+          </div>
         </div>
         <div class="chart-card-body">
           <canvas id="search-chart"></canvas>
@@ -1441,20 +1447,37 @@ async function doSearch() {
 function buildSearchChart() {
   const fromId = parseInt(document.getElementById('sr-ep-from')?.value) || searchAllEps[0]?.id;
   const toId   = parseInt(document.getElementById('sr-ep-to')?.value)   || searchAllEps[searchAllEps.length-1]?.id;
-  const filtered = searchAllEps.filter(ep => ep.id >= fromId && ep.id <= toId);
-  const labels   = filtered.map(ep => `Ep ${ep.id}`);
 
-  // Disable smooth when cumulative
+  // allRangeEps: every episode in the selected range (for "show zeros" and episode-aware smoothing window)
+  // sparseEps:   only episodes where the word appears (for "skip zeros")
+  const allRangeEps = episodeStats.filter(ep => ep.id >= fromId && ep.id <= toId);
+  const sparseEps   = searchAllEps.filter(ep => ep.id >= fromId && ep.id <= toId);
+
+  const displayed = searchSkipEmpty ? sparseEps : allRangeEps;
+  const labels    = displayed.map(ep => `Ep ${ep.id}`);
+
   document.getElementById('sr-smooth-group')?.querySelectorAll('.ctrl-btn').forEach(b => {
     b.disabled = searchCumulative;
     b.style.opacity = searchCumulative ? '0.35' : '';
   });
 
   const datasets = searchSpeakers.map(s => {
-    const raw = filtered.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0);
-    const vals = searchCumulative ? cumulate(raw) : rollingAvg(raw, searchSmooth);
-    return lineDS(s, vals, false, filtered.length > 80 ? 0 : 3);
+    let vals;
+    if (searchCumulative) {
+      vals = cumulate(displayed.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0));
+    } else if (searchSkipEmpty && searchSmooth > 1) {
+      // Episode-aware: window is over rangeEps by ID, so skipped zeros still count
+      vals = displayed.map(ep => {
+        const window = allRangeEps.filter(e => e.id > ep.id - searchSmooth && e.id <= ep.id);
+        const sum = window.reduce((acc, e) => acc + (searchEntry[s]?.[String(e.id)] ?? 0), 0);
+        return window.length ? sum / window.length : 0;
+      });
+    } else {
+      vals = rollingAvg(displayed.map(ep => searchEntry[s]?.[String(ep.id)] ?? 0), searchSmooth);
+    }
+    return lineDS(s, vals, false, displayed.length > 80 ? 0 : 3);
   });
+
   if (searchChart) { searchChart.destroy(); searchChart = null; }
   searchChart = new Chart(document.getElementById('search-chart'), {
     type: 'line', data: { labels, datasets }, options: baseOpts(),
@@ -1466,6 +1489,14 @@ function wireSearchControls() {
   document.getElementById('sr-apply')?.addEventListener('click', applyFn);
   document.getElementById('sr-ep-from')?.addEventListener('keydown', e => { if (e.key === 'Enter') applyFn(); });
   document.getElementById('sr-ep-to')?.addEventListener('keydown',   e => { if (e.key === 'Enter') applyFn(); });
+  document.getElementById('sr-skip-group')?.querySelectorAll('.ctrl-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.getElementById('sr-skip-group').querySelectorAll('.ctrl-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      searchSkipEmpty = b.dataset.skip === 'skip';
+      buildSearchChart();
+    });
+  });
   wireToggleGroup('sr-smooth-group', btn => {
     searchSmooth = parseInt(btn.dataset.smooth);
     buildSearchChart();
