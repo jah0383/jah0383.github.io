@@ -79,7 +79,8 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding-left: 1rem;
+  padding-right: 0;
   z-index: 100;
 }
 
@@ -97,14 +98,14 @@ nav .nav-id-link {
   gap: 0;
 }
 
-nav .nav-id-link div{
+nav .nav-id-link a{
   display: flex;
   border-left: 1px solid var(--border-dim);
   border-right: 1px solid var(--border-dim);
   align-items: center;
   height: var(--nav-h);
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 nav .nav-id-link div:hover { background: var(--bg-offset); }
@@ -634,7 +635,7 @@ footer .f-right { font-family: var(--mono); font-size: 0.6rem; color: var(--text
 
 /* Phones */
 @media (max-width: 560px) {
-  nav { padding: 0 1rem; }
+  nav { padding: 0 }
   .hero-left, .hero-right, .about-left, .about-right,
   .contact-left, .contact-right, .projects-header, .art-header { padding-left: 1rem; padding-right: 1rem; }
   .section-grid { grid-template-columns: 1fr; }
