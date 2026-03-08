@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,194 +6,277 @@
     <title>Gear Easing Explorer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <style>
         :root {
-            --bg: #08080c;
-            --surface: #0e0e14;
-            --border: rgba(255,255,255,0.07);
-            --text: #c8c8d0;
-            --text-dim: rgba(200,200,210,0.35);
-            --text-muted: rgba(200,200,210,0.18);
-            --accent: #00e0a0;
-            --accent-dim: rgba(0,224,160,0.15);
-            --accent-mid: rgba(0,224,160,0.4);
-            --gear-fill: #12121a;
-            --gear-stroke: rgba(0,224,160,0.5);
-            --mono: 'IBM Plex Mono', monospace;
+            /* ── Canvas / drawing colors ── */
+            --bg:                  #F0EBE1;
+            --primary-gear-fill:   #C94A24;
+            --secondary-gear-fill: #C94A24;
+            --primary-gear-stroke: #1C1B18;
+            --secondary-gear-stroke: #1C1B18;
+            --gear-stroke-weight:  1;
+            --graph-line-stroke:   #1C1B18;
+            --graph-text:          #7A7568;
+            --graph-line:          rgba(201, 74, 36, 0.55);
+            --graph-grid-line:     rgba(28, 27, 24, 0.1);
+            --graph-dot:           #C94A24;
+            --divider-stroke:      #C8C0AE;
+            --gear-label:          #7A7568;
+            --ratio-label:         #1C1B18;
+
+            /* ── UI colors ── */
+            --surface:    #EAE4D8;
+            --border:     #C8C0AE;
+            --border-dim: #D8D1C4;
+            --text:       #1C1B18;
+            --text-dim:   #4A4840;
+            --text-muted: #7A7568;
+            --accent:     #C94A24;
+            --accent-dim: #E8795A;
+
+            --mono:    'IBM Plex Mono', monospace;
             --display: 'Barlow Condensed', sans-serif;
         }
 
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { height: 100%; }
 
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html { height: 100%; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 12px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* same grain as portfolio */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        }
 
-    body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--mono);
-        font-size: 12px;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
+        ::selection { background: var(--accent); color: var(--bg); }
 
-    body::after {
-        content:''; position:fixed; inset:0;
-        pointer-events:none; z-index:9999; opacity:0.025;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        background-size: 128px;
-    }
+        a { color: var(--text-muted); text-decoration: none; transition: color .2s; }
+        a:hover { color: var(--accent); }
 
-    ::selection { background: var(--accent); color: var(--bg); }
+        /* ── HEADER ── */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 52px;
+            border-bottom: 1px solid var(--border);
+        }
 
-    a { color: var(--text); text-decoration: none; transition: color .2s; }
-    a:hover { color: var(--accent); }
+        .header-back {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .header-back:hover { color: var(--accent); }
 
-    /* ---- HEADER ---- */
-    .header {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--border);
-    }
+        .header-title {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
 
-    .header-back {
-        font-size: 10px; letter-spacing: 0.12em;
-        text-transform: uppercase; color: var(--text-dim);
-    }
+        .header-tag {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+        }
 
-    .header-title {
-        font-family: var(--display); font-weight: 700;
-        font-size: 16px; letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
+        /* ── CANVAS ── */
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+        }
+        #canvas-container canvas { display: block; }
 
-    .header-tag {
-        font-size: 10px; letter-spacing: 0.1em;
-        text-transform: uppercase; color: var(--accent);
-    }
+        /* ── CONTROLS ── */
+        .controls {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 2.5rem;
+        }
 
-    /* ---- CANVAS ---- */
-    #canvas-container {
-        display: flex; justify-content: center;
-        border-bottom: 1px solid var(--border);
-    }
-    #canvas-container canvas { display: block; }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.25rem 1.75rem;
+        }
 
-    /* ---- CONTROLS ---- */
-    .controls {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 20px 24px 32px;
-    }
+        .control-group { display: flex; flex-direction: column; gap: 0.4rem; }
 
-    .controls-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px 28px;
-    }
+        .control-label {
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
 
-    .control-group { display: flex; flex-direction: column; gap: 6px; }
+        .control-value {
+            color: var(--accent);
+            font-weight: 500;
+        }
 
-    .control-label {
-        font-size: 9px; letter-spacing: 0.18em;
-        text-transform: uppercase; color: var(--text-dim);
-        display: flex; justify-content: space-between;
-    }
+        /* ── Sliders ── */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            cursor: pointer;
+        }
+        input[type="range"]:hover { background: var(--border-dim); }
 
-    .control-value { color: var(--accent); }
+        /* ── Select ── */
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding: 0.45rem 0.75rem;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        select:focus { border-color: var(--accent); }
+        select:hover { border-color: var(--text-muted); }
 
-    /* Range sliders */
-    input[type="range"] {
-        -webkit-appearance: none; appearance: none;
-        width: 100%; height: 3px;
-        background: var(--border); border-radius: 2px;
-        outline: none; cursor: pointer;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none; appearance: none;
-        width: 12px; height: 12px; border-radius: 50%;
-        background: var(--accent); border: none;
-        box-shadow: 0 0 8px var(--accent-dim);
-        cursor: pointer;
-    }
-    input[type="range"]::-moz-range-thumb {
-        width: 12px; height: 12px; border-radius: 50%;
-        background: var(--accent); border: none;
-        cursor: pointer;
-    }
+        /* ── Pause toggle ── */
+        .pause-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding-top: 0.5rem;
+            grid-column: 1 / -1;
+            border-top: 1px solid var(--border-dim);
+            margin-top: 0.25rem;
+        }
 
-    /* Select dropdown */
-    select {
-        -webkit-appearance: none; appearance: none;
-        width: 100%; padding: 7px 10px;
-        background: var(--surface); color: var(--text);
-        border: 1px solid var(--border); border-radius: 0;
-        font-family: var(--mono); font-size: 11px;
-        letter-spacing: 0.04em; cursor: pointer;
-        outline: none;
-    }
-    select:focus { border-color: var(--accent-mid); }
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            user-select: none;
+        }
+        .toggle-wrap:hover { color: var(--text); }
 
-    /* Checkbox */
-    .pause-row {
-        display: flex; align-items: center; gap: 24px;
-        padding-top: 8px;
-        grid-column: 1 / -1;
-    }
+        .toggle-box {
+            width: 28px;
+            height: 14px;
+            background: var(--border);
+            border-radius: 7px;
+            position: relative;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .toggle-box::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 10px;
+            height: 10px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .toggle-wrap.active .toggle-box { background: var(--accent-dim); }
+        .toggle-wrap.active .toggle-box::after {
+            transform: translateX(14px);
+            background: var(--accent);
+        }
 
-    .toggle-wrap {
-        display: flex; align-items: center; gap: 8px; cursor: pointer;
-        font-size: 10px; letter-spacing: 0.12em;
-        text-transform: uppercase; color: var(--text-dim);
-    }
+        .kbd-hint {
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+        .kbd {
+            display: inline-block;
+            padding: 1px 5px;
+            border: 1px solid var(--border);
+            font-size: 0.58rem;
+            color: var(--text-dim);
+            font-family: var(--mono);
+        }
 
-    .toggle-box {
-        width: 32px; height: 16px;
-        background: var(--border); border-radius: 8px;
-        position: relative; transition: background .2s;
-    }
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+        }
 
-    .toggle-box::after {
-        content: ''; position: absolute;
-        top: 2px; left: 2px;
-        width: 12px; height: 12px;
-        background: var(--text-dim); border-radius: 50%;
-        transition: transform .2s, background .2s;
-    }
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .header { padding: 0 1rem; }
+            .controls { padding: 1rem; }
+            .controls-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+        }
+    </style>
 
-    .toggle-wrap.active .toggle-box { background: var(--accent-dim); }
-    .toggle-wrap.active .toggle-box::after {
-        transform: translateX(16px); background: var(--accent);
-    }
-
-    .kbd-hint {
-        font-size: 9px; color: var(--text-muted);
-        letter-spacing: 0.08em;
-    }
-
-    .kbd {
-        display: inline-block; padding: 1px 5px;
-        border: 1px solid var(--border); border-radius: 2px;
-        font-size: 9px; color: var(--text-dim);
-    }
-
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 640px) {
-        .header { padding: 10px 16px; }
-        .controls { padding: 16px; }
-        .controls-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-    }
-</style>
-
-<script data-goatcounter="https://madjam1231.goatcounter.com/count"
-      async src="//gc.zgo.at/count.js"></script>
+    <script data-goatcounter="https://madjam1231.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
-
 <div class="header">
-    <!-- ▼ REPLACE HREF WITH YOUR PORTFOLIO URL ▼ -->
     <a href="index.html" class="header-back">← Portfolio</a>
     <span class="header-title">Gear Easing Explorer</span>
     <span class="header-tag">p5.js</span>
@@ -256,6 +338,10 @@
     </div>
 </div>
 
+<div class="footer">
+    <span>GEAR EASING EXPLORER</span>
+    <span id="year"></span>
+</div>
 
 <script>
 // ──────────────────────────────────────────────────────
@@ -320,7 +406,7 @@ const easings = {
 };
 
 // ──────────────────────────────────────────────────────
-// STAIRCASE FUNCTION (from original)
+// STAIRCASE FUNCTION
 // ──────────────────────────────────────────────────────
 
 function modify4(func, x, xBeg, xEnd, yBeg, yEnd) {
@@ -354,16 +440,31 @@ let W, H;
 const GRAPH_H_RATIO = 0.22;
 const GEAR_AREA_RATIO = 0.78;
 
+let bg                 = window.getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+let primaryGearFill    = window.getComputedStyle(document.documentElement).getPropertyValue('--primary-gear-fill').trim();
+let secondaryGearFill  = window.getComputedStyle(document.documentElement).getPropertyValue('--secondary-gear-fill').trim();
+let primaryGearStroke  = window.getComputedStyle(document.documentElement).getPropertyValue('--primary-gear-stroke').trim();
+let secondaryGearStroke= window.getComputedStyle(document.documentElement).getPropertyValue('--secondary-gear-stroke').trim();
+let gearStrokeWeight   = window.getComputedStyle(document.documentElement).getPropertyValue('--gear-stroke-weight').trim();
+let graphLineStroke    = window.getComputedStyle(document.documentElement).getPropertyValue('--graph-line-stroke').trim();
+let graphText          = window.getComputedStyle(document.documentElement).getPropertyValue('--graph-text').trim();
+let graphLine          = window.getComputedStyle(document.documentElement).getPropertyValue('--graph-line').trim();
+let graphGridLine      = window.getComputedStyle(document.documentElement).getPropertyValue('--graph-grid-line').trim();
+let graphDot           = window.getComputedStyle(document.documentElement).getPropertyValue('--graph-dot').trim();
+let dividerStroke      = window.getComputedStyle(document.documentElement).getPropertyValue('--divider-stroke').trim();
+let gearLabel          = window.getComputedStyle(document.documentElement).getPropertyValue('--gear-label').trim();
+let ratioLabel         = window.getComputedStyle(document.documentElement).getPropertyValue('--ratio-label').trim();
+
 function getParams() {
     return {
-        period:   parseFloat(document.getElementById('s-period').value),
-        teeth1:   parseInt(document.getElementById('s-teeth1').value),
-        teeth2:   parseInt(document.getElementById('s-teeth2').value),
-        flat:     parseFloat(document.getElementById('s-flat').value),
-        offset:   parseFloat(document.getElementById('s-offset').value),
-        speed:    parseFloat(document.getElementById('s-speed').value),
-        depth:    parseFloat(document.getElementById('s-depth').value),
-        easing:   document.getElementById('s-easing').value,
+        period:  parseFloat(document.getElementById('s-period').value),
+        teeth1:  parseInt(document.getElementById('s-teeth1').value),
+        teeth2:  parseInt(document.getElementById('s-teeth2').value),
+        flat:    parseFloat(document.getElementById('s-flat').value),
+        offset:  parseFloat(document.getElementById('s-offset').value),
+        speed:   parseFloat(document.getElementById('s-speed').value),
+        depth:   parseFloat(document.getElementById('s-depth').value),
+        easing:  document.getElementById('s-easing').value,
     };
 }
 
@@ -372,10 +473,10 @@ function updateLabels() {
     document.getElementById('v-period').textContent = p.period;
     document.getElementById('v-teeth1').textContent = p.teeth1;
     document.getElementById('v-teeth2').textContent = p.teeth2;
-    document.getElementById('v-flat').textContent = (p.flat * 100).toFixed(0) + '%';
+    document.getElementById('v-flat').textContent   = (p.flat * 100).toFixed(0) + '%';
     document.getElementById('v-offset').textContent = (p.offset * 360).toFixed(0) + '°';
-    document.getElementById('v-speed').textContent = p.speed.toFixed(1) + '×';
-    document.getElementById('v-depth').textContent = p.depth.toFixed(1);
+    document.getElementById('v-speed').textContent  = p.speed.toFixed(1) + '×';
+    document.getElementById('v-depth').textContent  = p.depth.toFixed(1);
 }
 
 function togglePause() {
@@ -383,7 +484,6 @@ function togglePause() {
     document.getElementById('pause-toggle').classList.toggle('active', paused);
 }
 
-// Keyboard shortcut
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
         e.preventDefault();
@@ -391,7 +491,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Update labels on slider input
 document.querySelectorAll('input[type="range"], select').forEach(el => {
     el.addEventListener('input', updateLabels);
 });
@@ -403,53 +502,47 @@ document.querySelectorAll('input[type="range"], select').forEach(el => {
 function drawGear(cx, cy, numTeeth, pitchRadius, rotation, depthMult, isSecondary) {
     const mod = (2 * pitchRadius) / numTeeth;
     const addendum = mod * 1.0 * depthMult;
-    const dedendum = mod * 1.15 * depthMult;
+    const dedendum  = mod * 1.15 * depthMult;
     const outerR = pitchRadius + addendum;
-    const rootR = pitchRadius - dedendum;
-    const hubR = Math.max(pitchRadius * 0.18, 6);
-    const boreR = Math.max(hubR * 0.5, 3);
+    const rootR  = pitchRadius - dedendum;
+    const hubR   = Math.max(pitchRadius * 0.18, 6);
     const toothAng = TWO_PI / numTeeth;
-    const toothHW = toothAng * 0.28;
-    const tipHW = toothAng * 0.19;
+    const toothHW  = toothAng * 0.28;
+    const tipHW    = toothAng * 0.19;
 
     push();
     translate(cx, cy);
     rotate(rotation);
 
-    // Gear body with teeth
-    fill(isSecondary ? '#0f0f18' : '#13131e');
-    stroke(isSecondary ? 'rgba(0,224,160,0.25)' : 'rgba(0,224,160,0.45)');
-    strokeWeight(1);
+    fill(isSecondary ? primaryGearFill : secondaryGearFill);
+    stroke(isSecondary ? primaryGearStroke : secondaryGearStroke);
+    strokeWeight(gearStrokeWeight);
 
     beginShape();
     for (let i = 0; i < numTeeth; i++) {
         const a = i * toothAng;
-        // Root arc (gap between teeth)
         const gapStart = a - toothAng / 2;
-        const gapEnd = a - toothHW;
+        const gapEnd   = a - toothHW;
         for (let t = 0; t <= 3; t++) {
             const ga = lerp(gapStart, gapEnd, t / 3);
             vertex(rootR * cos(ga), rootR * sin(ga));
         }
-        // Leading flank
         vertex(outerR * cos(a - tipHW), outerR * sin(a - tipHW));
-        // Tip arc
         for (let t = 0; t <= 2; t++) {
             const ta = lerp(a - tipHW, a + tipHW, t / 2);
             vertex(outerR * cos(ta), outerR * sin(ta));
         }
-        // Trailing flank
         vertex(rootR * cos(a + toothHW), rootR * sin(a + toothHW));
     }
     endShape(CLOSE);
 
     // Lightening holes
     if (pitchRadius > 35) {
-        const holeCount = Math.min(numTeeth, 5);
-        const holeDist = (rootR + hubR * 2.5) / 2;
-        const holeR = Math.min((rootR - hubR * 2.5) * 0.22, holeDist * 0.3);
+        const holeCount = Math.min(numTeeth, 6);
+        const holeDist  = (rootR + hubR * 2.5) / 2;
+        const holeR     = Math.min((rootR - hubR * 2.5) * 0.22, holeDist * 0.3);
         if (holeR > 3) {
-            fill('#08080c');
+            fill(bg);
             noStroke();
             for (let i = 0; i < holeCount; i++) {
                 const a = i * TWO_PI / holeCount;
@@ -459,30 +552,10 @@ function drawGear(cx, cy, numTeeth, pitchRadius, rotation, depthMult, isSecondar
     }
 
     // Hub
-    fill('#08080c');
-    stroke('rgba(0,224,160,0.3)');
+    fill(bg);
+    stroke(dividerStroke);
     strokeWeight(1);
     ellipse(0, 0, hubR * 2);
-
-    // Bore
-    fill('#08080c');
-    stroke('rgba(0,224,160,0.15)');
-    strokeWeight(0.5);
-    ellipse(0, 0, boreR * 2);
-
-    // Crosshair in bore
-    stroke('rgba(0,224,160,0.12)');
-    strokeWeight(0.5);
-    line(-boreR * 0.7, 0, boreR * 0.7, 0);
-    line(0, -boreR * 0.7, 0, boreR * 0.7);
-
-    // Pitch circle (very faint dashed)
-    noFill();
-    stroke('rgba(0,224,160,0.08)');
-    strokeWeight(0.5);
-    drawingContext.setLineDash([3, 5]);
-    ellipse(0, 0, pitchRadius * 2);
-    drawingContext.setLineDash([]);
 
     pop();
 }
@@ -492,68 +565,60 @@ function drawGear(cx, cy, numTeeth, pitchRadius, rotation, depthMult, isSecondar
 // ──────────────────────────────────────────────────────
 
 function drawGraph(gx, gy, gw, gh, p) {
-    const ef = easings[p.easing];
+    const ef  = easings[p.easing];
     const pad = { l: 40, r: 16, t: 12, b: 20 };
-    const pw = gw - pad.l - pad.r;
-    const ph = gh - pad.t - pad.b;
+    const pw  = gw - pad.l - pad.r;
+    const ph  = gh - pad.t - pad.b;
 
     push();
     translate(gx, gy);
 
-    // Background
-    fill('#06060a');
+    fill(bg);
     noStroke();
     rect(0, 0, gw, gh);
 
-    // Grid lines
-    stroke('rgba(255,255,255,0.04)');
+    stroke(graphGridLine);
     strokeWeight(0.5);
     for (let i = 0; i <= 4; i++) {
         const yy = pad.t + (ph / 4) * i;
         line(pad.l, yy, pad.l + pw, yy);
     }
 
-    // Y-axis labels
-    fill('rgba(255,255,255,0.15)');
+    fill(graphText);
     noStroke();
     textFont('IBM Plex Mono');
     textSize(8);
     textAlign(RIGHT, CENTER);
     text('360°', pad.l - 6, pad.t);
-    text('0°', pad.l - 6, pad.t + ph);
+    text('0°',   pad.l - 6, pad.t + ph);
 
-    // X-axis label
     textAlign(CENTER, TOP);
-    fill('rgba(255,255,255,0.12)');
+    fill(graphText);
     text('1 PERIOD', pad.l + pw / 2, pad.t + ph + 6);
 
-    // Plot curve
     noFill();
-    stroke('rgba(0,224,160,0.6)');
+    stroke(graphLineStroke);
     strokeWeight(1.5);
     beginShape();
     for (let i = 0; i <= pw; i++) {
-        const x = (i / pw) * p.period;
-        const y = funcStairs(ef, x, p.period, p.teeth1, 360, p.flat, p.offset * p.period);
+        const x  = (i / pw) * p.period;
+        const y  = funcStairs(ef, x, p.period, p.teeth1, 360, p.flat, p.offset * p.period);
         const px = pad.l + i;
         const py = pad.t + ph - (y / 360) * ph;
         vertex(px, py);
     }
     endShape();
 
-    // Current position marker
-    const curX = count % p.period;
+    const curX    = count % p.period;
     const markerPx = pad.l + (curX / p.period) * pw;
-    const curY = funcStairs(ef, curX, p.period, p.teeth1, 360, p.flat, p.offset * p.period);
+    const curY    = funcStairs(ef, curX, p.period, p.teeth1, 360, p.flat, p.offset * p.period);
     const markerPy = pad.t + ph - (curY / 360) * ph;
 
-    // Vertical line
-    stroke('rgba(0,224,160,0.2)');
+    stroke(graphLine);
     strokeWeight(0.5);
     line(markerPx, pad.t, markerPx, pad.t + ph);
 
-    // Dot
-    fill('#00e0a0');
+    fill(graphDot);
     noStroke();
     ellipse(markerPx, markerPy, 5);
 
@@ -575,73 +640,55 @@ function setup() {
 }
 
 function draw() {
-    const p = getParams();
+    const p  = getParams();
     const ef = easings[p.easing];
 
     if (!paused) count += p.speed;
 
-    background(8, 8, 12);
+    background(bg);
 
-    const gearH = H * GEAR_AREA_RATIO;
+    const gearH  = H * GEAR_AREA_RATIO;
     const graphH = H * GRAPH_H_RATIO;
 
-    // Divider
-    stroke('rgba(255,255,255,0.06)');
+    stroke(dividerStroke);
     strokeWeight(0.5);
     line(0, gearH, W, gearH);
 
-    // ── Gear sizing ──
-    // Module must be shared for meshing
     const maxGearArea = Math.min(W * 0.42, gearH * 0.75);
-    const maxTeeth = Math.max(p.teeth1, p.teeth2);
-    const mod = maxGearArea / (maxTeeth + 4); // module with padding
-    const pr1 = mod * p.teeth1 / 2;
-    const pr2 = mod * p.teeth2 / 2;
-    const centerDist = pr1 + pr2;
+    const maxTeeth    = Math.max(p.teeth1, p.teeth2);
+    const mod         = maxGearArea / (maxTeeth + 4);
+    const pr1         = mod * p.teeth1 / 2;
+    const pr2         = mod * p.teeth2 / 2;
+    const centerDist  = pr1 + pr2;
 
-    // Center the gear pair
     const pairCX = W / 2 - centerDist / 2;
     const pairCY = gearH / 2;
 
-    // ── Compute rotations ──
     const rot1 = funcStairs(ef, count, p.period, p.teeth1, TWO_PI, p.flat, 0)
                  + p.offset * TWO_PI;
 
     const g2Period = (p.period * p.teeth2) / p.teeth1;
-    const rot2 = funcStairs(ef, count, g2Period, p.teeth2, TWO_PI, p.flat, 0)
+    const rot2     = funcStairs(ef, count, g2Period, p.teeth2, TWO_PI, p.flat, 0)
                  + p.offset * TWO_PI;
 
-    // Mesh phase: offset gear 2 by half a tooth so teeth interleave
     const meshPhase = PI / p.teeth2;
 
-    // ── Draw gears ──
-    drawGear(pairCX, pairCY, p.teeth1, pr1, rot1, p.depth, false);
-    drawGear(pairCX + centerDist, pairCY, p.teeth2, pr2, -rot2 + meshPhase, p.depth, true);
+    drawGear(pairCX,              pairCY, p.teeth1, pr1, rot1,            p.depth, false);
+    drawGear(pairCX + centerDist, pairCY, p.teeth2, pr2, -rot2+meshPhase, p.depth, true);
 
-    // ── Contact point indicator ──
-    const cpx = pairCX + pr1;
     noStroke();
-    fill('rgba(0,224,160,0.12)');
-    ellipse(cpx, pairCY, 6);
-    fill('#00e0a0');
-    ellipse(cpx, pairCY, 2);
-
-    // ── Gear labels ──
-    noStroke();
-    fill('rgba(255,255,255,0.12)');
+    fill(gearLabel);
     textFont('IBM Plex Mono');
     textSize(9);
     textAlign(CENTER, TOP);
-    text(p.teeth1 + 'T', pairCX, pairCY + pr1 + 14 + (mod * p.depth));
+    text(p.teeth1 + 'T', pairCX,              pairCY + pr1 + 14 + (mod * p.depth));
     text(p.teeth2 + 'T', pairCX + centerDist, pairCY + pr2 + 14 + (mod * p.depth));
 
-    // Ratio label
     textSize(10);
-    fill('rgba(0,224,160,0.25)');
+    fill(ratioLabel);
     const g = gcd(p.teeth1, p.teeth2);
     text(`${p.teeth1/g}:${p.teeth2/g}`, W / 2, gearH - 20);
 
-    // ── Graph ──
     drawGraph(0, gearH + 1, W, graphH - 1, p);
 }
 
@@ -653,6 +700,8 @@ function windowResized() {
     H = Math.min(window.innerHeight * 0.62, 560);
     resizeCanvas(W, H);
 }
+
+document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 
 </body>
