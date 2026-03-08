@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAH/ART</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <div class="nav-id">James<span>Howe</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="art.html" class="active">Art</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <!-- If I want to reenable count then just uncomment the lines with `count` and `countel` -->
+  <main class="page">
+    <div style="padding: 1.5rem 2rem 0; border-bottom: 1px solid var(--border);">
+      <div class="label">03/ART</div>
+    </div>
+
+    <header class="art-header">
+      <h1>Visual<span>Work</span></h1>
+      <!-- <div class="art-count" id="art-count">LOADING...</div> -->
+    </header>
+
+    <div class="masonry-grid" id="masonry-grid">
+      <div style="font-family:var(--mono); font-size:0.7rem; color:var(--text-muted); padding:2rem;">
+        Loading pieces...
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span class="f-left">JAMES HOWE &nbsp;·&nbsp; VISUAL WORK</span>
+    <span class="f-right"><span id="year"></span></span>
+  </footer>
+
+  <script>
+    // 1. Sets the current year in the footer dynamically
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    async function loadArt() {
+      // 2. Grab references to our target DOM elements
+      const grid = document.getElementById('masonry-grid');
+      // const countEl = document.getElementById('art-count');
+
+      let manifest;
+      try {
+        // 3. Fetch the JSON data from the art directory
+        const res = await fetch('art/manifest.json');
+        if (!res.ok) throw new Error('manifest not found');
+        manifest = await res.json();
+      } catch (e) {
+        // 4. Fallback error message if the fetch fails (e.g., missing file or local CORS issue)
+        grid.innerHTML = `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);padding:2rem;">
+          Could not load art/manifest.json.<br>
+          Make sure the file exists and you're serving from a local server or GitHub Pages.
+        </div>`;
+        return;
+      }
+
+      // 5. Safely extract the pieces array and update the header count
+      const pieces = manifest.pieces || [];
+      // countEl.textContent = `${pieces.length} PIECE${pieces.length !== 1 ? 'S' : ''}`;
+
+      // 6. Clear out the initial "Loading pieces..." text
+      grid.innerHTML = '';
+
+      if (pieces.length === 0) {
+        grid.innerHTML = `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);padding:2rem;">
+          No pieces in manifest yet.
+        </div>`;
+        return;
+      }
+
+      // 7. SETUP GRID FOR JS MASONRY
+      // To get a true Left-to-Right layout with no gaps, we turn the main grid
+      // into a flex row that holds distinct vertical columns.
+      grid.style.display = 'flex';
+      grid.style.flexDirection = 'row';
+      grid.style.alignItems = 'flex-start';
+      grid.style.gap = '0px'; // Enforces zero gaps between the vertical columns
+
+      // 8. CALCULATE RESPONSIVE COLUMNS
+      // Determines how many columns to create based on the user's screen width.
+      const screenWidth = window.innerWidth;
+      let numCols = 4; // Default for desktop
+      if (screenWidth < 600) numCols = 2;      // Mobile
+      else if (screenWidth < 900) numCols = 3; // Tablet
+
+      // 9. BUILD THE COLUMNS
+      // Creates the actual vertical flex containers and adds them directly to the grid.
+      const columns = [];
+      for (let i = 0; i < numCols; i++) {
+        const col = document.createElement('div');
+        col.style.display = 'flex';
+        col.style.flexDirection = 'column';
+        col.style.flex = '1';  // Makes sure all columns divide the space equally
+        col.style.gap = '0px'; // Enforces zero gaps between images stacked in the column
+        grid.appendChild(col);
+        columns.push(col);
+      }
+
+      // 10. PROCESS AND DISTRIBUTE EACH ART PIECE
+      pieces.forEach((piece, i) => {
+        // Create the wrapper div for the image and overlay
+        const item = document.createElement('div');
+        item.className = 'masonry-item';
+        // Force zero margin/padding and relative positioning (for the overlay)
+        item.style.margin = '0';
+        item.style.padding = '0';
+        item.style.display = 'block';
+        item.style.position = 'relative'; 
+
+        // Create the image
+        const img = document.createElement('img');
+        img.src = `art/${piece.file}`;
+        img.alt = piece.title || `Piece ${i + 1}`;
+        img.loading = 'lazy'; // Improves load time by deferring offscreen images
+
+        // Force image styles to completely eliminate default inline spacing and gaps
+        img.style.display = 'block';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.margin = '0';
+        img.style.padding = '0';
+        img.style.border = 'none';
+
+        // Handles broken image links gracefully
+        img.onerror = () => {
+          img.style.display = 'none';
+          const ph = document.createElement('div');
+          ph.style.cssText = `
+            aspect-ratio: 4/3;
+            background: var(--bg-offset);
+            border: 1px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            margin: 0; 
+            padding: 0;
+          `;
+          ph.textContent = piece.file;
+          item.insertBefore(ph, item.firstChild);
+        };
+
+        item.appendChild(img);
+
+        // Build the text overlay if a title or link exists
+        if (piece.title || piece.link) {
+          const overlay = document.createElement('div');
+          overlay.className = 'item-overlay';
+          if (piece.title) {
+            const t = document.createElement('div');
+            t.className = 'item-title';
+            t.textContent = piece.title;
+            overlay.appendChild(t);
+          }
+          if (piece.link) {
+            const l = document.createElement('div');
+            l.className = 'item-link-label';
+            l.textContent = '↗ VIEW';
+            overlay.appendChild(l);
+          }
+          item.appendChild(overlay);
+        }
+
+        // 11. LEFT-TO-RIGHT LOGIC
+        // The modulo operator (%) assigns piece 0 to col 0, piece 1 to col 1, 
+        // piece 2 to col 2, piece 3 to col 0, etc. This creates the L-to-R flow.
+        const targetCol = i % numCols;
+
+        // 12. APPEND TO DOM
+        // If there's a link, wrap the whole item in an anchor tag and strip its margins.
+        if (piece.link) {
+          const anchor = document.createElement('a');
+          anchor.href = piece.link;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.style.display = 'block';
+          anchor.style.margin = '0';
+          anchor.style.padding = '0';
+          item.style.cursor = 'pointer';
+          
+          anchor.appendChild(item);
+          columns[targetCol].appendChild(anchor);
+        } else {
+          columns[targetCol].appendChild(item);
+        }
+      });
+    }
+
+    // 13. HANDLE WINDOW RESIZING
+    // Debounces a window resize event to redraw the columns if the user scales 
+    // their browser window between desktop, tablet, or mobile sizes.
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        loadArt();
+      }, 200); 
+    });
+
+    // Run the initial load
+    loadArt();
+  </script>
+
+</body>
+</html>

@@ -1,596 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>James — Engineer, Denver</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --text: #e0e0e0;
-            --text-mid: rgba(224,224,224,0.55);
-            --text-dim: rgba(224,224,224,0.22);
-            --accent: #6b8f3c;
-            --border: rgba(224,224,224,0.10);
-            --border-hover: rgba(224,224,224,0.25);
-            --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-            --mono: 'IBM Plex Mono', 'Consolas', monospace;
-        }
-
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--mono);
-            font-size: 13px;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        body::after {
-            content:'';
-            position:fixed; inset:0;
-            pointer-events:none; z-index:9999;
-            opacity:0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 128px;
-        }
-
-        ::selection { background:var(--accent); color:var(--bg); }
-        a { color:var(--text); text-decoration:none; transition:color .2s; }
-        a:hover { color:var(--accent); }
-
-        .page { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
-
-        /* ---- TOP BAR ---- */
-        .topbar {
-            position: fixed; top:0; left:0; right:0;
-            height: 44px;
-            background: rgba(10,10,10,0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 2rem;
-        }
-
-        .topbar-name {
-            font-family: var(--display);
-            font-weight: 800; font-size: 14px;
-            letter-spacing: 0.12em; text-transform: uppercase;
-        }
-
-        .topbar-actions { display: flex; gap: 1.25rem; align-items: center; }
-
-        .topbar-actions a {
-            font-size: 10px; letter-spacing: 0.12em;
-            text-transform: uppercase; color: var(--text-mid);
-        }
-
-        .topbar-btn {
-            font-family: var(--mono);
-            font-size: 10px; font-weight: 500;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            padding: 6px 14px;
-            border: 1px solid var(--text);
-            background: transparent; color: var(--text);
-            cursor: pointer; transition: all .15s;
-        }
-        .topbar-btn:hover { background: var(--text); color: var(--bg); }
-
-        /* ---- HERO ---- */
-        .hero {
-            padding: 7rem 0 3rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .hero-label {
-            font-size: 10px; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--text-dim);
-            margin-bottom: 1rem;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .hero-label .dot {
-            width: 5px; height: 5px; border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-        .hero h1 {
-            font-family: var(--display);
-            font-weight: 800;
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            line-height: 0.92;
-            letter-spacing: -0.01em;
-            text-transform: uppercase;
-            margin-bottom: 1.25rem;
-        }
-
-        .hero-sub {
-            font-family: var(--display);
-            font-size: clamp(1rem, 2.5vw, 1.35rem);
-            font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.06em; color: var(--text-mid);
-            margin-bottom: 2rem;
-        }
-
-        .hero-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; }
-
-        .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
-
-        .label {
-            font-size: 9px; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--text-dim);
-        }
-        .value {
-            font-size: 12px; letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        /* ---- SECTIONS ---- */
-        .section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
-
-        .section-head {
-            display: flex; align-items: baseline;
-            gap: 0.75rem; margin-bottom: 1.5rem;
-        }
-
-        .section-num { font-size: 10px; letter-spacing: 0.08em; color: var(--accent); }
-
-        .section-title {
-            font-family: var(--display); font-weight: 700;
-            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.06em;
-        }
-
-        /* ---- EXPERIENCE ---- */
-        .entry {
-            border-top: 1px solid var(--border);
-            cursor: pointer; transition: background .15s;
-        }
-        .entry:last-child { border-bottom: 1px solid var(--border); }
-
-        .entry-header {
-            display: grid; grid-template-columns: 1fr auto;
-            align-items: center; padding: 1rem 0; gap: 1rem;
-        }
-
-        .entry-main {
-            display: flex; align-items: baseline;
-            gap: 0.75rem; flex-wrap: wrap;
-        }
-
-        .entry-org {
-            font-family: var(--display); font-weight: 700;
-            font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.03em;
-        }
-
-        .entry-role {
-            font-size: 11px; letter-spacing: 0.06em;
-            color: var(--accent); text-transform: uppercase;
-        }
-
-        .entry-right {
-            display: flex; align-items: center; gap: 1rem;
-        }
-
-        .entry-date {
-            font-size: 10px; letter-spacing: 0.08em;
-            color: var(--text-dim); text-transform: uppercase; white-space: nowrap;
-        }
-
-        .entry-toggle {
-            font-size: 14px; color: var(--text-dim);
-            transition: transform .25s, color .2s; user-select: none;
-        }
-
-        .entry.open .entry-toggle { transform: rotate(45deg); color: var(--accent); }
-
-        .entry-details {
-            max-height: 0; overflow: hidden;
-            transition: max-height .35s ease, padding .35s ease;
-        }
-        .entry.open .entry-details { max-height: 300px; padding: 0 0 1.25rem 0; }
-
-        .entry-details ul {
-            list-style: none; display: flex;
-            flex-direction: column; gap: 6px;
-        }
-
-        .entry-details li {
-            font-size: 12px; line-height: 1.6;
-            color: var(--text-mid); padding-left: 1rem; position: relative;
-        }
-        .entry-details li::before {
-            content:'—'; position:absolute; left:0; color:var(--text-dim);
-        }
-
-        .entry-loc {
-            font-size: 10px; letter-spacing: 0.08em;
-            text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px;
-        }
-
-        /* ---- EDUCATION ---- */
-        .edu-row {
-            display: flex; justify-content: space-between;
-            align-items: baseline; flex-wrap: wrap;
-            gap: 0.5rem 2rem; padding: 0.75rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .edu-left {
-            display: flex; align-items: baseline;
-            gap: 0.75rem; flex-wrap: wrap;
-        }
-
-        .edu-school {
-            font-family: var(--display); font-weight: 700;
-            font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em;
-        }
-        .edu-degree {
-            font-size: 11px; letter-spacing: 0.06em;
-            color: var(--accent); text-transform: uppercase;
-        }
-
-        .edu-right { display: flex; gap: 1.5rem; align-items: baseline; }
-
-        .edu-stat {
-            font-size: 11px; letter-spacing: 0.05em;
-            color: var(--text-mid); text-transform: uppercase;
-        }
-        .edu-stat strong { color: var(--text); font-weight: 600; }
-
-        /* ---- CERT ---- */
-        .cert-row {
-            display: flex; justify-content: space-between;
-            align-items: baseline; flex-wrap: wrap;
-            gap: 0.5rem 2rem; padding: 0.75rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .cert-name {
-            font-family: var(--display); font-weight: 700;
-            font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em;
-        }
-        .cert-detail {
-            font-size: 10px; letter-spacing: 0.08em;
-            text-transform: uppercase; color: var(--text-dim);
-        }
-        .cert-detail .active { color: var(--accent); }
-
-        /* ---- PROJECT ---- */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-        }
-
-        .project {
-            background: var(--bg);
-            padding: 1.5rem; transition: border-color .25s;
-        }
-        .project:hover { background: #0e0e0e; }
-
-        .project-tag {
-            font-size: 10px; letter-spacing: 0.12em;
-            text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
-        }
-
-        .project h3 {
-            font-family: var(--display); font-weight: 700;
-            font-size: 1.15rem; text-transform: uppercase;
-            letter-spacing: 0.03em; margin-bottom: 0.5rem;
-        }
-
-        .project p {
-            font-size: 12px; line-height: 1.65;
-            color: var(--text-mid); margin-bottom: 1rem;
-        }
-
-        .project-link {
-            font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-            border-bottom: 1px solid var(--border); padding-bottom: 2px;
-            transition: color .2s, border-color .2s;
-        }
-        .project-link:hover { color: var(--accent); border-color: var(--accent); }
-
-        /* ---- FOOTER ---- */
-        .footer {
-            padding: 2rem 0; display: flex;
-            justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 0.75rem;
-        }
-
-        .footer-left {
-            font-size: 10px; letter-spacing: 0.08em;
-            text-transform: uppercase; color: var(--text-dim);
-        }
-        .footer-right { display: flex; gap: 1.5rem; }
-        .footer-right a {
-            font-size: 10px; letter-spacing: 0.1em;
-            text-transform: uppercase; color: var(--text-mid);
-        }
-
-        /* ---- RESPONSIVE ---- */
-        @media (max-width: 640px) {
-            .page { padding: 0 1.25rem; }
-            .topbar { padding: 0 1.25rem; }
-            .topbar-actions a.hide-mobile { display: none; }
-            .hero { padding: 6rem 0 2.5rem; }
-            .hero-meta { gap: 1.25rem; }
-            .entry-main { flex-direction: column; gap: 2px; }
-            .edu-row, .cert-row { flex-direction: column; gap: 4px; }
-            .edu-right { gap: 1rem; }
-            .footer { flex-direction: column; align-items: flex-start; }
-        }
-
-        /* ---- LOAD ANIMATION ---- */
-        .fi { opacity:0; transform:translateY(10px); animation:fadeUp .5s ease forwards; }
-        .d1{animation-delay:.05s} .d2{animation-delay:.12s}
-        .d3{animation-delay:.2s}  .d4{animation-delay:.28s}
-        .d5{animation-delay:.36s} .d6{animation-delay:.44s}
-        .d7{animation-delay:.52s}
-
-        @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
-    </style>
-    <script data-goatcounter="https://madjam1231.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAH/NOW</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="index-page">
 
-    <div class="topbar">
-        <span class="topbar-name">James</span>
-        <div class="topbar-actions">
-            <!-- ▼ REPLACE HREF ▼ -->
-            <a href="https://www.linkedin.com/in/james-howe-17100b206/" class="hide-mobile">LinkedIn</a>
-            <a href="https://github.com/jah0383" target="_blank" rel="noopener" class="hide-mobile">GitHub</a>
-            <!-- ▼ REPLACE HREF WITH RESUME PDF ▼ -->
-            <a href="https://jah0383.github.io/Copy%20of%20James%20Resume.docx%20-%20Google%20Docs.pdf" class="topbar-btn">Resume ↓</a>
+  <nav>
+    <div class="nav-id">James<span>Howe</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="art.html">Art</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="page">
+
+    <!-- Ticker -->
+    <div class="ticker-strip" aria-hidden="true">
+      <div class="ticker-inner" id="ticker"></div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-left">
+        <div>
+          <div class="label" style="margin-bottom:1rem;">PORTFOLIO - V2026</div>
+          <h1 class="hero-name">
+            James<br>
+            <em>Howe</em>
+          </h1>
+          <div class="hero-sub">
+            B.S. Computer Engineering - Bucknell University, 2023<br>
+            CCNA Certified &nbsp;/&nbsp; Cloud Infrastructure &nbsp;/&nbsp; AI Systems<br>
+            Electrician's Apprentice - Mile High Millwrights &amp; Maintenance<br>
+            Denver, CO
+          </div>
         </div>
-    </div>
+        <div class="label" style="margin-top:2rem;">
+          <span class="reg" style="margin-right:0.5rem;"></span>
+          REF: <a href="https://github.com/jah0383">Github</a> &nbsp;&nbsp; STATUS: LOOKING FOR WORK &nbsp;&nbsp; LOC: 39.7°N 104.9°W
+        </div>
+      </div>
+      <div class="hero-right">
+        <p class="hero-tagline">
+          Software engineer, electrician's apprentice, and AI systems researcher.
+        </p>
+        <div class="hero-spec">
+          <div class="hero-spec-item">
+            <div class="s-label">Current</div>
+            <div class="s-val">Mile High Millwrights &amp; Maintenance</div>
+          </div>
+          <div class="hero-spec-item">
+            <div class="s-label">Focus</div>
+            <div class="s-val">AI Safety</div>
+          </div>
+          <div class="hero-spec-item">
+            <div class="s-label">Stack</div>
+            <div class="s-val">Python / Cloud</div>
+          </div>
+          <div class="hero-spec-item">
+            <div class="s-label">Also</div>
+            <div class="s-val">D&amp;D / Art</div>
+          </div>
+        </div>
+        <a href="contact.html" style="display:inline-block; margin-top: 0.5rem;">
+          <span style="font-family:var(--mono); font-size:0.68rem; color:var(--accent); letter-spacing:0.08em;">
+            GET IN TOUCH →
+          </span>
+        </a>
+      </div>
+    </section>
 
-    <div class="page">
+    <!-- Section nav cards -->
+    <section class="section-grid">
+      <div class="section-card" style="position:relative;">
+        <a href="projects.html" class="card-link" aria-label="Projects"></a>
+        <span class="card-code">01 / WORK</span>
+        <div>
+          <div class="card-title">Projects</div>
+          <div class="card-desc">Software, infrastructure, and AI experiments.</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="section-card" style="position:relative;">
+        <a href="art.html" class="card-link" aria-label="Art"></a>
+        <span class="card-code">02 / VISUAL</span>
+        <div>
+          <div class="card-title">Art</div>
+          <div class="card-desc">Visual work, graphic design, illustration.</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="section-card" style="position:relative;">
+        <a href="about.html" class="card-link" aria-label="About"></a>
+        <span class="card-code">03 / BIO</span>
+        <div>
+          <div class="card-title">About</div>
+          <div class="card-desc">Background, interests, and what I'm building.</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="section-card" style="position:relative; border-right:none;">
+        <a href="resume.html" class="card-link" aria-label="Resume"></a>
+        <span class="card-code">04 / CV</span>
+        <div>
+          <div class="card-title">Resume</div>
+          <div class="card-desc">Full work history and credentials.</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </section>
 
-        <section class="hero">
-            <div class="hero-label fi d1"><span class="dot"></span> Available for work</div>
-            <h1 class="fi d2">James</h1>
-            <p class="hero-sub fi d3">Network&nbsp;&nbsp;/&nbsp;&nbsp;AI Workflows&nbsp;&nbsp;/&nbsp;&nbsp;Automation</p>
-            <div class="hero-meta fi d4">
-                <div class="hero-meta-item">
-                    <span class="label">Location</span>
-                    <span class="value">Denver, CO</span>
-                </div>
-                <!-- <div class="hero-meta-item">
-                    <span class="label">Local</span>
-                    <span class="value" id="clock">--:--</span>
-                </div> -->
-                <div class="hero-meta-item">
-                    <span class="label">Focus</span>
-                    <span class="value">AI and Industrial systems</span>
-                </div>
-                <!-- <div class="hero-meta-item">
-                    <span class="label">Cert</span>
-                    <span class="value">CCNA</span>
-                </div> -->
-            </div>
-        </section>
+  </main>
 
-        <section class="section fi d5">
-            <div class="section-head">
-                <span class="section-num">01</span>
-                <h2 class="section-title">Experience</h2>
-            </div>
-            
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org">Mile High Millwrights & Maintenance</span>
-                        <span class="entry-role">Electrician’s Apprentice</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2025 - present</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Denver, CO</div>
-                    <ul>
-                        <li>Engineered a control panel from specification to installation for a custom switch conveyor, collaborating with senior electricians to determine component selection, wiring layout, and safety requirements</li>
-                        <li>Built and maintain the company website, optimizing search engine visibility and managing digital inventory tracking to streamline operations</li>
-                        <li>Draft and modify electrical schematics in AutoCAD for commercial and industrial installations</li>
-                        <li>Prepare detailed project quotes for commercial clients, scoping electrical installations and industrial machine repairs through on-site assessments and client consultations</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org">Kyndryl</span>
-                        <span class="entry-role">Senior Network Associate</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2023 — 2024</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Denver, CO</div>
-                    <ul>
-                        <li>Built automation for client Azure and AWS cloud networks with Terraform and Python</li>
-                        <li>Developed network architecture plans, scoped and communicated solutions to clients</li>
-                        <li>Contributed to pricing discussions and solution development in client meetings</li>
-                    </ul>
-                </div>
-            </div>
+  <footer>
+    <span class="f-left">JAH0383 &nbsp;·&nbsp; DENVER CO &nbsp;·&nbsp; <span id="year"></span></span>
+    <span class="f-right">jah0383.github.io</span>
+  </footer>
 
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org">Senior Capstone</span>
-                        <span class="entry-role">Design Engineer</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2022 — 2023</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Bucknell University, PA</div>
-                    <ul>
-                        <li>Built image recognition system with Keras, TensorFlow, and Python</li>
-                        <li>Containerized microservice architecture using VMware and Docker on Linux</li>
-                        <li>Presented at Hannover Messe industrial trade fair in Germany</li>
-                    </ul>
-                </div>
-            </div>
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org"><a href="https://makere.maker.bucknell.edu/" target="_blank" rel="noopener" onclick="event.stopPropagation()">Makerspace</a></span>
-                        <span class="entry-role">Lead Student Programmer</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2021 — 2023</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Bucknell University, PA</div>
-                    <ul>
-                        <li>Refactored RF card access system for Linux-based embedded machines</li>
-                        <li>Designed full-stack system — RESTful APIs, MySQL database, web front-end</li>
-                        <li>Maintained docs and version control across multiple repositories</li>
-                    </ul>
-                </div>
-            </div>
+    // Ticker
+    const items = [
+      { text: 'B.S. COMPUTER ENGINEERING', hi: false },
+      { text: 'MATH MINOR', hi: false },
+      { text: 'CCNA CERTIFIED', hi: true },
+      { text: 'AI SAFETY RESEARCH', hi: false },
+      // { text: 'KYNDRYL', hi: false },
+      { text: 'DENVER CO', hi: true },
+      // { text: 'ELECTRICIAN\'S APPRENTICE', hi: false },
+      { text: 'PYTHON / CLOUD / LINUX', hi: false },
+      { text: 'DUNGEONS & DRAGONS', hi: true },
+      { text: 'LLM DECEPTION & PERSUASION', hi: false },
+      { text: 'MULTI-AGENT SYSTEMS', hi: false },
+      { text: 'AVAILABLE FOR WORK', hi: true },
+    ];
+    const ticker = document.getElementById('ticker');
+    // duplicate for seamless loop
+    [...items, ...items].forEach(item => {
+      const span = document.createElement('span');
+      span.textContent = item.text;
+      if (item.hi) span.classList.add('hi');
+      ticker.appendChild(span);
+    });
+  </script>
 
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org">CSCI 205</span>
-                        <span class="entry-role">Scrum Master</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2021</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Bucknell University, PA</div>
-                    <ul>
-                        <li>Led a team of four through Scrum workflow to ship a working Java game</li>
-                        <li>Designed UI with Model-View-Controller architecture, wrote unit tests</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="entry" onclick="this.classList.toggle('open')">
-                <div class="entry-header">
-                    <div class="entry-main">
-                        <span class="entry-org">Theater Dept</span>
-                        <span class="entry-role">Stage Manager</span>
-                    </div>
-                    <div class="entry-right">
-                        <span class="entry-date">2019 — 2023</span>
-                        <span class="entry-toggle">+</span>
-                    </div>
-                </div>
-                <div class="entry-details">
-                    <div class="entry-loc">Bucknell University, PA</div>
-                    <ul>
-                        <li>Managed ensembles up to 20 — scheduling, rehearsal planning, cross-department coordination</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section class="section fi d6">
-            <div class="section-head">
-                <span class="section-num">02</span>
-                <h2 class="section-title">Education</h2>
-            </div>
-            <div class="edu-row">
-                <div class="edu-left">
-                    <span class="edu-school">Bucknell University</span>
-                    <span class="edu-degree">B.S. Computer Engineering, Math Minor</span>
-                </div>
-                <div class="edu-right">
-                    <span class="edu-stat"><strong>3.63</strong> GPA</span>
-                    <span class="edu-stat">Dean's List <strong>×7</strong></span>
-                    <span class="edu-stat">2019 — 2023</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="section fi d6">
-            <div class="section-head">
-                <span class="section-num">03</span>
-                <h2 class="section-title">Certifications</h2>
-            </div>
-            <div class="cert-row">
-                <span class="cert-name">CCNA</span>
-                <span class="cert-detail">Cisco&nbsp;&nbsp;·&nbsp;&nbsp;Dec 2024&nbsp;&nbsp;·&nbsp;&nbsp;<span class="active">Valid through 2027</span></span>
-            </div>
-        </section>
-
-        <section class="section fi d7">
-            <div class="section-head">
-                <span class="section-num">04</span>
-                <h2 class="section-title">Projects</h2>
-            </div>
-            <div class="projects-grid">
-                <div class="project">
-                    <div class="project-tag">Data Visualization / Python</div>
-                    <h3>MBMBaM Transcript Dashboard</h3>
-                    <p>Precomputed word and phrase frequency analysis across 500+ podcast episodes. Search any term and see usage by speaker, over time, and across episodes — no raw transcripts stored, just queryable stats.</p>
-                    <!-- ▼ REPLACE HREF ▼ -->
-                    <a href="https://jah0383.github.io/MBMBAM.html" class="project-link" target="_blank" rel="noopener">View dashboard →</a>
-                </div>
-                <div class="project">
-                    <div class="project-tag">Machine Learning / PyTorch</div>
-                    <h3>MNIST Digit Game</h3>
-                    <p>Draw a digit, a convolutional neural network guesses what you wrote. CNN trained on the MNIST dataset with PyTorch, deployed as an interactive browser game.</p>
-                    <a href="https://jah0383.github.io/mnist-debate-game.html" class="project-link" target="_blank" rel="noopener">Play it →</a>
-                </div>
-                <div class="project">
-                    <div class="project-tag">Interactive / p5.js</div>
-                    <h3>Gear Easing Explorer</h3>
-                    <p>A tool for visualizing how different easing functions affect the motion of gear-like objects.</p>
-                    <!-- ▼ REPLACE HREF ▼ -->
-                    <a href="gears.html" class="project-link" target="_blank" rel="noopener">View project →</a>
-                </div>
-            </div>
-        </section>
-
-        <footer class="footer">
-            <span class="footer-left">© <span id="yr"></span> James</span>
-            <div class="footer-right">
-                <!-- ▼ REPLACE HREFS ▼ -->
-                <a href="https://www.linkedin.com/in/james-howe-17100b206/">LinkedIn</a>
-                <a href="https://github.com/jah0383" target="_blank" rel="noopener">GitHub</a>
-                <a href="mailto:madjam1231?subject=Job%20offer&body=I%20want%20to%20offer%20you%20%241%2C000%2C000%2Fyear%20for%20a%20job%0A%7BLegally%20binding%20email%7D">Email</a>
-            </div>
-        </footer>
-    </div>
-
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        function tick() {
-            const d = new Date();
-            const h = d.getHours() % 12 || 12;
-            const m = String(d.getMinutes()).padStart(2,'0');
-            document.getElementById('clock').textContent = `${h}:${m} ${d.getHours()>=12?'PM':'AM'}`;
-        }
+</body>
+</html>
