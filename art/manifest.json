@@ -1,0 +1,43 @@
+{
+  "_comment": "Add entries here to populate the art page. Drop image files into the art/ folder and add a matching entry below.",
+  "_format": "{ \"file\": \"filename.jpg\", \"title\": \"Piece Title\", \"link\": \"https://external-link-or-empty-string\" }",
+  "pieces": [
+    { "file": "ALONE.jpg", "title": "", "link": "" },
+    
+    { "file": "MIRACLE.jpg", "title": "", "link": "" },
+    { "file": "MBMBAM.gif", "title": "podcast analytics dashboard", "link": "https://jah0383.github.io/MBMBAM.html" },
+    
+    { "file": "RYAN.png", "title": "", "link": "" },
+    { "file": "GREEN.jpg", "title": "", "link": "" },
+    { "file": "CREEPY.gif", "title": "", "link": "" },
+    { "file": "BEMERRY.png", "title": "", "link": "" },
+    { "file": "WIZARD.gif", "title": "D&D Puzzle", "link": "https://jah0383.github.io/freqmatch.html" },
+    
+    { "file": "HIKE.jpg", "title": "", "link": "" },
+    { "file": "PANICRIGHTNOW.jpg", "title": "", "link": "" },
+    { "file": "HAVEFUN.png", "title": "", "link": "" },
+    { "file": "ODETOAFRIEND.png", "title": "", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" },
+    
+    { "file": "DOWNLOW.jpg", "title": "", "link": "" },
+    { "file": "GRIND.gif", "title": "Easing Visualizer", "link": "https://jah0383.github.io/gears.html" },
+    { "file": "YOURWELCOME.jpg", "title": "", "link": "" },
+    
+    { "file": "ILOVEWOMEN.jpg", "title": "", "link": "" },
+    { "file": "FLOW.jpg", "title": "", "link": "" },
+    { "file": "JOIN.png", "title": "", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" },
+    { "file": "LACE.jpg", "title": "", "link": "" },
+    { "file": "MARKETING.jpg", "title": " in situ", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" },
+    { "file": "BROKEN.jpg", "title": "", "link": "" },
+    
+    { "file": "THIRSTY.jpg", "title": "", "link": "" },
+    { "file": "SATIN.jpg", "title": "", "link": "" },
+    { "file": "SECONDBEST.jpg", "title": "", "link": "" },
+    { "file": "IRONYOFSOMEKIND.png", "title": "", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" },
+    { "file": "GOHERE.png", "title": "", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" },
+    { "file": "VACATION.jpg", "title": "", "link": "" },
+    { "file": "FORNUTELLA.png", "title": "", "link": "https://www.redbubble.com/people/madjam1231/shop?asc=u" }
+    
+    
+    
+  ]
+}

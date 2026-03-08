@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAH/SOUL</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <div class="nav-id">James<span>Howe</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="art.html">Art</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="page">
+
+    <div style="padding: 1.5rem 2rem 0; border-bottom: 1px solid var(--border);">
+      <div class="label">03 / BIO</div>
+    </div>
+
+    <div class="about-grid">
+      <div> </div>
+      <div class="about-left">
+        <h1>About<span>Me</span></h1>
+        <div class="about-bio">
+          <p>
+            I'm a computer engineer based in Denver, CO. I'm currently workign at Mile High Millwrights &amp;
+            Maintenance, doing industrial and electrical control systems work.
+          </p>
+          <p>
+            My main technical interest is AI safety, specifically how LLMs deceive, persuade, and
+            reason under adversarial conditions. I'm currently working on a chess-based experiment
+            studying multi-agent deception, similar to 
+            <a href="https://arxiv.org/abs/2602.21262" class="link">Under the Influence: Quantifying Persuasion and Vigilance in Large Language Models</a>.(Robinson et al, 2026)
+          </p>
+          <p>
+            I've been running the same weekly 'D&D campaign for 7 years, which has been a huge creative outlet and source of joy for me. 
+            I also have a long-standing love of theater and acting, which I pursued in college and hope to get back into at some point.
+            I also like to make visual things, check out the <a href="art.html" class="link">"art" page</a>
+          </p>
+          <p>
+            I graduated from Bucknell University in 2023 with a B.S. in Computer Engineering,
+            Cum Laude, with a Mathematics minor. I hold a CCNA certification and an OSHA 30 certification.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-right">
+
+        <div class="data-block">
+          <div class="data-block-label">Location</div>
+          <div class="data-row">
+            <span class="dr-key">City</span>
+            <span class="dr-val">Denver, CO</span>
+          </div>
+          <!-- <div class="data-row">
+            <span class="dr-key">Coordinates</span>
+            <span class="dr-val">39.7°N 104.9°W</span>
+          </div> -->
+        </div>
+
+        <div class="data-block">
+          <div class="data-block-label">Education</div>
+          <div class="data-row">
+            <span class="dr-key">Degree</span>
+            <span class="dr-val">B.S. Computer Engineering</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">School</span>
+            <span class="dr-val">Bucknell University</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">Year</span>
+            <span class="dr-val">2023, Cum Laude</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">Minor</span>
+            <span class="dr-val">Mathematics</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">Certs</span>
+            <span class="dr-val">CCNA, OSHA 30</span>
+          </div>
+        </div>
+
+        <div class="data-block">
+          <div class="data-block-label">Current Work</div>
+          <div class="data-row">
+            <span class="dr-key">Primary</span>
+            <span class="dr-val">Mile High Millwrights &amp; Maintenance</span>
+          </div>
+        </div>
+
+        <div class="data-block">
+          <div class="data-block-label">Interests</div>
+          <div class="data-row">
+            <span class="dr-key">Research</span>
+            <span class="dr-val">AI Safety / Alignment</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">Domains</span>
+            <span class="dr-val">LLM Deception, Persuasion</span>
+          </div>
+          <div class="data-row">
+            <span class="dr-key">Other</span>
+            <span class="dr-val">D&amp;D, Visual Art, Rock Climbing, Theater</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="f-left">James Howe&nbsp;·&nbsp;ABOUT</span>
+    <span class="f-right"><span id="year"></span></span>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

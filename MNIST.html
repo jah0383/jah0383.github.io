@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNIST Debate — AI Safety via Debate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+<script src="js/ort/ort.min.js"></script>
+
+<style>
+/* ── Reset & Base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #080810;
+  --surface:    #10101e;
+  --surface2:   #181828;
+  --border:     #28283e;
+  --border2:    #363650;
+  --amber:      #d4a017;
+  --amber-dim:  #8c6a0f;
+  --mint:       #3dffa0;
+  --mint-dim:   #1a7048;
+  --red:        #ff4d6b;
+  --red-dim:    #7a2030;
+  --blue:       #7b8cde;
+  --blue-dim:   #3a4580;
+  --text:       #cccce8;
+  --muted:      #5c5c7a;
+  --mono:       'Courier Prime', 'Courier New', monospace;
+  --display:    'Oswald', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Scanline overlay ─────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  opacity: 0.6;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.header-title span {
+  color: var(--text);
+  opacity: 0.4;
+}
+
+.header-meta {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.8;
+}
+
+.header-meta a {
+  color: var(--amber-dim);
+  text-decoration: none;
+}
+.header-meta a:hover { color: var(--amber); }
+
+/* ── Status bar ─────────────────────────────────────────────────── */
+.status-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+#model-status {
+  color: var(--muted);
+}
+#model-status.loading { color: var(--amber); }
+#model-status.loading + .status-dot,
+.status-bar:has(.loading) .status-dot { background: var(--amber); animation: pulse 1s infinite; }
+#model-status.ok { color: var(--mint); }
+#model-status.error { color: var(--red); }
+
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+/* ── Main layout ─────────────────────────────────────────────────── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 40px 60px;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.tab-btn {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 28px 10px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Section label ─────────────────────────────────────────────── */
+.section-label {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* ── Classify tab ───────────────────────────────────────────────── */
+.classify-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.canvas-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.canvas-wrap {
+  position: relative;
+  border: 1px solid var(--border);
+  background: #000;
+  width: 280px;
+  height: 280px;
+}
+
+.canvas-wrap::before {
+  content: 'DRAW DIGIT';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--display);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #1a1a2e;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#draw-canvas {
+  position: relative;
+  z-index: 1;
+  cursor: crosshair;
+  display: block;
+  width: 280px;
+  height: 280px;
+}
+
+.canvas-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.model-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+select {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 7px 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus { border-color: var(--amber); }
+
+/* ── Classify result ─────────────────────────────────────────────── */
+#classify-result { margin-top: 8px; }
+
+.result-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.result-pred {
+  font-family: var(--display);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.result-meta {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.prob-bars { display: flex; flex-direction: column; gap: 5px; }
+
+.prob-row {
+  display: grid;
+  grid-template-columns: 18px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.prob-row.top .prob-label { color: var(--amber); font-weight: bold; }
+.prob-row.top .prob-val   { color: var(--amber); }
+
+.prob-label { color: var(--muted); text-align: right; }
+.prob-val   { color: var(--muted); font-size: 11px; }
+
+.prob-bar-wrap {
+  height: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.prob-bar {
+  height: 100%;
+  background: var(--border2);
+  transition: width 0.4s ease;
+}
+
+.prob-row.top .prob-bar { background: var(--amber); }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+button {
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: #000;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+}
+.btn-primary:hover { background: #e8b82a; }
+.btn-primary:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; }
+
+.btn-secondary {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 8px 18px;
+}
+.btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 7px 14px;
+}
+.btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+/* ── Debate tab ─────────────────────────────────────────────────── */
+#debate-setup { max-width: 560px; }
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--amber);
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.range-val {
+  font-size: 20px;
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--amber);
+  min-width: 24px;
+  text-align: center;
+}
+
+.role-info {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+/* ── Debate game board ──────────────────────────────────────────── */
+#debate-game { display: none; }
+
+.debate-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.board-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-title {
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.panel-title.truthful { color: var(--mint); }
+.panel-title.liar     { color: var(--red);  }
+.panel-title.judge    { color: var(--blue); }
+
+.pixel-canvas-wrap {
+  border: 1px solid var(--border);
+  background: #000;
+  line-height: 0;
+}
+
+#agent-canvas,
+#judge-canvas {
+  display: block;
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+/* ── Info panel ─────────────────────────────────────────────────── */
+#debate-info { margin-bottom: 16px; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.info-block {
+  background: var(--surface);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-family: var(--display);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.info-val {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.turn-banner {
+  border: 1px solid var(--border2);
+  padding: 8px 16px;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── Judge vote ─────────────────────────────────────────────────── */
+#judge-vote-area {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--blue-dim);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.judge-prompt {
+  font-size: 13px;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vote-btn {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  width: 48px;
+  height: 48px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+}
+.vote-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+
+/* ── Result ─────────────────────────────────────────────────────── */
+#debate-result {
+  display: none;
+  margin-top: 16px;
+}
+
+.result-banner {
+  border: 2px solid;
+  padding: 14px 24px;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.result-details {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  color: var(--muted);
+}
+
+/* ── Paper abstract ─────────────────────────────────────────────── */
+.paper-abstract {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  max-width: 760px;
+}
+
+.abstract-title {
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.abstract-text {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.abstract-text strong { color: var(--text); font-weight: normal; }
+
+.debate-steps {
+  margin: 16px 0 0 0;
+  padding: 0 0 0 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2.2;
+}
+
+.debate-steps li { padding-left: 4px; }
+
+/* ── Legend ─────────────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  gap: 20px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  header { padding: 20px 20px 18px; }
+  .main  { padding: 20px 20px 40px; }
+
+  .classify-layout { grid-template-columns: 1fr; }
+  .setup-grid      { grid-template-columns: 1fr; }
+  .debate-layout   { grid-template-columns: 1fr; }
+  .info-grid       { grid-template-columns: repeat(2, 1fr); }
+  .result-details  { flex-direction: column; gap: 6px; }
+}
+
+/* ── Animations ─────────────────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: none; } }
+.tab-panel.active { animation: fadeIn 0.2s ease; }
+</style>
+</head>
+
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────── -->
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="header-title">MNIST<span> ×</span> DEBATE</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.04em;">
+        Interactive demo — <em>AI Safety via Debate</em>, Irving et al. 2018
+      </div>
+    </div>
+    <div class="header-meta">
+      <a href="https://arxiv.org/abs/1805.00899" target="_blank">arxiv 1805.00899</a><br>
+      Draw a digit. Watch two AI agents argue about it.
+    </div>
+  </div>
+</header>
+
+<!-- ── Status bar ──────────────────────────────────────────────────── -->
+<div class="status-bar">
+  <div class="status-dot"></div>
+  <span id="model-status">Initializing…</span>
+</div>
+
+<!-- ── Main ────────────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="classify">Classify</button>
+    <button class="tab-btn"        data-tab="debate">Debate Game</button>
+    <button class="tab-btn"        data-tab="about">About</button>
+  </nav>
+
+  <!-- ── CLASSIFY TAB ─────────────────────────────────────────────── -->
+  <div id="tab-classify" class="tab-panel active">
+    <div class="classify-layout">
+
+      <div class="canvas-panel">
+        <div class="section-label">Input</div>
+        <div class="canvas-wrap">
+          <canvas id="draw-canvas" width="280" height="280"></canvas>
+        </div>
+        <div class="canvas-controls">
+          <button class="btn-ghost" id="clear-btn">Clear</button>
+          <button class="btn-primary" id="classify-btn" disabled>Classify →</button>
+        </div>
+      </div>
+
+      <div class="model-panel">
+        <div class="section-label">Model</div>
+        <div class="model-select-row">
+          <select id="model-select">
+            <option value="standard">Standard Classifier</option>
+            <option value="sparse">Sparse Classifier (Judge)</option>
+          </select>
+        </div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.8;max-width:340px;">
+          <strong style="color:var(--text)">Standard:</strong> trained on full images. ~99% accuracy.<br>
+          <strong style="color:var(--text)">Sparse:</strong> trained with only ~10% of pixels visible.
+          Robust to partial observations — used as the debate judge.
+        </div>
+
+        <div id="classify-result"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── DEBATE TAB ───────────────────────────────────────────────── -->
+  <div id="tab-debate" class="tab-panel">
+
+    <!-- Setup form -->
+    <div id="debate-setup">
+      <div class="section-label">Configuration</div>
+
+      <div class="setup-grid">
+        <div class="field">
+          <label for="k-pixels">Pixels revealed per debate</label>
+          <div class="range-row">
+            <input type="range" id="k-pixels" min="2" max="12" value="6" step="1"
+                   oninput="document.getElementById('k-val').textContent=this.value">
+            <span class="range-val" id="k-val">6</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="human-role">Your role</label>
+          <select id="human-role" onchange="updateRoleInfo()">
+            <option value="spectator">Spectator (watch AI vs AI)</option>
+            <option value="truthful">Truthful Agent</option>
+            <option value="liar">Lying Agent</option>
+            <option value="judge">Judge</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="role-info" id="role-info">
+        <strong style="color:var(--text)">Spectator:</strong> Watch the truthful and lying agents debate.
+        The sparse classifier acts as judge and renders a verdict automatically.
+      </div>
+
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">
+        Draw your digit on the Classify tab first, then return here and press Start.
+      </div>
+
+      <button class="btn-primary" id="start-debate-btn" disabled>Start Debate →</button>
+    </div>
+
+    <!-- Game board -->
+    <div id="debate-game">
+
+      <div id="debate-info"></div>
+
+      <div class="debate-layout">
+
+        <div class="board-panel">
+          <div class="panel-header">
+            <span class="panel-title truthful" id="agent-panel-title">FULL IMAGE</span>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--mint)"></div>
+                <span>Truthful</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--red)"></div>
+                <span>Liar</span>
+              </div>
+            </div>
+          </div>
+          <div class="pixel-canvas-wrap">
+            <canvas id="agent-canvas" width="280" height="280"></canvas>
+          </div>
+        </div>
+
+        <div class="board-panel">
+          <div class="panel-header">
+            <span class="panel-title judge">JUDGE'S VIEW</span>
+            <span style="font-size:10px;color:var(--muted)">only revealed pixels</span>
+          </div>
+          <div class="pixel-canvas-wrap">
+            <canvas id="judge-canvas" width="280" height="280"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Human judge vote -->
+      <div id="judge-vote-area"></div>
+
+      <!-- Result -->
+      <div id="debate-result"></div>
+
+    </div>
+  </div>
+
+  <!-- ── ABOUT TAB ─────────────────────────────────────────────────── -->
+  <div id="tab-about" class="tab-panel">
+    <div class="paper-abstract">
+      <div class="abstract-title">AI Safety via Debate — Irving et al. 2018</div>
+      <div class="abstract-text">
+        <strong>The core idea:</strong> if two AI agents debate, and a human judge evaluates
+        their arguments, then a lying agent can only win by making a false argument that
+        survives scrutiny. With sufficient debate turns, the truth should win — giving us
+        a scalable way to supervise AI systems whose outputs we can't directly evaluate.
+        <br><br>
+        The MNIST instantiation is a concrete proof of concept: the "question" is an image,
+        the "answers" are digit class claims, and "statements" are individual pixel reveals.
+        A judge trained only on sparse (partially-masked) inputs must decide which agent's
+        claim is correct based only on the few pixels revealed during debate.
+        <br><br>
+        <strong>Game protocol:</strong>
+      </div>
+      <ol class="debate-steps">
+        <li>Both agents observe the full digit image and state their answers
+            (truthful claims the true class, liar commits to a false class)</li>
+        <li>Agents take turns revealing one pixel per turn to the judge</li>
+        <li>The judge sees <em>only</em> the revealed pixels — never the full image</li>
+        <li>After K turns, the judge classifies based on the partial image</li>
+        <li>Truthful wins if the judge predicts the true class; liar wins otherwise</li>
+      </ol>
+    </div>
+
+    <div class="paper-abstract" style="margin-top:32px;">
+      <div class="abstract-title">Models</div>
+      <div class="abstract-text">
+        Four models are trained in <code>training/train_all.ipynb</code> (PyTorch → ONNX):
+        <br><br>
+        <strong>Standard Classifier:</strong> LeNet-style CNN trained on full MNIST images. Baseline for comparison.
+        <br><br>
+        <strong>Sparse Classifier (Judge):</strong> Same architecture, trained with ~10% of pixels visible per image
+        (random binary mask per sample). Acts as the debate judge — evaluates partial-image observations.
+        <br><br>
+        <strong>Truthful Agent:</strong> Policy network (1588 → 512 → 512 → 784) trained via self-play REINFORCE
+        with GradCAM warmup. Selects pixels that maximize the sparse classifier's probability on the true class.
+        <br><br>
+        <strong>Lying Agent:</strong> Same architecture, trained to minimize that probability — reveals pixels
+        that push the judge toward the liar's false class claim.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Paper note ──────────────────────────────────────────────── -->
+  <div style="margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+              display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <span style="font-size:10px;color:var(--muted)">
+      Irving, G., Christiano, P., Amodei, D. (2018).
+      <em>AI safety via debate.</em> arXiv:1805.00899.
+    </span>
+    <a href="https://github.com/jah0383"
+       style="font-size:10px;color:var(--amber-dim);text-decoration:none;"
+       target="_blank">github.com/jah0383</a>
+  </div>
+
+</main>
+
+<script src="js/MNIST.js"></script>
+
+<script>
+// Role info text
+const ROLE_INFO = {
+  spectator: '<strong style="color:var(--text)">Spectator:</strong> Watch the AI agents debate automatically. The sparse classifier judges the result.',
+  truthful:  '<strong style="color:var(--mint)">Truthful Agent:</strong> You know the true digit. On your turns, click a pixel on the left grid to reveal it to the judge. Your goal: make the judge predict the correct class.',
+  liar:      '<strong style="color:var(--red)">Lying Agent:</strong> You\'ve been given a false target class. Click pixels that confuse the judge into predicting the wrong digit. The truthful agent (AI) will try to counter you.',
+  judge:     '<strong style="color:var(--blue)">Judge:</strong> You see only the revealed pixels — never the full image. After all reveals, vote on which digit you think it is. The debate outcome depends on your verdict.',
+};
+
+function updateRoleInfo() {
+  const role = document.getElementById('human-role').value;
+  document.getElementById('role-info').innerHTML = ROLE_INFO[role];
+}
+</script>
+
+</body>
+</html>

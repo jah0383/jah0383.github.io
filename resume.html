@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAH/PAST</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    @media print {
+      nav, footer { display: none !important; }
+      .page { padding-top: 0; }
+      .resume-wrap { max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-id">James<span>Howe</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="art.html">Art</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="resume.html" class="active">Resume</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="page">
+    <div class="resume-wrap">
+
+      <!-- Top bar -->
+      <div class="resume-topbar">
+        <div>
+          <div class="resume-name">James<span>Howe</span></div>
+          <div style="font-family:var(--mono); font-size:0.65rem; color:var(--text-muted); margin-top:0.4rem; letter-spacing:0.06em;">
+            Computer Engineer &nbsp;/&nbsp; Denver, CO
+          </div>
+        </div>
+        <div class="resume-contact-block">
+          <a href="mailto:madjam1231@gmail.com">madjam1231@gmail.com</a><br>
+          <a href="https://github.com/jah0383" target="_blank" rel="noopener">github.com/jah0383</a><br>
+          <a href="https://jah0383.github.io" target="_blank" rel="noopener">jah0383.github.io</a><br>
+          Denver, CO
+        </div>
+      </div>
+
+      <!-- Print button -->
+      <div class="print-btn" style="margin-bottom:1.5rem;">
+        <button onclick="window.print()" style="
+          font-family: var(--mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          background: none;
+          border: 1px solid var(--border);
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          color: var(--text-muted);
+          transition: background 0.15s;
+        "
+        onmouseover="this.style.background='var(--bg-offset)'"
+        onmouseout="this.style.background='none'"
+        >Print / Save PDF</button>
+      </div>
+
+      <!-- Education -->
+      <section class="resume-section">
+        <div class="resume-section-label">Education</div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">B.S. Computer Engineering</div>
+            <div class="re-date">2019 — 2023</div>
+          </div>
+          <div class="re-org">Bucknell University &nbsp;·&nbsp; Cum Laude</div>
+          <div class="re-body">Mathematics minor&nbsp;·&nbsp;Dean's List: 8 Semesters</div>
+        </div>
+
+      </section>
+
+      <!-- Experience -->
+      <section class="resume-section">
+        <div class="resume-section-label">Experience</div>
+        
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">Electrician's Apprentice</div>
+            <div class="re-date">Current</div>
+          </div>
+          <div class="re-org">Mile High Millwrights &amp; Maintenance, Denver CO</div>
+          <div class="re-body">
+            <ul>
+              <li>Engineered a control panel from specification to installation for a custom switch conveyor, collaborating with senior electricians to determine component selection, wiring layout, and safety requirements</li>
+              <li>Built and maintain the company website, optimizing search engine visibility and managing digital inventory tracking to streamline operations</li>
+              <li>Draft and modify electrical schematics in AutoCAD for commercial and industrial installations</li>
+              <li>Prepare detailed project quotes for commercial clients, scoping electrical installations and industrial machine repairs through on-site assessments and client consultations</li>
+            </ul>
+          </div>
+          <div class="re-tags">
+            <span class="tag">Industrial Electrical</span>
+            <span class="tag">Control</span>
+            <span class="tag">AutoCAD</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">Cloud / Infrastructure Engineer</div>
+            <div class="re-date">2023 — 2024</div>
+          </div>
+          <div class="re-org">Kyndryl</div>
+          <div class="re-body">
+            <ul>
+              <li>Built automation for client Azure and AWS cloud networks with Terraform and Python</li>
+              <li>Developed network architecture plans, scoped and communicated solutions to clients</li>
+              <li>Contributed to pricing discussions and solution development in client meetings</li>
+            </ul>
+          </div>
+          <div class="re-tags">
+            <span class="tag">AWS</span>
+            <span class="tag">Azure</span>
+            <span class="tag">Terraform</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Linux</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">Design Engineer</div>
+            <div class="re-date">2022 — 2023</div>
+          </div>
+          <div class="re-org">Senior Capstone at Bucknell University</div>
+          <div class="re-body">
+            <ul>
+              <li>Engineered an image recognition system with Keras, TensorFlow, and Python, achieving >90% classification accuracy.</li>
+              <li>Containerized microservice architecture using VMware and Docker on Linux</li>
+              <li>Showcased project at Hannover-Messe, demonstrating real-time image recognition and containerized deployment to international industry experts.</li>
+            </ul>
+          </div>
+          <div class="re-tags">
+            <span class="tag">Keras</span>
+            <span class="tag">ML</span>
+            <span class="tag">Python</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Linux</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">Lead Student Programmer</div>
+            <div class="re-date">2021 — 2023</div>
+          </div>
+          <div class="re-org">Bucknell University, “MakerE” Makerspace</div>
+          <div class="re-body">
+            <ul>
+              <li>Refactored the Makerspace's RF card access system for its Linux based embedded machines </li>
+              <li>Created detailed technical documentation for future developers and lab managers.</li>
+              <li>Designed and deployed a full-stack RF card access control system, integrating MySQL, RESTful APIs, and embedded Linux, improving lab security and user tracking.</li>
+              <li>Created and maintained RESTful API calls for a MySQL database to connect with a web application </li>
+              <li>Maintained version control for multiple Git repositories </li>
+            </ul>
+          </div>
+          <div class="re-tags">
+            <span class="tag">Embedded Systems</span>
+            <span class="tag">Linux</span>
+            <span class="tag">MySQL</span>      
+            <span class="tag">REST API</span>
+            <span class="tag">Git</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">Electrical Engineering Class TA</div>
+            <div class="re-date">2020 — 2021</div>
+          </div>
+          <div class="re-org">Bucknell University</div>
+          <div class="re-body">
+            <ul>
+              <li>Created a program in Python to send data from a microcontroller to an online repository</li>
+              <li>Developed a library for the microcontroller that offers a variety of embedded functions</li>
+              <li>Provided ongoing support and maintenance for the embedded library, resolving real-time issues during lab sessions.</li>
+            </ul>
+          </div>
+          <div class="re-tags">
+            <span class="tag">Embedded Systems</span>
+            <span class="tag">Python</span>
+            <span class="tag">Technical Support</span>
+          </div>
+        </div>
+
+
+      </section>
+
+
+
+      <!-- Certifications -->
+      <section class="resume-section">
+        <div class="resume-section-label">Certifications</div>
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">CCNA</div>
+          </div>
+          <div class="re-org">Cisco Certified Network Associate</div>
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-title">OSHA 30</div>
+          </div>
+          <div class="re-org">Occupational Safety and Health Administration - 30 Hour General Industry</div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="resume-section">
+        <div class="resume-section-label">Skills</div>
+        <div class="skills-grid">
+          <div class="skill-group">
+            <div class="sg-label">Languages</div>
+            <div class="sg-items">Python, JavaScript, Bash, SQL</div>
+          </div>
+          <div class="skill-group">
+            <div class="sg-label">Cloud / Infra</div>
+            <div class="sg-items">AWS, Azure, Terraform, Docker, Linux</div>
+          </div>
+          <div class="skill-group">
+            <div class="sg-label">AI / ML</div>
+            <div class="sg-items">Frontier APIs, LLM Evaluation, inspect_ai, Multi-Agent Systems, MCP</div>
+          </div>
+          <div class="skill-group">
+            <div class="sg-label">Web</div>
+            <div class="sg-items">React, HTML/CSS, REST APIs</div>
+          </div>
+          <div class="skill-group">
+            <div class="sg-label">Tools</div>
+            <div class="sg-items">Git, Google Apps Script, Windows Task Scheduler</div>
+          </div>
+          <div class="skill-group">
+            <div class="sg-label">Other</div>
+            <div class="sg-items">Industrial Electrical, Stainless Steel Piping, Technical Writing, OSHA 30</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Selected Projects -->
+      <section class="resume-section">
+        <div class="resume-section-label">Selected Projects</div>
+
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-link"><a href="https://jah0383.github.io/MBMBAM.html" target="_blank" rel="noopener noreferrer">MBMBaM Podcast Analytics Dashboard↗</a></div>
+          </div>
+          <div class="re-body">
+            Precomputed word and phrase frequency analysis across 500+ podcast episodes. 
+            Search any term and see usage by speaker, over time, and across episodes — no raw transcripts stored, just queryable stats.
+            With an automated github pipeline which keeps it up to date.
+          </div>
+        </div>
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-link"><a href="https://jah0383.github.io/MNIST.html" target="_blank" rel="noopener noreferrer">AI Safety via MNIST debate↗</a></div>
+          </div>
+          <div class="re-body">
+            A web based implementation of the paper <a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noopener noreferrer" class="link">"AI Safety via Debate"</a> 
+            (Geoffrey Irving, Paul Christiano, Dario Amodei, Oct 2018)
+          </div>
+        </div>
+        <div class="resume-entry">
+          <div class="re-top">
+            <div class="re-link"><a href="https://jah0383.github.io/gears.html" target="_blank" rel="noopener noreferrer">Gear Easing Explorer↗</a></div>
+          </div>
+          <div class="re-body">
+            A tool for visualizing how different easing functions affect the motion of gear-like objects.
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <span class="f-left">JAMES HOWE&nbsp;·&nbsp;RESUME</span>
+    <span class="f-right"><span id="year"></span></span>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
