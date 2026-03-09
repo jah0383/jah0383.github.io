@@ -289,9 +289,9 @@ footer .f-right { font-family: var(--mono); font-size: 0.6rem; color: var(--text
   transition: transform 0.2s, color 0.2s;
   font-family: var(--mono);
 }
-/* .section-card a.card-link {
-  position: absolute; inset: 0;
-} */
+.section-card a.card-link {
+  position: absolute; inset: 0; z-index: 2;
+}
 
 /* Index ticker strip */
 .ticker-strip {
