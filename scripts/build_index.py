@@ -36,7 +36,7 @@ from collections import defaultdict
 
 # -- Tokenizer -----------------------------------------------------------------
 
-WORD_RE = re.compile(r"\b[a-z'][a-z']*\b")
+WORD_RE = re.compile(r"\b(?:[a-z'][a-z']*)|(?:[0-9][0-9]*)\b")
 
 
 def tokenize(text: str) -> list:
