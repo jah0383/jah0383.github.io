@@ -36,94 +36,139 @@
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-left">
+      <div class="hero-left desktop">
         <div>
-          <div class="label" style="margin-bottom:1rem;">PORTFOLIO - V2026</div>
           <h1 class="hero-name">
             James<br>
             <em>Howe</em>
           </h1>
+          <p class="hero-tagline">
+            Software&nbsp;-&nbsp;Electrical&nbsp;-&nbsp;AI Research
+          </p>
           <div class="hero-sub">
-            B.S. Computer Engineering - Bucknell University, 2023<br>
-            CCNA Certified &nbsp;/&nbsp; Cloud Infrastructure &nbsp;/&nbsp; AI Systems<br>
-            Electrician's Apprentice - Mile High Millwrights &amp; Maintenance<br>
+            B.S. Computer Engineering <span>- Bucknell University, 2023</span><br>
+            CCNA Certified &nbsp;/&nbsp; <span>Cloud Infrastructure</span> &nbsp;/&nbsp; <span>AI Systems</span><br>
+            Electrician's Apprentice <span>- Mile High Millwrights &amp; Maintenance</span><br>
             Denver, CO
           </div>
+          <a href="contact.html" class= "contact-link">
+          <span>
+            GET IN TOUCH
+          </span>
+          </a>
         </div>
-        <div class="label" style="margin-top:2rem;">
+        <!-- <div class="label" style="margin-top:2rem;">
           <span class="reg" style="margin-right:0.5rem;"></span>
           REF: <a href="https://github.com/jah0383">Github</a> &nbsp;&nbsp; STATUS: LOOKING FOR WORK &nbsp;&nbsp; LOC: 39.7°N 104.9°W
-        </div>
+        </div> -->
       </div>
-      <div class="hero-right">
-        <p class="hero-tagline">
-          Software engineer, electrician's apprentice, and AI systems researcher.
-        </p>
-        <div class="hero-spec">
-          <div class="hero-spec-item">
-            <div class="s-label">Current</div>
-            <div class="s-val">Mile High Millwrights &amp; Maintenance</div>
-          </div>
-          <div class="hero-spec-item">
-            <div class="s-label">Focus</div>
-            <div class="s-val">AI Safety</div>
-          </div>
-          <div class="hero-spec-item">
-            <div class="s-label">Stack</div>
-            <div class="s-val">Python / Cloud</div>
-          </div>
-          <div class="hero-spec-item">
-            <div class="s-label">Also</div>
-            <div class="s-val">D&amp;D / Art</div>
-          </div>
+
+      <div class="hero-left mobile">
+        <div style="display: flex; flex-direction: row; gap: 1.5rem;">
+          <h1 class="hero-name">
+            James<br>
+            <em>Howe</em>
+          </h1>
+          
+          <p class="hero-tagline">
+
+            <span>Software Engineer<br></span>
+            <span>Electrician<br></span>
+            <span>AI Research</span>
+          </p>
         </div>
-        <a href="contact.html" style="display:inline-block; margin-top: 0.5rem;">
-          <span style="font-family:var(--mono); font-size:0.68rem; color:var(--accent); letter-spacing:0.08em;">
-            GET IN TOUCH →
+        <div>
+          <div class="hero-sub">
+            <b>B.S. Computer Engineering</b><br>
+            Bucknell University, 2023<br><br>
+            CCNA Certified/Cloud Infrastructure/AI Systems<br><br>
+            <b>Electrician's Apprentice</b><br>
+            Mile High Millwrights &amp; Maintenance<br>
+            Denver, CO
+          </div>
+          <a href="contact.html" class= "contact-link">
+          <span>
+            GET IN TOUCH
           </span>
         </a>
+        </div>
+        <!-- <div class="label" style="margin-top:2rem;">
+          <span class="reg" style="margin-right:0.5rem;"></span>
+          REF: <a href="https://github.com/jah0383">Github</a> &nbsp;&nbsp; STATUS: LOOKING FOR WORK &nbsp;&nbsp; LOC: 39.7°N 104.9°W
+        </div> -->
       </div>
-    </section>
-
-    <!-- Section nav cards -->
+     <!-- Section nav cards -->
     <section class="section-grid">
-      <div class="section-card" style="position:relative;">
-        <a href="projects.html" class="card-link" aria-label="Projects"></a>
-        <span class="card-code">01 / WORK</span>
+      <div class="section-card">
         <div>
+          <a href="projects.html" class="card-link" aria-label="Projects"></a>
+          <span class="card-code">01 / WORK</span>
+        </div>
+        <div class="card-body">
           <div class="card-title">Projects</div>
           <div class="card-desc">Software, infrastructure, and AI experiments.</div>
         </div>
         <span class="card-arrow">↗</span>
       </div>
-      <div class="section-card" style="position:relative;">
-        <a href="art.html" class="card-link" aria-label="Art"></a>
-        <span class="card-code">02 / VISUAL</span>
+      <div class="section-card">
         <div>
+          <a href="art.html" class="card-link" aria-label="Art"></a>
+          <span class="card-code">02 / VISUAL</span>
+        </div>
+        <div class="card-body">
           <div class="card-title">Art</div>
           <div class="card-desc">Visual work, graphic design, illustration.</div>
         </div>
         <span class="card-arrow">↗</span>
-      </div>
-      <div class="section-card" style="position:relative;">
-        <a href="about.html" class="card-link" aria-label="About"></a>
-        <span class="card-code">03 / BIO</span>
+      </div class="card-body">
+      <div class="section-card">
         <div>
+          <a href="about.html" class="card-link" aria-label="About"></a>
+          <span class="card-code">03 / BIO</span>
+        </div>
+        <div class="card-body">
           <div class="card-title">About</div>
           <div class="card-desc">Background, interests, and what I'm building.</div>
         </div>
         <span class="card-arrow">↗</span>
       </div>
-      <div class="section-card" style="position:relative; border-right:none;">
-        <a href="resume.html" class="card-link" aria-label="Resume"></a>
-        <span class="card-code">04 / CV</span>
+      <div class="section-card">
         <div>
+          <a href="resume.html" class="card-link" aria-label="Resume"></a>
+          <span class="card-code">04 / CV</span>
+        </div>
+        <div class="card-body">
           <div class="card-title">Resume</div>
           <div class="card-desc">Full work history and credentials.</div>
         </div>
         <span class="card-arrow">↗</span>
       </div>
+    </section>     
     </section>
+    <div class="hero-right">
+
+      <!-- <div class="hero-spec"> -->
+        <div class="hero-spec-item">
+          <div class="s-label">Current</div>
+          <div class="s-val">Mile High Millwrights &amp; Maintenance</div>
+        </div>
+        <div class="hero-spec-item">
+          <div class="s-label">Focus</div>
+          <div class="s-val">AI Safety</div>
+        </div>
+        <div class="hero-spec-item">
+          <div class="s-label">Stack</div>
+          <div class="s-val">Python / Cloud</div>
+        </div>
+        <div class="hero-spec-item">
+          <div class="s-label">Also</div>
+          <div class="s-val">D&amp;D / Art</div>
+        </div>
+      <!-- </div> -->
+
+    </div>
+
+
 
   </main>
 
