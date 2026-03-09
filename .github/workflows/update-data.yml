@@ -23,6 +23,14 @@ on:
         description: 'Force full rebuild (re-parse all PDFs, ignore existing data)'
         type: boolean
         default: false
+      skip_parse:
+        description: 'Skip parse step (reuse existing parsed_episodes.json from cache)'
+        type: boolean
+        default: false
+      skip_build:
+        description: 'Skip build step (useful if you only want to scrape/parse without rebuilding indexes)'
+        type: boolean
+        default: false
 
 # Only one run at a time — prevents races on the JSON files
 concurrency:
@@ -78,7 +86,9 @@ jobs:
             --delay 0.5
 
       # ── 4. Parse — incremental unless full rebuild requested ───────────────
+      #    Skippable via skip_parse input — build will use cached parsed_episodes.json
       - name: Parse transcripts
+        if: ${{ inputs.skip_parse != true }}
         run: |
           INCREMENTAL_FLAG=""
           if [ "${{ inputs.full_rebuild }}" != "true" ]; then
@@ -90,14 +100,18 @@ jobs:
             $INCREMENTAL_FLAG
 
       # ── 5. Rebuild indexes ─────────────────────────────────────────────────
+      #    Skippable via skip_build input — useful when testing scrape/parse only
       - name: Build indexes
+        if: ${{ inputs.skip_build != true }}
         run: |
           python scripts/build_index.py parsed_episodes.json \
             --output-dir data
 
       # ── 6. Commit updated data files if anything changed ───────────────────
+      #    Only runs if build wasn't skipped — nothing in data/ will have changed otherwise
       - name: Check for changes
         id: check
+        if: ${{ inputs.skip_build != true }}
         run: |
           git diff --quiet data/ || echo "changed=true" >> $GITHUB_OUTPUT
 
