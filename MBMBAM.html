@@ -921,13 +921,16 @@
             <li>Transcripts aren't available for every episode - some early ones are missing entirely.</li>
             <li>PDF formatting isn't perfectly consistent across 800 episodes, so occasionally a line gets misattributed or missed during parsing.</li>
             <li>Speaker counts reflect transcript text only - if a transcript labels something wrong, the data inherits that error.</li>
+              <ul>
+                <li>Of note, in "795: The Naming of 2026" they say the sound "twenty" a bunch, but it's almost only written as "20" so this only shows them using it 14 times.</li>
+              </ul>
             <li>Stage directions like <em>[laughs]</em> are searchable but counted separately from spoken words. 
               <ul>
                 <li>Sometimes these are hard to assign to specific speakers due to the injective nature.</li>
                 <li>For example [Griffin stifles a giggle] is assigned to Justin due to it being done while Justin was talking.</li>
               </ul>
             </li>
-            <li>2 word and 3 word phrases have a cutoff so filesizes don't balloon, if they were said less than 10 times they aren't here.</li>
+            <li>2 word and 3 word phrases have a cutoff so filesizes don't balloon, if they were said less than 10 times they aren't here.(For mobile the cutoff is ~20)</li>
             <li>Due to the large file sizes the site can crash on mobile phones when you try and load a file.</li>
           </ul>
           <p style="margin-top:0.75rem; color: rgba(240,230,206,0.8)">If you notice anything off, feel free to email <a href="mailto:madjam1231@gmail.com">madjam1231@gmail.com</a>.</p>
@@ -1013,12 +1016,22 @@ let manifest = null, episodeStats = null;
 let currentMode = 'word';
 
 const INDEX_CACHE = { word: null, bigram: null, trigram: null, stage: null };
-const INDEX_FILES = {
+const REG_INDEX_FILES = {
   word:    'word_index.json',
   bigram:  'bigram_index.json',
   trigram: 'trigram_index.json',
   stage:   'stage_index.json',
 };
+const MOBILE_INDEX_FILES = {
+  word:    'word_index.json',
+  bigram:  'bigram_index_trimmed.json',
+  trigram: 'trigram_index.json',
+  stage:   'stage_index.json',
+};
+const INDEX_FILES = isMemoryConstrained() ? MOBILE_INDEX_FILES : REG_INDEX_FILES;
+
+
+
 
 // ── Nav ───────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.site-nav button').forEach(btn => {
