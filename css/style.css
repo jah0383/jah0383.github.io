@@ -631,6 +631,12 @@ section .desktop{
 .re-link { font-family: var(--cond); color: var(--text); font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em; }
 .re-link:hover { text-decoration: underline; }
 
+.hail-mary{
+  font-family: var(--cond);
+  color: var(--bg);
+  text-transform: uppercase;
+}
+
 /* ══════════════════════════════════════════════════════════════
    DECORATIVE / SHARED
 ══════════════════════════════════════════════════════════════ */
