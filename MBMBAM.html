@@ -1012,12 +1012,22 @@ let manifest = null, episodeStats = null;
 let currentMode = 'word';
 
 const INDEX_CACHE = { word: null, bigram: null, trigram: null, stage: null };
-const INDEX_FILES = {
+const REG_INDEX_FILES = {
   word:    'word_index.json',
   bigram:  'bigram_index.json',
   trigram: 'trigram_index.json',
   stage:   'stage_index.json',
 };
+const MOBILE_INDEX_FILES = {
+  word:    'word_index.json',
+  bigram:  'bigram_index_trimmed.json',
+  trigram: 'trigram_index.json',
+  stage:   'stage_index.json',
+};
+const INDEX_FILES = isMemoryConstrained() ? MOBILE_INDEX_FILES : REG_INDEX_FILES;
+
+
+
 
 // ── Nav ───────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.site-nav button').forEach(btn => {
