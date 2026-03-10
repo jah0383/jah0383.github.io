@@ -8,6 +8,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Lora:ital,wght@0,400;0,600;1,400&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script></script>
+  //Add white backgrounds to the pngs 
+    const whiteBgPlugin = {
+      id: 'whiteBg',
+      beforeDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      }
+    };
+    Chart.register(whiteBgPlugin);
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,7 +41,7 @@
       --ink-lite:#9A7D58;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-y: scroll;}
     body {
       font-family: 'Lora', Georgia, serif;
       background: var(--cream);
@@ -517,7 +532,7 @@
     }
     .browse-table th {
       position: sticky;
-      top: calc(var(--nav-h) - 2px); /* the -2px is because otherwise theres a very thin gap on mobile*/
+      top: 0; 
       z-index: 10;       /* above table rows (default 0), below nav (z-index:100) */
       background: #f5ead4; /* solid — can't use rgba here or rows show through */
       font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
@@ -683,11 +698,130 @@
       .highlight-card { flex: 1 1 100%; }
       .about-block p  { font-size: 0.9rem; }
     }
+
+    /* ── CHART ACTION BUTTONS (Pin / Export / Share) ─────── */
+    .chart-card-head {
+      flex-wrap: wrap;
+    }
+    .chart-card-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .chart-action-btn {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #b8a888;
+      border-radius: 3px;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      transition: all 0.12s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .chart-action-btn:hover {
+      background: rgba(255,255,255,0.16);
+      color: var(--cream);
+    }
+
+    /* ── TOAST ───────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(0);
+      background: var(--ink); color: var(--cream);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.5rem;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .toast.visible { opacity: 1; }
+
+    /* ── PINBOARD ────────────────────────────────────────── */
+    .pin-intro {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.04em;
+      color: var(--ink-lite); margin-bottom: 1.5rem;
+    }
+    .pin-empty {
+      text-align: center; padding: 5rem 0;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .pin-empty-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .pin-empty-msg {
+      font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-lite);
+    }
+    .pin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      gap: 1.5rem;
+    }
+    .pin-card {
+      background: white;
+      border: 2px solid var(--ink); border-radius: 4px;
+      box-shadow: 4px 4px 0 var(--ink);
+      overflow: hidden;
+    }
+    .pin-card-head {
+      background: var(--ink); color: var(--cream);
+      padding: 0.55rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .pin-card-label {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      flex: 1;
+      outline: none;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      padding: 0.1rem 0.3rem;
+      background: transparent;
+      color: var(--cream);
+      cursor: text;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .pin-card-label:focus {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.08);
+    }
+    .pin-remove-btn {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(208,73,42,0.2);
+      border: 1px solid rgba(208,73,42,0.4);
+      color: #f08060;
+      border-radius: 3px;
+      padding: 0.2rem 0.55rem;
+      cursor: pointer;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    .pin-remove-btn:hover { background: rgba(208,73,42,0.4); color: white; }
+    .pin-card-body { padding: 1rem; }
+    .pin-card-body canvas { max-height: 220px; }
+    @media (max-width: 599px) {
+      .pin-grid { grid-template-columns: 1fr; }
+    }
   </style>
   <script data-goatcounter="https://madjam1231.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
+
+<div class="toast" id="toast"></div>
 
 <header class="masthead">
   <div class="masthead-stripes">
@@ -715,6 +849,7 @@
   <button data-tab="search">Word Search</button>
   <button data-tab="topwords">Compare Words</button>
   <button data-tab="browse">Browse</button>
+  <button data-tab="pinboard">Pinboard</button>
   <button data-tab="about">About</button>
 </nav>
 
@@ -728,7 +863,7 @@
       <div class="stat-band" id="stat-band"></div>
       <div class="stripe-rule"></div>
       <div class="chart-card">
-        <div class="chart-card-head"><span class="dot"></span><span id="ov-words-title">Words Per Episode — By Brother</span></div>
+        <div class="chart-card-head"><span class="dot"></span><span id="ov-words-title">Words Per Episode — By Brother</span><div class="chart-card-actions"><button class="chart-action-btn" id="ov-words-pin-btn" title="Pin to Pinboard">Pin</button><button class="chart-action-btn" id="ov-words-export-btn" title="Export PNG">Export PNG</button></div></div>
         <div class="chart-controls">
           <span class="chart-controls-label">Range</span>
           <div class="ctrl-group">
@@ -764,7 +899,7 @@
         </div>
       </div>
       <div class="chart-card">
-        <div class="chart-card-head"><span class="dot" style="background:var(--teal)"></span>Speaker Share Per Episode (%)</div>
+        <div class="chart-card-head"><span class="dot" style="background:var(--teal)"></span>Speaker Share Per Episode (%)<div class="chart-card-actions"><button class="chart-action-btn" id="ov-share-pin-btn" title="Pin to Pinboard">Pin</button><button class="chart-action-btn" id="ov-share-export-btn" title="Export PNG">Export PNG</button></div></div>
         <div class="chart-card-body">
           <canvas id="chart-share" height="100"></canvas>
           <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
@@ -795,6 +930,9 @@
         <span id="badge-stage"   class="idx-badge" style="display:none"><span class="dot"></span>Stage</span>
       </div>
       <div class="search-status" id="search-status">Select a mode, type a query, press Search or Enter.</div>
+      <div style="display:flex;justify-content:flex-end;margin-top:0.5rem">
+        <button class="chart-action-btn" id="search-share-btn" title="Copy shareable link">Share Link</button>
+      </div>
     </div>
     <div id="search-results"></div>
   </section>
@@ -816,6 +954,9 @@
         <button class="tw-go" id="tw-btn">Compare</button>
       </div>
       <div class="tw-status" id="tw-status">Results will appear below.</div>
+      <div style="display:flex;justify-content:flex-end;margin-top:0.5rem">
+        <button class="chart-action-btn" id="tw-share-btn" title="Copy shareable link">Share Link</button>
+      </div>
     </div>
     <div id="tw-results"></div>
   </section>
@@ -859,7 +1000,7 @@
 
     <div id="browse-status" class="browse-status">Loading vocabulary…</div>
 
-    <div class="chart-card" id="browse-card" style="display:none;overflow:clip">
+    <div class="chart-card" id="browse-card" style="display:none">
       <div class="chart-card-head">
         <span class="dot" style="background:var(--gold)"></span>
         <span id="browse-card-title">All speakers · Words</span>
@@ -875,6 +1016,17 @@
     </div>
   </section>
 
+  <!-- PINBOARD -->
+  <section id="pinboard">
+    <div class="section-heading"><h2>Pinboard</h2><div class="rule"></div></div>
+    <p class="pin-intro">Pin charts from Word Search and Compare Words to compare them at a glance. Pins are saved in your browser.</p>
+    <div id="pin-empty" class="pin-empty">
+      <div class="pin-empty-icon">📌</div>
+      <div class="pin-empty-msg">No pins yet — search for a word and hit <strong>Pin to Board</strong></div>
+    </div>
+    <div id="pin-grid" class="pin-grid"></div>
+  </section>
+
   <!-- ABOUT -->
   <section id="about">
     <div class="section-heading"><h2>About</h2><div class="rule"></div></div>
@@ -883,6 +1035,7 @@
       <div class="about-block">
         <h3>What is this?</h3>
         <p>A searchable, browsable breakdown of every word spoken across 800+ episodes of <em>My Brother, My Brother and Me</em> — You can search for how often a word or phrase has been said, who says it most, and how usage has shifted over time.</p>
+        <p>Inspired by <a href="https://mbmbam.fandom.com/wiki/James_O%27Neill">Jimmy O's cursing stats.</a></p>
       </div>
 
       <div class="stripe-rule"></div>
@@ -989,7 +1142,7 @@
 
 </main>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Config ────────────────────────────────────────────────────────────────────
 const DATA_BASE = './data';
 
@@ -1042,6 +1195,8 @@ document.querySelectorAll('.site-nav button').forEach(btn => {
     btn.classList.add('active');
     document.getElementById(tab).classList.add('active');
     if (tab === 'browse') initBrowse();
+    if (tab === 'pinboard') renderPinboard();
+    pushURLState();
   });
 });
 
@@ -1149,6 +1304,241 @@ function setBadge(mode, state) {
   if (el) { el.style.display = ''; el.className = `idx-badge ${state}`; }
 }
 
+
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('visible'), 2200);
+}
+
+
+
+
+// ── Export PNG ────────────────────────────────────────────────────────────────
+function exportChartPNG(chart, filename) {
+  const a = document.createElement('a');
+  chart
+  a.href = chart.toBase64Image('image/png', 1);
+  a.download = (filename || 'chart').replace(/[^a-z0-9_-]/gi, '-') + '.png';
+  a.click();
+}
+
+// ── URL State ─────────────────────────────────────────────────────────────────
+function getActiveTab() {
+  return document.querySelector('.site-nav button.active')?.dataset.tab ?? 'overview';
+}
+
+function pushURLState() {
+  const tab = getActiveTab();
+  const p = new URLSearchParams();
+  p.set('tab', tab);
+
+  if (tab === 'overview') {
+    const from = document.getElementById('ov-ep-from')?.value;
+    const to   = document.getElementById('ov-ep-to')?.value;
+    if (from) p.set('ov_from', from);
+    if (to)   p.set('ov_to', to);
+    if (ovSmooth > 1)   p.set('ov_smooth', ovSmooth);
+    if (ovFill)         p.set('ov_type', 'area');
+    if (ovCumulative)   p.set('ov_cum', '1');
+  }
+
+  if (tab === 'search') {
+    const q = document.getElementById('word-input')?.value.trim();
+    if (q) p.set('q', q);
+    p.set('mode', currentMode);
+    const from = document.getElementById('sr-ep-from')?.value;
+    const to   = document.getElementById('sr-ep-to')?.value;
+    if (from) p.set('sr_from', from);
+    if (to)   p.set('sr_to', to);
+    if (searchSmooth > 1)   p.set('sr_smooth', searchSmooth);
+    if (searchCumulative)   p.set('sr_cum', '1');
+  }
+
+  if (tab === 'topwords') {
+    const tw = document.getElementById('tw-input')?.value.trim();
+    if (tw) p.set('tw', tw);
+  }
+
+  history.replaceState(null, '', '#' + p.toString());
+}
+
+async function restoreURLState() {
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  const p = new URLSearchParams(hash);
+  const tab = p.get('tab');
+  if (!tab) return;
+
+  // Switch tab
+  const tabBtn = document.querySelector(`.site-nav button[data-tab="${tab}"]`);
+  if (tabBtn) tabBtn.click();
+
+  if (tab === 'overview' && episodeStats) {
+    const fromEl = document.getElementById('ov-ep-from');
+    const toEl   = document.getElementById('ov-ep-to');
+    if (p.has('ov_from') && fromEl) fromEl.value = p.get('ov_from');
+    if (p.has('ov_to')   && toEl)   toEl.value   = p.get('ov_to');
+
+    if (p.has('ov_smooth')) {
+      const smooth = parseInt(p.get('ov_smooth'));
+      ovSmooth = smooth;
+      document.querySelector(`#ov-smooth-group [data-smooth="${smooth}"]`)?.click();
+    }
+    if (p.get('ov_type') === 'area') {
+      ovFill = true;
+      document.querySelector('#ov-type-group [data-type="area"]')?.click();
+    }
+    if (p.get('ov_cum') === '1') {
+      ovCumulative = true;
+      document.querySelector('#ov-count-group [data-count="cumulative"]')?.click();
+    }
+    buildOvCharts(episodeStats);
+  }
+
+  if (tab === 'search') {
+    const q    = p.get('q');
+    const mode = p.get('mode') ?? 'word';
+    if (q) {
+      // Set mode
+      const modeBtn = document.querySelector(`.ngram-btn[data-mode="${mode}"]`);
+      if (modeBtn && mode !== currentMode) modeBtn.click();
+      document.getElementById('word-input').value = q;
+      // Run search, then apply extra controls
+      await doSearch();
+      if (p.has('sr_from')) {
+        const fromEl = document.getElementById('sr-ep-from');
+        if (fromEl) fromEl.value = p.get('sr_from');
+      }
+      if (p.has('sr_to')) {
+        const toEl = document.getElementById('sr-ep-to');
+        if (toEl) toEl.value = p.get('sr_to');
+      }
+      if (p.has('sr_smooth')) {
+        const smooth = parseInt(p.get('sr_smooth'));
+        searchSmooth = smooth;
+        document.querySelector(`#sr-smooth-group [data-smooth="${smooth}"]`)?.click();
+      }
+      if (p.get('sr_cum') === '1') {
+        searchCumulative = true;
+        document.querySelector('#sr-count-group [data-count="cumulative"]')?.click();
+      }
+      buildSearchChart();
+    }
+  }
+
+  if (tab === 'topwords') {
+    const tw = p.get('tw');
+    if (tw) {
+      document.getElementById('tw-input').value = tw;
+      await doCompare();
+    }
+  }
+}
+
+// ── Share buttons ─────────────────────────────────────────────────────────────
+function wireShareButtons() {
+  document.getElementById('search-share-btn')?.addEventListener('click', () => {
+    pushURLState();
+    navigator.clipboard.writeText(location.href).then(() => showToast('Link copied!'));
+  });
+  document.getElementById('tw-share-btn')?.addEventListener('click', () => {
+    pushURLState();
+    navigator.clipboard.writeText(location.href).then(() => showToast('Link copied!'));
+  });
+}
+
+// ── Pinboard ──────────────────────────────────────────────────────────────────
+const PINS_KEY = 'mbmbam_pins';
+
+function getPins() {
+  try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function savePins(pins) {
+  try { localStorage.setItem(PINS_KEY, JSON.stringify(pins)); }
+  catch { showToast('Storage full — remove some pins'); }
+}
+
+function pinChart(label, chartType, chartData) {
+  const pins = getPins();
+  pins.push({ id: Date.now().toString(36), label, chartType, chartData });
+  savePins(pins);
+  showToast('Pinned!');
+  // Re-render if pinboard is currently open
+  if (getActiveTab() === 'pinboard') renderPinboard();
+}
+
+const pinChartInstances = {};
+
+function renderPinboard() {
+  const pins    = getPins();
+  const grid    = document.getElementById('pin-grid');
+  const empty   = document.getElementById('pin-empty');
+
+  // Destroy old chart instances to avoid canvas leaks
+  for (const id of Object.keys(pinChartInstances)) {
+    pinChartInstances[id]?.destroy();
+    delete pinChartInstances[id];
+  }
+
+  grid.innerHTML = '';
+  empty.style.display = pins.length ? 'none' : '';
+
+  pins.forEach(pin => {
+    const card = document.createElement('div');
+    card.className = 'pin-card';
+    card.innerHTML = `
+      <div class="pin-card-head">
+        <input class="pin-card-label" value="${pin.label.replace(/"/g, '&quot;')}" title="Click to rename" />
+        <button class="pin-remove-btn" data-id="${pin.id}">Remove</button>
+      </div>
+      <div class="pin-card-body">
+        <canvas id="pin-canvas-${pin.id}"></canvas>
+      </div>`;
+    grid.appendChild(card);
+
+    // Editable label — save on change
+    const labelInput = card.querySelector('.pin-card-label');
+    labelInput.addEventListener('change', () => {
+      const all = getPins().map(p => p.id === pin.id ? { ...p, label: labelInput.value } : p);
+      savePins(all);
+    });
+
+    // Remove button
+    card.querySelector('.pin-remove-btn').addEventListener('click', () => {
+      pinChartInstances[pin.id]?.destroy();
+      delete pinChartInstances[pin.id];
+      savePins(getPins().filter(p => p.id !== pin.id));
+      card.remove();
+      if (!getPins().length) empty.style.display = '';
+    });
+
+    // Render chart — reconstruct options fresh (no serialization of functions)
+    const opts = baseOpts();
+    opts.animation = { duration: 0 };
+    if (pin.chartType === 'bar') {
+      opts.plugins.tooltip.callbacks = {
+        title: ctx => ctx[0].label,
+        label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`,
+      };
+    }
+
+    const canvas = document.getElementById(`pin-canvas-${pin.id}`);
+    pinChartInstances[pin.id] = new Chart(canvas, {
+      type: pin.chartType,
+      data: pin.chartData,
+      options: opts,
+    });
+  });
+}
+
 async function init() {
   try {
     [manifest, episodeStats] = await Promise.all([
@@ -1163,6 +1553,8 @@ async function init() {
     document.getElementById('overview-content').style.display = '';
     renderOverview();
     buildPresets();
+    wireShareButtons();
+    restoreURLState();
   } catch (err) {
     document.getElementById('overview-loading').textContent = `Failed to load: ${err.message}`;
   }
@@ -1326,23 +1718,41 @@ function wireOvControls(stats) {
   if (fromEl && !fromEl.value) fromEl.value = stats[0]?.id ?? '';
   if (toEl   && !toEl.value)   toEl.value   = stats[stats.length-1]?.id ?? '';
 
-  document.getElementById('ov-apply')?.addEventListener('click', () => buildOvCharts(stats));
-  fromEl?.addEventListener('keydown', e => { if (e.key === 'Enter') buildOvCharts(stats); });
-  toEl?.addEventListener('keydown',   e => { if (e.key === 'Enter') buildOvCharts(stats); });
+  const applyAndPush = () => { buildOvCharts(stats); pushURLState(); };
+  document.getElementById('ov-apply')?.addEventListener('click', applyAndPush);
+  fromEl?.addEventListener('keydown', e => { if (e.key === 'Enter') applyAndPush(); });
+  toEl?.addEventListener('keydown',   e => { if (e.key === 'Enter') applyAndPush(); });
 
   wireToggleGroup('ov-smooth-group', btn => {
     ovSmooth = parseInt(btn.dataset.smooth);
-    buildOvCharts(stats);
+    buildOvCharts(stats); pushURLState();
   });
 
   wireToggleGroup('ov-type-group', btn => {
     ovFill = btn.dataset.type === 'area';
-    buildOvCharts(stats);
+    buildOvCharts(stats); pushURLState();
   });
 
   wireToggleGroup('ov-count-group', btn => {
     ovCumulative = btn.dataset.count === 'cumulative';
-    buildOvCharts(stats);
+    buildOvCharts(stats); pushURLState();
+  });
+
+  // Overview action buttons
+  document.getElementById('ov-words-export-btn')?.addEventListener('click', () => {
+    if (ovWordsChart) exportChartPNG(ovWordsChart, 'mbmbam-words-per-episode');
+  });
+  document.getElementById('ov-words-pin-btn')?.addEventListener('click', () => {
+    if (!ovWordsChart) return;
+    const label = document.getElementById('ov-words-title')?.textContent || 'Words Per Episode';
+    pinChart(label, 'line', JSON.parse(JSON.stringify(ovWordsChart.data)));
+  });
+  document.getElementById('ov-share-export-btn')?.addEventListener('click', () => {
+    if (ovShareChart) exportChartPNG(ovShareChart, 'mbmbam-speaker-share');
+  });
+  document.getElementById('ov-share-pin-btn')?.addEventListener('click', () => {
+    if (!ovShareChart) return;
+    pinChart('Speaker Share %', 'line', JSON.parse(JSON.stringify(ovShareChart.data)));
   });
 }
 
@@ -1414,6 +1824,10 @@ async function doSearch() {
         <div class="chart-card-head">
           <span class="dot" style="background:var(--coral)"></span>
           "${key}" — per episode by speaker
+          <div class="chart-card-actions">
+            <button class="chart-action-btn" id="sr-pin-btn" title="Pin to Pinboard">Pin</button>
+            <button class="chart-action-btn" id="sr-export-btn" title="Export PNG">Export PNG</button>
+          </div>
         </div>
         <div class="chart-controls">
           <span class="chart-controls-label">Range</span>
@@ -1458,6 +1872,7 @@ async function doSearch() {
 
     buildSearchChart();
     wireSearchControls();
+    pushURLState();
   } catch (err) {
     setSearchStatus('error', `Error: ${err.message}`);
   }
@@ -1505,7 +1920,7 @@ function buildSearchChart() {
 }
 
 function wireSearchControls() {
-  const applyFn = () => buildSearchChart();
+  const applyFn = () => { buildSearchChart(); pushURLState(); };
   document.getElementById('sr-apply')?.addEventListener('click', applyFn);
   document.getElementById('sr-ep-from')?.addEventListener('keydown', e => { if (e.key === 'Enter') applyFn(); });
   document.getElementById('sr-ep-to')?.addEventListener('keydown',   e => { if (e.key === 'Enter') applyFn(); });
@@ -1519,11 +1934,20 @@ function wireSearchControls() {
   });
   wireToggleGroup('sr-smooth-group', btn => {
     searchSmooth = parseInt(btn.dataset.smooth);
-    buildSearchChart();
+    buildSearchChart(); pushURLState();
   });
   wireToggleGroup('sr-count-group', btn => {
     searchCumulative = btn.dataset.count === 'cumulative';
-    buildSearchChart();
+    buildSearchChart(); pushURLState();
+  });
+  // Export / Pin for search chart
+  document.getElementById('sr-export-btn')?.addEventListener('click', () => {
+    if (searchChart) exportChartPNG(searchChart, `mbmbam-${document.getElementById('word-input').value.trim() || 'search'}`);
+  });
+  document.getElementById('sr-pin-btn')?.addEventListener('click', () => {
+    if (!searchChart) return;
+    const term = document.getElementById('word-input').value.trim() || 'search';
+    pinChart(term, 'line', JSON.parse(JSON.stringify(searchChart.data)));
   });
 }
 
@@ -1626,7 +2050,13 @@ async function doCompare() {
 
     resEl.innerHTML = `
       <div class="chart-card">
-        <div class="chart-card-head"><span class="dot" style="background:var(--teal)"></span>Total uses across all episodes, by speaker</div>
+        <div class="chart-card-head">
+          <span class="dot" style="background:var(--teal)"></span>Total uses across all episodes, by speaker
+          <div class="chart-card-actions">
+            <button class="chart-action-btn" id="tw-pin-btn" title="Pin to Pinboard">Pin</button>
+            <button class="chart-action-btn" id="tw-export-btn" title="Export PNG">Export PNG</button>
+          </div>
+        </div>
         <div class="chart-card-body">
           <canvas id="tw-chart"></canvas>
           <div class="legend-hint">Click a name in the legend to show/hide that speaker</div>
@@ -1646,6 +2076,18 @@ async function doCompare() {
     twChart = new Chart(document.getElementById('tw-chart'), {
       type: 'bar', data: { labels, datasets }, options: twOpts,
     });
+
+    // Wire compare action buttons
+    document.getElementById('tw-export-btn')?.addEventListener('click', () => {
+      if (twChart) exportChartPNG(twChart, `mbmbam-compare-${terms.slice(0,2).join('-')}`);
+    });
+    document.getElementById('tw-pin-btn')?.addEventListener('click', () => {
+      if (!twChart) return;
+      const label = document.getElementById('tw-input').value.trim().slice(0, 40) || 'Compare';
+      pinChart(label, 'bar', JSON.parse(JSON.stringify(twChart.data)));
+    });
+
+    pushURLState();
   } catch (err) {
     setTwStatus('error', `Error: ${err.message}`);
   }
