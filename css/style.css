@@ -25,9 +25,62 @@
   --nav-h: 52px;
 }
 
+/* ── Page transitions ────────────────────────────────────────────────── */
+
+/* enable page transitions */
+/* @view-transition { navigation: auto; } */
+
+/* ::view-transition-old(root) {
+  animation-duration: 1s;
+}
+::view-transition-new(root) {
+  animation-duration: 250ms;
+} */
+
+/* @keyframes blurIn {
+  from {
+    filter: blur(100px);
+  }
+
+  to {
+    filter: blur(0);
+  }
+}
+
+@keyframes blurOut {
+  from {
+    filter: blur(0);
+  }
+
+  to {
+    filter: blur(100px);
+  }
+}
+
+::view-transition-old(header-text),
+::view-transition-new(header-text) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(header-text) {
+  animation-duration: 250ms;
+}
+
+::view-transition-new(header-text) {
+  animation-duration: 250ms;
+} */
+/* ::view-transition-old(main-nav) {
+  animation-duration: 250ms;
+}
+::view-transition-new(main-nav) {
+  animation-duration: 250ms;
+} */
+
 /* ── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
+
+
 
 body {
   background: var(--bg);
@@ -47,6 +100,10 @@ body.index-page {
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 ul { list-style: none; }
+
+
+
+
 
 /* ── Utility ────────────────────────────────────────────────── */
 .mono       { font-family: var(--mono); }
@@ -82,6 +139,7 @@ nav {
   padding-left: 1rem;
   padding-right: 0;
   z-index: 100;
+  view-transition-name: none; /* Gives it a name so that it tranisitons better */
 }
 
 nav .nav-links .nav-id {
@@ -158,6 +216,11 @@ nav a.desktop{
 .page {
   padding-top: var(--nav-h);
   min-height: 100vh;
+}
+
+.page-number {
+  padding: 16px 2rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
