@@ -1320,10 +1320,29 @@ function showToast(msg) {
 
 
 // ── Export PNG ────────────────────────────────────────────────────────────────
-function exportChartPNG(chart, filename) {
+function exportChartPNG(chart, filename, title) {
+  const src = chart.canvas;
+  const offscreen = document.createElement('canvas');
+  const titleH = title ? 36 : 0;
+  offscreen.width = src.width;
+  offscreen.height = src.height + titleH;
+
+  const ctx = offscreen.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, offscreen.width, offscreen.height);
+  ctx.textAlign = 'center';
+  
+  if (title) {
+    ctx.fillStyle = '#2B1D0E';
+    ctx.font = 'bold 13px "Josefin Sans", sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(title, offscreen.width / 2, titleH / 2);
+  }
+
+  ctx.drawImage(src, 0, titleH);
+
   const a = document.createElement('a');
-  chart
-  a.href = chart.toBase64Image('image/png', 1);
+  a.href = offscreen.toDataURL('image/png');
   a.download = (filename || 'chart').replace(/[^a-z0-9_-]/gi, '-') + '.png';
   a.click();
 }
@@ -1740,7 +1759,7 @@ function wireOvControls(stats) {
 
   // Overview action buttons
   document.getElementById('ov-words-export-btn')?.addEventListener('click', () => {
-    if (ovWordsChart) exportChartPNG(ovWordsChart, 'mbmbam-words-per-episode');
+    if (ovWordsChart) exportChartPNG(searchChart, `mbmbam-words-per-episode`, `Words per Episode`);
   });
   document.getElementById('ov-words-pin-btn')?.addEventListener('click', () => {
     if (!ovWordsChart) return;
@@ -1748,7 +1767,7 @@ function wireOvControls(stats) {
     pinChart(label, 'line', JSON.parse(JSON.stringify(ovWordsChart.data)));
   });
   document.getElementById('ov-share-export-btn')?.addEventListener('click', () => {
-    if (ovShareChart) exportChartPNG(ovShareChart, 'mbmbam-speaker-share');
+    if (ovShareChart) exportChartPNG(searchChart, `mbmbam-speaker-share`, `Speaker Share`);
   });
   document.getElementById('ov-share-pin-btn')?.addEventListener('click', () => {
     if (!ovShareChart) return;
@@ -1942,7 +1961,7 @@ function wireSearchControls() {
   });
   // Export / Pin for search chart
   document.getElementById('sr-export-btn')?.addEventListener('click', () => {
-    if (searchChart) exportChartPNG(searchChart, `mbmbam-${document.getElementById('word-input').value.trim() || 'search'}`);
+    if (searchChart) exportChartPNG(searchChart, `mbmbam-${document.getElementById('word-input').value.trim() || 'search'}`, `"${document.getElementById('word-input').value.trim() || 'search'}" — per episode`);
   });
   document.getElementById('sr-pin-btn')?.addEventListener('click', () => {
     if (!searchChart) return;
@@ -2079,7 +2098,7 @@ async function doCompare() {
 
     // Wire compare action buttons
     document.getElementById('tw-export-btn')?.addEventListener('click', () => {
-      if (twChart) exportChartPNG(twChart, `mbmbam-compare-${terms.slice(0,2).join('-')}`);
+      if (twChart) exportChartPNG(twChart, `mbmbam-compare-${terms.slice(0,2).join('-')}`, `Compare: ${terms.slice(0,2).join(', ')}`);
     });
     document.getElementById('tw-pin-btn')?.addEventListener('click', () => {
       if (!twChart) return;
