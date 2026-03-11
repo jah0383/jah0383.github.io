@@ -368,12 +368,14 @@
     .loading-state::after  { content: ' —'; }
 
     .masthead-about {
-      position: absolute; top: 50%; right: 0;
-      transform: translateY(-50%);
+      position: relative; 
+      /* top: 50%; right: 0;
+      transform: translateY(-50%); */
       font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem;
       letter-spacing: 0.05em; color: var(--ink-lite);
       text-align: right; line-height: 1.7; z-index: 2;
-      padding: 1rem;
+      /* padding: 1rem; */
+      flex: 1;
     }
     .masthead-about a {
       color: var(--coral); text-decoration: none; font-weight: 700;
@@ -392,12 +394,12 @@
     /* ═══════════════════════════════════════════════════════
        RESPONSIVE — tablet and mobile
     ═══════════════════════════════════════════════════════ */
-
+/* 
     @media (max-width: 960px) {
       .masthead-inner { padding: 1.25rem 1.5rem; gap: 1.5rem; }
       main { padding: 1.75rem 1.5rem; }
       .masthead-about { font-size: 0.6rem; }
-    }
+    } */
     /* ── Tablet (≤ 860px) ────────────────────────────────── */
     @media (max-width: 860px) {
 
@@ -844,7 +846,7 @@
     <div class="masthead-divider"></div>
     <div class="masthead-meta" id="masthead-meta">Loading…</div>
     <div class="masthead-about">
-      Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe, Check out my other stuff! I'm looking for a job ;)</a><br>
+      Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe, <nobr>Check out my other stuff!</nobr> <nobr>I'm looking for a job ;)</nobr></a><br>
       <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
     </div>
   </div>
