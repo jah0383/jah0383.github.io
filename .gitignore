@@ -1,3 +1,5 @@
 additional.js
-scripts/pdfs
+scripts/*pdfs
 utility.py
+utility.ipynb
+parsed_episodes.json

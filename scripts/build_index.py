@@ -259,7 +259,7 @@ def build_stage_index(episodes: list) -> dict:
 
 def write_json(path: Path, data, indent=None) -> float:
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=indent)
+        json.dump(data, f, ensure_ascii=False, indent=indent, separators=(',', ':'))
     return path.stat().st_size / 1024 / 1024
 
 

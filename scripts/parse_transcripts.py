@@ -44,7 +44,7 @@ HEADER_RE = re.compile(
 
 # Fallback: episode number + title from filename
 # Matches: MBMBaM-Ep801-Bad-Idea-Blanket.pdf  /  ep42-title.pdf
-FILENAME_RE = re.compile(r'[Mm][Bb][Mm][Bb][Aa][Mm]-(?:[Ee][Pp]-?)?(\d+)-(.+?)\.pdf$')
+FILENAME_RE = re.compile(r'mbmbam e[po](\d+)\s(.*)\.pdf',re.IGNORECASE)
 
 # "Published on February 16th, 2026"
 DATE_RE = re.compile(
@@ -197,7 +197,7 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
 
     episodes   = []
     skipped    = 0
-    no_header  = 0
+    no_filename  = 0
 
     for pdf_path in pdf_paths:
         # Fast pre-check: if we can determine the episode ID from the filename
@@ -212,12 +212,12 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
             text = extract_pdf_text(pdf_path)
 
             # Try PDF header first, fall back to filename
-            meta = parse_pdf_header(text)
-            source = 'pdf'
+            meta = parse_filename_fallback(pdf_path.name)
+            source = "filename"
             if not meta:
-                meta = parse_filename_fallback(pdf_path.name)
-                source = 'filename'
-                no_header += 1
+                meta = parse_pdf_header(text)
+                source = 'pdf'
+                no_filename += 1
 
             if not meta:
                 print('SKIP (no episode number found in PDF or filename)')
@@ -250,8 +250,8 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
     episodes.sort(key=lambda ep: ep['id'])
 
     print(f'\nProcessed : {len(episodes)} episodes')
-    if no_header:
-        print(f'  Fallback : {no_header} used filename (no PDF header match)')
+    if no_filename:
+        print(f'  Fallback : {no_filename} used filename (no PDF header match)')
     if skipped:
         print(f'  Skipped  : {skipped}')
     print(f'Utterances: {sum(len(ep["utterances"]) for ep in episodes):,} total')
