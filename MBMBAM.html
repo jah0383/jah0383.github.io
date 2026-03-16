@@ -89,13 +89,14 @@
     }
     .masthead-inner {
       position: relative; z-index: 1;
-      display: flex; align-items: center; gap: 2.5rem; padding: 1.5rem 2.5rem;
+      display: flex; align-items: center; gap: 2.5rem; padding: 1.5rem 2.5rem; padding-bottom: 0.1rem;
     }
     .masthead-title {
       font-family: 'Alfa Slab One', serif;
       font-size: clamp(1.4rem, 3vw, 2.2rem);
       line-height: 0.95; letter-spacing: -0.01em;
       color: var(--ink); text-transform: uppercase;
+      flex: 0 0 auto
     }
     .masthead-title .amp { color: var(--coral); font-style: italic; font-family: 'Lora', serif; font-size: 0.7em; }
     .masthead-title .sub {
@@ -103,10 +104,20 @@
       font-size: 0.3em; font-weight: 700; letter-spacing: 0.25em;
       color: var(--ink-lite); text-transform: uppercase; margin-top: 0.5rem;
     }
+    .masthead-title .disclaimer {
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem;
+      color: var(--ink-lite);
+      line-height: 1.7; z-index: 2;
+      display: block; margin-top: 0.1rem; opacity: 0.7; font-size: 0.6rem;
+    }
+    .masthead-title:hover{
+      cursor: pointer;
+    }
     .masthead-divider { width: 3px; height: 60px; background: var(--ink); opacity: 0.2; flex-shrink: 0; }
     .masthead-meta {
       font-family: 'Josefin Sans', sans-serif; font-size: 0.78rem;
       letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mid); line-height: 1.8;
+      flex: 0 1 35%;
     }
     .masthead-meta strong { color: var(--coral); font-weight: 700; }
 
@@ -369,12 +380,10 @@
 
     .masthead-about {
       position: relative; 
-      /* top: 50%; right: 0;
-      transform: translateY(-50%); */
-      font-family: 'Josefin Sans', sans-serif; font-size: 0.65rem;
+      font-family: 'Josefin Sans', sans-serif; font-size: 1rem;
       letter-spacing: 0.05em; color: var(--ink-lite);
-      text-align: right; line-height: 1.7; z-index: 2;
-      /* padding: 1rem; */
+      text-align: left; line-height: 1.7; z-index: 2;
+      padding: 0.5rem 2.5rem;
       flex: 1;
     }
     .masthead-about a {
@@ -382,9 +391,7 @@
       transition: color 0.15s;
     }
     .masthead-about a:hover { color: var(--coral-d); }
-    .masthead-about .disclaimer {
-      display: block; margin-top: 0.1rem; opacity: 0.7; font-size: 0.6rem;
-    }
+
 
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--cream-d); }
@@ -839,16 +846,16 @@
   <div class="masthead-semi"></div>
   <div class="masthead-inner">
     <div class="masthead-title">
-      My Brother,<br>My Brother
-      <span class="amp">&amp;</span> Me
+      <a class = "nav" data-tab="overview" style="text-decoration: none; color: inherit;" >My Brother,<br>My Brother
+      <span class="amp">&amp;</span> Me</a>
       <span class="sub">(Unofficial)Word Statistics</span>
+      <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
     </div>
     <div class="masthead-divider"></div>
     <div class="masthead-meta" id="masthead-meta">Loading…</div>
-    <div class="masthead-about">
-      Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe, <nobr>Check out my other stuff!</nobr> <nobr>I'm looking for a job ;)</nobr></a><br>
-      <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
-    </div>
+  </div>
+  <div class="masthead-about">
+    Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe, <nobr>Check out my other stuff!</nobr> <nobr>I'm looking for a job ;)</nobr></a><br>
   </div>
 </header>
 
@@ -1196,6 +1203,19 @@ const INDEX_FILES = isMemoryConstrained() ? MOBILE_INDEX_FILES : REG_INDEX_FILES
 
 // ── Nav ───────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.site-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.site-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('main section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+    if (tab === 'browse') initBrowse();
+    if (tab === 'pinboard') renderPinboard();
+    pushURLState();
+  });
+});
+
+document.querySelectorAll('.nav').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
     document.querySelectorAll('.site-nav button').forEach(b => b.classList.remove('active'));
@@ -1573,8 +1593,9 @@ async function init() {
       fetchJSON(`${DATA_BASE}/episode_stats.json`),
     ]);
     const { speakers, episode_count } = manifest;
-    document.getElementById('masthead-meta').innerHTML =
-      `<strong>${episode_count.toLocaleString()}</strong> Episodes<br>` +
+    document.getElementById('masthead-meta').innerHTML = 
+      `A searchable, browsable breakdown of every word spoken across <strong>${episode_count.toLocaleString()}</strong> episodes of <span style="white-space: nowrap;"><i>My Brother, My Brother and Me</i></span><br>` +
+      // `<strong>${episode_count.toLocaleString()}</strong> Episodes<br>` +
       speakers.map(s => `<strong style="color:${sc(s).line}">${s}</strong>`).join(' · ');
     document.getElementById('overview-loading').style.display = 'none';
     document.getElementById('overview-content').style.display = '';

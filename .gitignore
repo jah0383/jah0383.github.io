@@ -3,3 +3,6 @@ scripts/*pdfs
 utility.py
 utility.ipynb
 parsed_episodes.json
+speakers.json
+test*
+taz_roles.json
