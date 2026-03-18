@@ -211,7 +211,7 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
         try:
             text = extract_pdf_text(pdf_path)
 
-            # Try PDF header first, fall back to filename
+            # Try filename first, fall back to PDF header
             meta = parse_filename_fallback(pdf_path.name)
             source = "filename"
             if not meta:
