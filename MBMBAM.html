@@ -415,6 +415,7 @@
         flex-direction: column;
         align-items: flex-start;
         padding: 1rem 1rem 1.25rem;
+        padding-bottom: 0.1rem;
         gap: 0.3rem;
       }
       .masthead-divider { display: none; }
@@ -427,7 +428,8 @@
         padding-top: 0.6rem;
         border-top: 1px solid rgba(43,29,14,0.15);
         width: 100%;
-      }
+        }
+      .masthead-about { padding: 1rem 1rem 1.25rem;}
       main { padding: 1.25rem 1rem; }
     }
 
@@ -849,13 +851,13 @@
       <a class = "nav" data-tab="overview" style="text-decoration: none; color: inherit;" >My Brother,<br>My Brother
       <span class="amp">&amp;</span> Me</a>
       <span class="sub">(Unofficial)Word Statistics</span>
-      <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span>
+      <!-- <span class="disclaimer">Fan-made · No affiliation with MBMBaM or Maximum Fun</span> -->
     </div>
     <div class="masthead-divider"></div>
     <div class="masthead-meta" id="masthead-meta">Loading…</div>
   </div>
   <div class="masthead-about">
-    Made by <a href="https://jah0383.github.io" target="_blank" rel="noopener">James Howe, Check out my other stuff! I'm looking for a job ;)</a><br>
+    Made by James Howe, <a href="https://jah0383.github.io" target="_blank" rel="noopener">Check out my other stuff!</a> I'm looking for a job ;)<br>
   </div>
 </header>
 
@@ -1594,7 +1596,7 @@ async function init() {
     ]);
     const { speakers, episode_count } = manifest;
     document.getElementById('masthead-meta').innerHTML = 
-      `A searchable, browsable breakdown of every word spoken across <strong>${episode_count.toLocaleString()}</strong> episodes of <span style="white-space: nowrap;"><i>My Brother, My Brother and Me</i></span><br>` +
+      `A searchable, browsable breakdown of every word spoken across <strong>${episode_count.toLocaleString()}</strong> episodes of <i>My Brother, My Brother and Me</i><br>` +
       // `<strong>${episode_count.toLocaleString()}</strong> Episodes<br>` +
       speakers.map(s => `<strong style="color:${sc(s).line}">${s}</strong>`).join(' · ');
     document.getElementById('overview-loading').style.display = 'none';
