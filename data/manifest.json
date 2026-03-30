@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":801,
+  "episode_count":802,
   "episodes":[
     {
       "id":1,
@@ -4010,6 +4010,11 @@
       "id":804,
       "title":"Aaron Space, Boy Astronaut",
       "date":"March 9th, 2026"
+    },
+    {
+      "id":805,
+      "title":"The Most Forbidden Fritos",
+      "date":"March 16th, 2026"
     }
   ]
 }
