@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":802,
+  "episode_count":803,
   "episodes":[
     {
       "id":1,
@@ -4015,6 +4015,11 @@
       "id":805,
       "title":"The Most Forbidden Fritos",
       "date":"March 16th, 2026"
+    },
+    {
+      "id":806,
+      "title":"Ad Daddies",
+      "date":"March 23rd, 2026"
     }
   ]
 }
