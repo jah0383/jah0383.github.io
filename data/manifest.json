@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":806,
+  "episode_count":807,
   "episodes":[
     {
       "id":1,
@@ -4035,6 +4035,11 @@
       "id":809,
       "title":"Lesser Luigi Model",
       "date":null
+    },
+    {
+      "id":810,
+      "title":"Shirtpants! Shirtpants!",
+      "date":"April 20, 2026"
     }
   ]
 }
