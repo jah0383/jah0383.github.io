@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":807,
+  "episode_count":809,
   "episodes":[
     {
       "id":1,
@@ -4040,6 +4040,16 @@
       "id":810,
       "title":"Shirtpants! Shirtpants!",
       "date":"April 20, 2026"
+    },
+    {
+      "id":811,
+      "title":"New At Yeast",
+      "date":"April 27th, 2026"
+    },
+    {
+      "id":812,
+      "title":"‘Cino Drops A Hoo",
+      "date":"May 4th, 2026"
     }
   ]
 }
