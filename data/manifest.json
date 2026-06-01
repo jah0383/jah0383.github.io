@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":809,
+  "episode_count":811,
   "episodes":[
     {
       "id":1,
@@ -4050,6 +4050,16 @@
       "id":812,
       "title":"‘Cino Drops A Hoo",
       "date":"May 4th, 2026"
+    },
+    {
+      "id":813,
+      "title":"Somebody Cream Me!",
+      "date":"May 11th, 2026"
+    },
+    {
+      "id":814,
+      "title":"Pibbonade",
+      "date":"May 18th, 2026"
     }
   ]
 }
