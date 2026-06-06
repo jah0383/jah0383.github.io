@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":799,
+  "episode_count":811,
   "episodes":[
     {
       "id":1,
@@ -4000,6 +4000,66 @@
       "id":802,
       "title":"Assassinating The Moon Queen",
       "date":"February 22nd, 2026"
+    },
+    {
+      "id":803,
+      "title":"Rango Vs. Rango",
+      "date":null
+    },
+    {
+      "id":804,
+      "title":"Aaron Space, Boy Astronaut",
+      "date":"March 9th, 2026"
+    },
+    {
+      "id":805,
+      "title":"The Most Forbidden Fritos",
+      "date":"March 16th, 2026"
+    },
+    {
+      "id":806,
+      "title":"Ad Daddies",
+      "date":"March 23rd, 2026"
+    },
+    {
+      "id":807,
+      "title":"Riding In Floors With Boys",
+      "date":null
+    },
+    {
+      "id":808,
+      "title":"Let Your Body Be The Dumpster",
+      "date":null
+    },
+    {
+      "id":809,
+      "title":"Lesser Luigi Model",
+      "date":null
+    },
+    {
+      "id":810,
+      "title":"Shirtpants! Shirtpants!",
+      "date":"April 20, 2026"
+    },
+    {
+      "id":811,
+      "title":"New At Yeast",
+      "date":"April 27th, 2026"
+    },
+    {
+      "id":812,
+      "title":"‘Cino Drops A Hoo",
+      "date":"May 4th, 2026"
+    },
+    {
+      "id":813,
+      "title":"Somebody Cream Me!",
+      "date":"May 11th, 2026"
+    },
+    {
+      "id":814,
+      "title":"Pibbonade",
+      "date":"May 18th, 2026"
     }
   ]
 }
