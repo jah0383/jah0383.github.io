@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":813,
+  "episode_count":815,
   "episodes":[
     {
       "id":1,
@@ -4070,6 +4070,16 @@
       "id":816,
       "title":"Ship Of Vanilli",
       "date":"June 1st, 2026"
+    },
+    {
+      "id":817,
+      "title":"Shabby Dabby Doug",
+      "date":"June 8th, 2026"
+    },
+    {
+      "id":818,
+      "title":"Announcing Utilidrink",
+      "date":"June 16th, 2026"
     }
   ]
 }
