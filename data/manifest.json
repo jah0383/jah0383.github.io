@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":816,
+  "episode_count":815,
   "episodes":[
     {
       "id":1,
@@ -4080,11 +4080,6 @@
       "id":818,
       "title":"Announcing Utilidrink",
       "date":"June 16th, 2026"
-    },
-    {
-      "id":819,
-      "title":"Real Guys Real Eyes Realize Real Lies",
-      "date":"June 22nd, 2026"
     }
   ]
 }
