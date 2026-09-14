@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":778,
+  "episode_count":749,
   "episodes":[
     {
       "id":1,
@@ -309,11 +309,6 @@
     {
       "id":61,
       "title":"Steak'Em And Tubes",
-      "date":null
-    },
-    {
-      "id":62,
-      "title":"My Dark Twisted Pretzel Fantasy",
       "date":null
     },
     {
@@ -3754,146 +3749,6 @@
     {
       "id":753,
       "title":"The Dicktine Chapel",
-      "date":null
-    },
-    {
-      "id":754,
-      "title":"Dinglebuff Hufferbuff",
-      "date":"March 17th, 2025"
-    },
-    {
-      "id":755,
-      "title":"Getting Crowded At Funny Beach",
-      "date":"March 24th, 2025"
-    },
-    {
-      "id":756,
-      "title":"King Fuck Of Bastard Mountain",
-      "date":"March 31st, 2025"
-    },
-    {
-      "id":757,
-      "title":"Face 2 Face Ain’T No Horny Like Goose Horny",
-      "date":"April 7, 2025"
-    },
-    {
-      "id":758,
-      "title":"Ostrichhood",
-      "date":"April 14th, 2025"
-    },
-    {
-      "id":759,
-      "title":"Face 2 Face Mommy’S Special Sweets For Good Business Boys",
-      "date":"April 21st, 2025"
-    },
-    {
-      "id":760,
-      "title":"Immaxulate Conception",
-      "date":"April 28th, 2025"
-    },
-    {
-      "id":761,
-      "title":"My Other Dad Is A Helicopter",
-      "date":"May 5th, 2025"
-    },
-    {
-      "id":762,
-      "title":"Mozzarella Stickz, Never Eaten",
-      "date":"May 12th, 2025"
-    },
-    {
-      "id":763,
-      "title":"The Revenge Pope",
-      "date":"May 19th, 2025"
-    },
-    {
-      "id":764,
-      "title":"Sneak A Pi In That Mobo",
-      "date":"May 26th, 2025"
-    },
-    {
-      "id":765,
-      "title":"Face 2 Face Ethics Of Pissin’ In Da Car",
-      "date":null
-    },
-    {
-      "id":766,
-      "title":"A Different Breed Of Pervert",
-      "date":"June 9th, 2025"
-    },
-    {
-      "id":767,
-      "title":"Look At Me, An Outdoor Kid",
-      "date":"June 16th, 2025"
-    },
-    {
-      "id":768,
-      "title":"Face 2 Face No Toes As A General Rule",
-      "date":"June 23rd, 2025"
-    },
-    {
-      "id":769,
-      "title":"The Good Time Mcelroy Hang Time",
-      "date":"June 30th, 2025"
-    },
-    {
-      "id":770,
-      "title":"Hy Paw Thesis",
-      "date":"July 7th, 2025"
-    },
-    {
-      "id":771,
-      "title":"Face 2 Face Le Oink",
-      "date":"July 14th, 2025"
-    },
-    {
-      "id":772,
-      "title":"Spiders Are Writing And God Is Real",
-      "date":"July 21st, 2025"
-    },
-    {
-      "id":773,
-      "title":"Face 2 Face Callioucifer",
-      "date":"July 28th, 2025"
-    },
-    {
-      "id":774,
-      "title":"Bear No Skyver",
-      "date":"August 4th, 2025"
-    },
-    {
-      "id":775,
-      "title":"Face 2 Face Cookies And Clam",
-      "date":"August 11th, 2025"
-    },
-    {
-      "id":776,
-      "title":"The Great Brother Spiral Of 2025",
-      "date":"August 18th, 2025"
-    },
-    {
-      "id":777,
-      "title":"Preparation Hoops",
-      "date":"August 25th, 2025"
-    },
-    {
-      "id":778,
-      "title":"Face 2 Face Yellin’ At The Kellen Felons",
-      "date":"September 1st, 2025"
-    },
-    {
-      "id":779,
-      "title":"Bugbag Mode",
-      "date":"September 8th, 2025"
-    },
-    {
-      "id":780,
-      "title":"Face 2 Face Good Will Horsing",
-      "date":"September 16th, 2025"
-    },
-    {
-      "id":781,
-      "title":"Jolly Green Gundam",
       "date":null
     }
   ]
