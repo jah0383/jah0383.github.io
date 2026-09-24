@@ -131,3 +131,69 @@ jobs:
       - name: No changes
         if: steps.check.outputs.changed != 'true'
         run: echo "Data files are already up to date — nothing to commit."
+
+      # ── 7. Stale data check ────────────────────────────────────────────────
+      #    Fails the workflow (and triggers GitHub's failure email) if no new
+      #    episode has been published in over 30 days — likely a sign that the
+      #    scraper stopped picking up the latest files.
+      #    Skipped when skip_build is true (data/ wasn't rebuilt, so the check
+      #    would be misleading).
+      - name: Check for stale data
+        if: ${{ inputs.skip_build != true }}
+        run: |
+          python - << 'EOF'
+          import json, re, sys
+          from datetime import datetime
+          from pathlib import Path
+
+          data_file = Path('data/episode_stats.json')
+          if not data_file.exists():
+              print("episode_stats.json not found -- skipping staleness check")
+              sys.exit(0)
+
+          data = json.loads(data_file.read_text())
+          if not data:
+              print("No episodes in data -- skipping staleness check")
+              sys.exit(0)
+
+          # Parse dates from both formats:
+          #   "February 16th, 2026"  -- from PDF 'Published on' line
+          #   "2026-08-24"           -- from new-format filename prefix
+          def parse_ep_date(s):
+              if not s:
+                  return None
+              try:
+                  return datetime.strptime(s, '%Y-%m-%d')
+              except ValueError:
+                  pass
+              cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', s).strip()
+              for fmt in ('%B %d, %Y', '%B %d %Y'):
+                  try:
+                      return datetime.strptime(cleaned, fmt)
+                  except ValueError:
+                      pass
+              return None
+
+          dates = [parse_ep_date(ep.get('date')) for ep in data]
+          dates = [d for d in dates if d]
+
+          if not dates:
+              print("No parseable dates found -- skipping staleness check")
+              sys.exit(0)
+
+          latest    = max(dates)
+          days_ago  = (datetime.utcnow() - latest).days
+          threshold = 30
+
+          print(f"Latest episode date : {latest.strftime('%Y-%m-%d')}")
+          print(f"Days since latest   : {days_ago}")
+          print(f"Total episodes      : {len(data)}")
+
+          if days_ago > threshold:
+              print(f"::error::No new episode in {days_ago} days "
+                    f"(latest: {latest.strftime('%Y-%m-%d')}). "
+                    f"Check whether the scraper is still picking up new files.")
+              sys.exit(1)
+
+          print(f"Data is fresh -- within {threshold}-day threshold.")
+          EOF

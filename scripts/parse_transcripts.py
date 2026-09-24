@@ -42,9 +42,18 @@ HEADER_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Fallback: episode number + title from filename
+# Fallback: episode number + title from old-format filename.
 # Matches: MBMBaM-Ep801-Bad-Idea-Blanket.pdf  /  ep42-title.pdf
-FILENAME_RE = re.compile(r'mbmbam e[po](\d+)\s(.*)\.pdf',re.IGNORECASE)
+FILENAME_RE = re.compile(r'[Mm][Bb][Mm][Bb][Aa][Mm]-(?:[Ee][Pp]-?)?(\d+)-(.+?)\.pdf$')
+
+# New-format filename: date prefix, no episode number.
+# Matches: 2026-08-24 MBMBaM Unless I'm Pissin' Pants.pdf
+# Episode number must come from the PDF header for these files.
+# The date prefix is used as a fallback when the PDF's own date line fails.
+FILENAME_DATE_RE = re.compile(
+    r'^(\d{4}-\d{2}-\d{2})\s+MBMBaM\s+(.+)\.pdf$',
+    re.IGNORECASE,
+)
 
 # "Published on February 16th, 2026"
 DATE_RE = re.compile(
@@ -57,7 +66,7 @@ DATE_RE = re.compile(
 # Group 1: speaker name   Group 2: optional role (may be None)   Group 3: rest of line
 SPEAKER_RE = re.compile(
     r'^([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)'   # speaker name
-    r'(?:\s*\[[Aa]s\s+([^\]]+)\])?'           # optional [as Character Name]
+    r'(?:\s*\[as\s+([^\]]+)\])?'           # optional [as Character Name]
     r'\s*:\s*(.*)'                          # colon + rest of line
 )
 
@@ -108,10 +117,20 @@ def extract_pdf_text(path: Path) -> str:
     return '\n'.join(pages)
 
 
-def parse_date(text: str) -> Optional[str]:
-    """Extract publication date from PDF text."""
+def parse_date(text: str, filename: str = '') -> Optional[str]:
+    """
+    Extract publication date from PDF text.
+    Falls back to the YYYY-MM-DD prefix in new-format filenames if the PDF
+    does not contain a 'Published on ...' line.
+    """
     m = DATE_RE.search(text)
-    return m.group(1) if m else None
+    if m:
+        return m.group(1)
+    if filename:
+        mf = FILENAME_DATE_RE.match(filename)
+        if mf:
+            return mf.group(1)  # already ISO format: 2026-08-24
+    return None
 
 
 def parse_utterances(text: str, known_speakers: set) -> list:
@@ -184,8 +203,14 @@ def parse_utterances(text: str, known_speakers: set) -> list:
 
 # ── Main processing ───────────────────────────────────────────────────────────
 
-def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | None = None) -> list:
-    skip_ids = skip_ids or set()
+def process_directory(
+    pdf_dir: Path,
+    known_speakers: set,
+    skip_ids: set[int] | None = None,
+    skip_filenames: set[str] | None = None,
+) -> list:
+    skip_ids       = skip_ids or set()
+    skip_filenames = skip_filenames or set()
     """
     Process every .pdf in pdf_dir (non-recursive).
     Returns a list of episode dicts sorted by episode number.
@@ -197,11 +222,18 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
 
     episodes   = []
     skipped    = 0
-    no_filename  = 0
+    no_header  = 0
 
     for pdf_path in pdf_paths:
-        # Fast pre-check: if we can determine the episode ID from the filename
-        # before parsing the PDF, skip early to avoid loading it at all.
+        # Fast pre-check: skip files we've already parsed.
+        # Two strategies combined:
+        #  1. Filename match — works for both old and new format files since we
+        #     store the filename in each episode record.
+        #  2. Episode-number match from filename — old format only, but avoids
+        #     opening the PDF when the filename parse works.
+        if pdf_path.name in skip_filenames:
+            print(f'  {pdf_path.name[:60]:<60} already parsed, skipping')
+            continue
         if skip_ids:
             quick_meta = parse_filename_fallback(pdf_path.name)
             if quick_meta and quick_meta['episode'] in skip_ids:
@@ -211,13 +243,13 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
         try:
             text = extract_pdf_text(pdf_path)
 
-            # Try filename first, fall back to PDF header
-            meta = parse_filename_fallback(pdf_path.name)
-            source = "filename"
+            # Try PDF header first, fall back to filename
+            meta = parse_pdf_header(text)
+            source = 'pdf'
             if not meta:
-                meta = parse_pdf_header(text)
-                source = 'pdf'
-                no_filename += 1
+                meta = parse_filename_fallback(pdf_path.name)
+                source = 'filename'
+                no_header += 1
 
             if not meta:
                 print('SKIP (no episode number found in PDF or filename)')
@@ -230,7 +262,7 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
                 print(f'already parsed, skipping')
                 continue
 
-            date       = parse_date(text)
+            date       = parse_date(text, pdf_path.name)
             utterances = parse_utterances(text, known_speakers)
 
             episodes.append({
@@ -250,8 +282,8 @@ def process_directory(pdf_dir: Path, known_speakers: set, skip_ids: set[int] | N
     episodes.sort(key=lambda ep: ep['id'])
 
     print(f'\nProcessed : {len(episodes)} episodes')
-    if no_filename:
-        print(f'  Fallback : {no_filename} used filename (no PDF header match)')
+    if no_header:
+        print(f'  Fallback : {no_header} used filename (no PDF header match)')
     if skipped:
         print(f'  Skipped  : {skipped}')
     print(f'Utterances: {sum(len(ep["utterances"]) for ep in episodes):,} total')
@@ -291,21 +323,30 @@ def main():
     # ── Incremental: load existing episodes, build skip-set ──────────────────
     existing_episodes: list = []
     skip_ids: set[int] = set()
+    skip_filenames: set[str] = set()
     if args.incremental and args.output.exists():
         try:
             with open(args.output, encoding='utf-8') as f:
                 existing_episodes = json.load(f)
             skip_ids = {ep['id'] for ep in existing_episodes}
+            # Filename-based skip handles new-format files (YYYY-MM-DD prefix,
+            # no episode number in name) where the episode-ID fast-path can't
+            # fire without opening the PDF first.
+            skip_filenames = {ep['filename'] for ep in existing_episodes}
             print(f'Incremental mode: {len(skip_ids)} episodes already in {args.output}')
         except Exception as e:
             print(f'Warning: could not load existing output ({e}), doing full parse.')
             existing_episodes = []
             skip_ids = set()
+            skip_filenames = set()
 
     print(f'Scanning: {args.pdf_dir}')
     print(f'Speakers: {", ".join(args.speakers)}\n')
 
-    new_episodes = process_directory(args.pdf_dir, set(args.speakers), skip_ids=skip_ids)
+    new_episodes = process_directory(
+        args.pdf_dir, set(args.speakers),
+        skip_ids=skip_ids, skip_filenames=skip_filenames,
+    )
 
     if args.incremental and existing_episodes:
         if not new_episodes:

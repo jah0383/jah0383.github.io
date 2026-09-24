@@ -54,14 +54,22 @@ DROPBOX_LIST_URL   = 'https://api.dropboxapi.com/2/files/list_folder'
 DROPBOX_LIST_CONT  = 'https://api.dropboxapi.com/2/files/list_folder/continue'
 DROPBOX_DL_URL     = 'https://content.dropboxapi.com/2/sharing/get_shared_link_file'
 
-# Matches the MBMBaM transcript filename pattern, including the known 'Eo' typo.
-# Examples this handles:
+# Matches both MBMBaM transcript filename formats:
+#
+# Old format (episode number in filename):
 #   MBMBaM Ep002 Holding a Stranger's Hand.pdf
 #   MBMBaM Eo246 Face 2 Face Hot Beans.pdf     ← typo: Eo instead of Ep
 #   MBMBaM Ep91 Feeding Frenzy.pdf             ← no zero-padding
 #   MBMBaM Ep665 Face 2 Face Cody-Pendant.pdf
+#
+# New format (date prefix, no episode number in filename):
+#   2026-08-24 MBMBaM Unless I'm Pissin' Pants.pdf
 MBMBAM_PDF_RE = re.compile(
-    r'^MBMBaM\s+E[oOpP](\d+)\s+.+\.pdf$',
+    r'^(?:'
+    r'MBMBaM\s+E[oOpP]\d+\s+.+'         # old: MBMBaM Ep850 Some Title
+    r'|'
+    r'\d{4}-\d{2}-\d{2}\s+MBMBaM\s+.+'  # new: 2026-08-24 MBMBaM Some Title
+    r')\.pdf$',
     re.IGNORECASE,
 )
 
