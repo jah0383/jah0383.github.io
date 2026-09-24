@@ -32,10 +32,7 @@ import os
 import re
 import time
 import argparse
-import json
 from pathlib import Path
-from urllib.parse import quote
-
 
 import requests
 
@@ -72,6 +69,10 @@ MBMBAM_PDF_RE = re.compile(
     r')\.pdf$',
     re.IGNORECASE,
 )
+
+# Used by the sort key below to extract episode number (old format) or date (new format).
+_OLD_EP_RE   = re.compile(r'^MBMBaM\s+E[oOpP](\d+)',    re.IGNORECASE)
+_NEW_DATE_RE = re.compile(r'^(\d{4}-\d{2}-\d{2})\s+MBMBaM', re.IGNORECASE)
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -143,17 +144,28 @@ def list_folder(access_token: str) -> list[dict]:
 
 # ── Download ──────────────────────────────────────────────────────────────────
 
-def download_pdf(filename: str, dest: Path, access_token: str) -> bool:
-    headers = {
-        'Authorization': f'Bearer {access_token}',
-        'Dropbox-API-Arg': json.dumps({
-            'url': 'https://www.dropbox.com/sh/egqdua6s38oxb9p/AADFJKcNCRliMD-rF89mZB2Fa/MBMBaM?dl=0',
-            'path': f'/{filename}',
-        }),
-    }
+def download_pdf(
+    filename: str,
+    dest: Path,
+    access_token: str,
+    session: requests.Session,
+) -> bool:
+    """
+    Download a single PDF from the shared folder via the Dropbox content API.
+    The 'path' in the API arg is relative to the shared folder root.
+    """
+    import json
 
+    api_arg = json.dumps({
+        'url':  SHARED_FOLDER_URL,
+        'path': f'/{filename}',
+    })
+    headers = {
+        'Authorization':   f'Bearer {access_token}',
+        'Dropbox-API-Arg': api_arg,
+    }
     try:
-        r = requests.get(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
+        r = session.post(DROPBOX_DL_URL, headers=headers, timeout=120, stream=True)
         r.raise_for_status()
         with open(dest, 'wb') as f:
             for chunk in r.iter_content(chunk_size=65536):
@@ -161,9 +173,6 @@ def download_pdf(filename: str, dest: Path, access_token: str) -> bool:
         return True
     except requests.RequestException as e:
         print(f'    ✗ Download failed: {e}')
-        # Add these two lines:
-        if hasattr(e, 'response') and e.response is not None:
-            print(f'    ✗ Response body: {e.response.text}')
         if dest.exists():
             dest.unlink()
         return False
@@ -216,11 +225,18 @@ def main():
         e for e in all_entries
         if e.get('.tag') == 'file' and MBMBAM_PDF_RE.match(e['name'])
     ]
-    # Sort by episode number for tidy output
-    def ep_num(entry):
-        m = MBMBAM_PDF_RE.match(entry['name'])
-        return int(m.group(1)) if m else 0
-    pdfs.sort(key=ep_num)
+    # Sort by episode number (old format) or date (new format).
+    # Old-format files sort first (tuple key 0 < 1), then new-format by date.
+    def ep_sort_key(entry):
+        name = entry['name']
+        m = _OLD_EP_RE.match(name)
+        if m:
+            return (0, int(m.group(1)), '')
+        m = _NEW_DATE_RE.match(name)
+        if m:
+            return (1, 0, m.group(1))
+        return (2, 0, '')
+    pdfs.sort(key=ep_sort_key)
 
     non_pdf = len(all_entries) - len(pdfs)
     print(f'  Found {len(all_entries)} total entries, '
@@ -240,6 +256,7 @@ def main():
     print('─' * 60)
     print('Step 3: Downloading new PDFs…')
 
+    session = requests.Session()
     downloaded = skipped = failed = 0
 
     for i, entry in enumerate(pdfs, 1):
@@ -254,7 +271,7 @@ def main():
             continue
 
         print(f'  ↓ Downloading…')
-        ok = download_pdf(filename, dest, access_token)
+        ok = download_pdf(filename, dest, access_token, session)
         if ok:
             size_kb = dest.stat().st_size / 1024
             print(f'  ✓ {size_kb:.0f} KB')
