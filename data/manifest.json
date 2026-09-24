@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":749,
+  "episode_count":824,
   "episodes":[
     {
       "id":1,
@@ -310,6 +310,11 @@
       "id":61,
       "title":"Steak'Em And Tubes",
       "date":null
+    },
+    {
+      "id":62,
+      "title":"My Dark Twisted Pretzel Fantasy",
+      "date":"2011-07-11"
     },
     {
       "id":63,
@@ -3750,6 +3755,376 @@
       "id":753,
       "title":"The Dicktine Chapel",
       "date":null
+    },
+    {
+      "id":754,
+      "title":"Dinglebuff Hufferbuff",
+      "date":"March 17th, 2025"
+    },
+    {
+      "id":755,
+      "title":"Getting Crowded at Funny Beach",
+      "date":"March 24th, 2025"
+    },
+    {
+      "id":756,
+      "title":"King Fuck of Bastard Mountain",
+      "date":"March 31st, 2025"
+    },
+    {
+      "id":757,
+      "title":"Face 2 Face: Ain't No Horny Like Goose Horny",
+      "date":"April 7, 2025"
+    },
+    {
+      "id":758,
+      "title":"Ostrichhood",
+      "date":"April 14th, 2025"
+    },
+    {
+      "id":759,
+      "title":"Face 2 Face: Mommy's Special Sweets For Good",
+      "date":"April 21st, 2025"
+    },
+    {
+      "id":760,
+      "title":"ImMaxulate Conception",
+      "date":"April 28th, 2025"
+    },
+    {
+      "id":761,
+      "title":"My Other Dad is a Helicopter",
+      "date":"May 5th, 2025"
+    },
+    {
+      "id":762,
+      "title":"Mozzarella Stickz, Never Eaten",
+      "date":"May 12th, 2025"
+    },
+    {
+      "id":763,
+      "title":"The Revenge Pope",
+      "date":"May 19th, 2025"
+    },
+    {
+      "id":764,
+      "title":"Sneak a Pi in that Mobo",
+      "date":"May 26th, 2025"
+    },
+    {
+      "id":765,
+      "title":"Face 2 Face: Ethics of Pissin' in Da Car",
+      "date":"2025-06-02"
+    },
+    {
+      "id":766,
+      "title":"A Different Breed of Pervert",
+      "date":"June 9th, 2025"
+    },
+    {
+      "id":767,
+      "title":"Look at Me, An Outdoor Kid",
+      "date":"June 16th, 2025"
+    },
+    {
+      "id":768,
+      "title":"Face 2 Face: No Toes as a General Rule",
+      "date":"June 23rd, 2025"
+    },
+    {
+      "id":769,
+      "title":"The Good Time McElroy Hang Time",
+      "date":"June 30th, 2025"
+    },
+    {
+      "id":770,
+      "title":"Hy-paw-thesis",
+      "date":"July 7th, 2025"
+    },
+    {
+      "id":771,
+      "title":"Face 2 Face: Le Oink",
+      "date":"July 14th, 2025"
+    },
+    {
+      "id":772,
+      "title":"Spiders Are Writing and God Is Real",
+      "date":"July 21st, 2025"
+    },
+    {
+      "id":773,
+      "title":"Face 2 Face: Callioucifer",
+      "date":"July 28th, 2025"
+    },
+    {
+      "id":774,
+      "title":"Bear No Skyver",
+      "date":"August 4th, 2025"
+    },
+    {
+      "id":775,
+      "title":"Face 2 Face: Cookies and Clam",
+      "date":"August 11th, 2025"
+    },
+    {
+      "id":776,
+      "title":"The Great Brother Spiral of 2025",
+      "date":"August 18th, 2025"
+    },
+    {
+      "id":777,
+      "title":"Preparation Hoops",
+      "date":"August 25th, 2025"
+    },
+    {
+      "id":778,
+      "title":"Face 2 Face: Yellin' at the Kellen Felons",
+      "date":"September 1st, 2025"
+    },
+    {
+      "id":779,
+      "title":"Bugbag Mode",
+      "date":"September 8th, 2025"
+    },
+    {
+      "id":780,
+      "title":"Face 2 Face: Good Will Horsing",
+      "date":"September 16th, 2025"
+    },
+    {
+      "id":781,
+      "title":"Jolly Green Gundam",
+      "date":"2025-09-22"
+    },
+    {
+      "id":782,
+      "title":"A Net Full of Screaming Butterflies",
+      "date":"September 29th, 2025"
+    },
+    {
+      "id":783,
+      "title":"Spidey Spaghetti",
+      "date":"October 6th, 2025"
+    },
+    {
+      "id":784,
+      "title":"Can You Escape Hatred Cove?",
+      "date":"October 13th, 2025"
+    },
+    {
+      "id":785,
+      "title":"Flatman",
+      "date":"October 27th, 2025"
+    },
+    {
+      "id":788,
+      "title":"Blame It On the Full Beaver Supermoon",
+      "date":"November 10th, 2025"
+    },
+    {
+      "id":789,
+      "title":"Meditations on Bean",
+      "date":"November 17th, 2025"
+    },
+    {
+      "id":790,
+      "title":"Face 2 Face: Frogspotting",
+      "date":"November 24th, 2025"
+    },
+    {
+      "id":791,
+      "title":"A Safe Space to Hurt Travis's Feelings",
+      "date":"December 1st, 2025"
+    },
+    {
+      "id":792,
+      "title":"They're Not Drunk, They're Just Fighting",
+      "date":"December 8th, 2025"
+    },
+    {
+      "id":793,
+      "title":"Fruit of the Loam",
+      "date":"December 15th, 2025"
+    },
+    {
+      "id":794,
+      "title":"Candlenights XXX",
+      "date":"December 22nd, 2025"
+    },
+    {
+      "id":795,
+      "title":"The Naming of 2026",
+      "date":"January 5th, 2026"
+    },
+    {
+      "id":796,
+      "title":"Wire and Ass",
+      "date":"January 12th, 2025"
+    },
+    {
+      "id":797,
+      "title":"Safe and Full of Grubs",
+      "date":"January 19th, 2026"
+    },
+    {
+      "id":798,
+      "title":"Round and Swallowable",
+      "date":"January 26th, 2026"
+    },
+    {
+      "id":799,
+      "title":"A Regular Human Footballman",
+      "date":"February 2nd, 2026"
+    },
+    {
+      "id":800,
+      "title":"Platonic Soapbox Sex Coffin",
+      "date":"February 2nd, 2026"
+    },
+    {
+      "id":800,
+      "title":"Platonic Soapbox Sex Coffin",
+      "date":"February 16th, 2026"
+    },
+    {
+      "id":802,
+      "title":"Assassinating the Moon Queen",
+      "date":"February 22nd, 2026"
+    },
+    {
+      "id":803,
+      "title":"Rango vs. Rango",
+      "date":"2026-03-03"
+    },
+    {
+      "id":804,
+      "title":"Aaron Space, Boy Astronaut",
+      "date":"March 9th, 2026"
+    },
+    {
+      "id":805,
+      "title":"The Most Forbidden Fritos",
+      "date":"March 16th, 2026"
+    },
+    {
+      "id":806,
+      "title":"Ad Daddies",
+      "date":"March 23rd, 2026"
+    },
+    {
+      "id":807,
+      "title":"Riding in Floors with Boys",
+      "date":"2026-03-30"
+    },
+    {
+      "id":808,
+      "title":"Let Your Body Be the Dumpster",
+      "date":"2026-04-06"
+    },
+    {
+      "id":809,
+      "title":"Lesser Luigi Model",
+      "date":"2026-04-13"
+    },
+    {
+      "id":810,
+      "title":"Shirtpants! Shirtpants!",
+      "date":"April 20, 2026"
+    },
+    {
+      "id":811,
+      "title":"New At Yeast",
+      "date":"April 27th, 2026"
+    },
+    {
+      "id":812,
+      "title":"'Cino Drops a Hoo",
+      "date":"May 4th, 2026"
+    },
+    {
+      "id":813,
+      "title":"Somebody Cream Me!",
+      "date":"May 11th, 2026"
+    },
+    {
+      "id":814,
+      "title":"Pibbonade",
+      "date":"May 18th, 2026"
+    },
+    {
+      "id":815,
+      "title":"Pain Is Funny Leaving The Body",
+      "date":"May 25th, 2026"
+    },
+    {
+      "id":816,
+      "title":"Ship of Vanilli",
+      "date":"June 1st, 2026"
+    },
+    {
+      "id":817,
+      "title":"Shabby Dabby Doug",
+      "date":"June 8th, 2026"
+    },
+    {
+      "id":818,
+      "title":"Announcing: Utilidrink",
+      "date":"June 16th, 2026"
+    },
+    {
+      "id":819,
+      "title":"Real Guys Real Eyes Realize Real Lies",
+      "date":"June 22nd, 2026"
+    },
+    {
+      "id":820,
+      "title":"More Baubles!",
+      "date":"June 29th, 2026"
+    },
+    {
+      "id":821,
+      "title":"Time Lost is Cool Lost",
+      "date":"July 6th, 2026"
+    },
+    {
+      "id":822,
+      "title":"Cheddars Never Win",
+      "date":"2026-07-13"
+    },
+    {
+      "id":823,
+      "title":"Seasonably Effective",
+      "date":"July 20th, 2026"
+    },
+    {
+      "id":824,
+      "title":"Chaddy, Not Daddy",
+      "date":"July 27th, 2026"
+    },
+    {
+      "id":825,
+      "title":"I Ain't 'Fredo No Toast",
+      "date":"August 4th, 2026"
+    },
+    {
+      "id":826,
+      "title":"Right to the Couch Hole",
+      "date":"August 10th, 2026"
+    },
+    {
+      "id":827,
+      "title":"Advanced Jesus Studies for Men",
+      "date":"August 17th, 2026"
+    },
+    {
+      "id":828,
+      "title":"*Unless I’m Pissin’ Pants",
+      "date":"2026-08-24"
+    },
+    {
+      "id":829,
+      "title":"Content Basement",
+      "date":"August 31st, 2026"
     }
   ]
 }
