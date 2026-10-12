@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":824,
+  "episode_count":829,
   "episodes":[
     {
       "id":1,
@@ -4125,6 +4125,31 @@
       "id":829,
       "title":"Content Basement",
       "date":"August 31st, 2026"
+    },
+    {
+      "id":830,
+      "title":"On the Goku",
+      "date":"September 7th, 2026"
+    },
+    {
+      "id":831,
+      "title":"How the Sausage Doesn't Get Made",
+      "date":"September 14th, 2026"
+    },
+    {
+      "id":832,
+      "title":"A Clean Bill of Pants",
+      "date":"September 21st, 2026"
+    },
+    {
+      "id":833,
+      "title":"Where Do We Get Travwheat?",
+      "date":"2026-09-28"
+    },
+    {
+      "id":834,
+      "title":"You Ain't Never Ate an Egg Like Me",
+      "date":"2026-10-05"
     }
   ]
 }
