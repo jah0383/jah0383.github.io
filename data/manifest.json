@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":829,
+  "episode_count":830,
   "episodes":[
     {
       "id":1,
@@ -4150,6 +4150,11 @@
       "id":834,
       "title":"You Ain't Never Ate an Egg Like Me",
       "date":"2026-10-05"
+    },
+    {
+      "id":836,
+      "title":"American Comedy Story",
+      "date":"October 12th, 2026"
     }
   ]
 }
