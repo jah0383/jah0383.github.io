@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":830,
+  "episode_count":831,
   "episodes":[
     {
       "id":1,
@@ -4155,6 +4155,11 @@
       "id":836,
       "title":"American Comedy Story",
       "date":"October 12th, 2026"
+    },
+    {
+      "id":838,
+      "title":"Five Increasingly Less-Convincing",
+      "date":"November 2nd, 2026"
     }
   ]
 }
