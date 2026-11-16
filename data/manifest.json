@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":831,
+  "episode_count":832,
   "episodes":[
     {
       "id":1,
@@ -4160,6 +4160,11 @@
       "id":838,
       "title":"Five Increasingly Less-Convincing",
       "date":"November 2nd, 2026"
+    },
+    {
+      "id":839,
+      "title":"Hate to Ruin Your Stew Algo",
+      "date":"November 9th, 2026"
     }
   ]
 }
