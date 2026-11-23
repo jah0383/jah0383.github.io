@@ -4,7 +4,7 @@
     "Justin",
     "Travis"
   ],
-  "episode_count":832,
+  "episode_count":833,
   "episodes":[
     {
       "id":1,
@@ -4165,6 +4165,11 @@
       "id":839,
       "title":"Hate to Ruin Your Stew Algo",
       "date":"November 9th, 2026"
+    },
+    {
+      "id":840,
+      "title":"Martin Short, Shaq Tall",
+      "date":"2026-11-16"
     }
   ]
 }
